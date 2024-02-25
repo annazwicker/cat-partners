@@ -42,30 +42,37 @@ class _TopNavBarState extends State<TopNavBar> {
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: BottomNavigationBar(
             backgroundColor: SUYellow,
+            type: BottomNavigationBarType.fixed,
+            elevation: 0.0,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Home',
+                backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.business),
                 label: 'About',
+                backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.school),
                 label: 'Admin',
+                backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Sign Up to Feed',
+                backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: 'Account',
+                backgroundColor: SUYellow,
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Color.fromARGB(255, 255, 255, 255),
+            selectedItemColor: Color.fromARGB(255, 0, 0, 0),
             onTap: _onItemTapped,
           ),
         ),
