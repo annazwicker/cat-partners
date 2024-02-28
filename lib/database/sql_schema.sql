@@ -1,9 +1,3 @@
--- CREATE TABLE todos (
---     userid INT NOT NULL PRIMARY KEY AUTOINCREMENT,
---     title TEXT,
---     body TEXT,
---     category INT REFERENCES categories (id)
--- );
 
 CREATE TABLE users (
     userID INT NOT NULL PRIMARY KEY AUTOINCREMENT,
