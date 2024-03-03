@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:flutter_application_1/components/nav_bar.dart";
-import "package:flutter_application_1/const.dart";
 import 'package:flutter_application_1/pages/about_page.dart';
 import 'package:flutter_application_1/pages/account_page.dart';
 import 'package:flutter_application_1/pages/admin_page.dart';
@@ -14,14 +13,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    HomeScreen(),
-    AboutScreen(),
-    AdminScreen(),
-    FeederScreen(),
-    AccountScreen(),
+    const HomeScreen(),
+    const AboutScreen(),
+    const AdminScreen(),
+    const FeederScreen(),
+    const AccountScreen(),
   ];
 
   @override
@@ -33,9 +32,11 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text('Home Screen!!'),
     );
   }
