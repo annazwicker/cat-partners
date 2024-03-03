@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+
 void main() => runApp(const AccountScreen());
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+  const AccountScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    const appTitle = 'Form Validation Demo';
+    const appTitle = 'User Account Information';
 
     return MaterialApp(
       title: appTitle,
@@ -15,60 +17,61 @@ class AccountScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text(appTitle),
         ),
-        body: const MyCustomForm(),
+        body: AccountInfoForm(),
       ),
     );
   }
 }
 
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({super.key});
+class AccountInfoForm extends StatefulWidget {
+  const AccountInfoForm({Key? key});
 
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
+  AccountInfoFormState createState() {
+    return AccountInfoFormState();
   }
 }
 
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
+class AccountInfoFormState extends State<AccountInfoForm> {
   final _formKey = GlobalKey<FormState>();
+
+  String? _name;
+  String? _email;
+  String? _phoneNumber;
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextFormField(
-            // The validator receives the text that the user has entered.
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
+          _buildTextField('Name', 'Enter your name', (value) {
+            _name = value;
+          }),
+          _buildTextField('Email', 'Enter your email', (value) {
+            _email = value;
+          }),
+          _buildTextField('Phone Number', 'Enter your phone number', (value) {
+            _phoneNumber = value;
+          }),
+          _buildTextField('Status', 'Select your status', (value) {
+            _phoneNumber = value;
+          }),
+          _buildTextField('Rescue Group Affiliation', 'Enter your rescue group affiliation', (value) {
+            _phoneNumber = value;
+          }),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: ElevatedButton(
               onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
+
+                  // Process the collected data (you can send it to a server or save it in a database)
+                  print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber');
                 }
               },
               child: const Text('Submit'),
@@ -78,13 +81,42 @@ class MyCustomFormState extends State<MyCustomForm> {
       ),
     );
   }
-}
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text('Account Screen, test change'),
+
+  Widget _buildTextField(String title, String hintText, Function(String?) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          onChanged: onChanged,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter some text';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            hintText: hintText,
+          ),
+        ),
+        SizedBox(height: 10), // Add some spacing between fields
+      ],
     );
   }
-
 }
+
+
+// This was the original test code for the account page
+// keeping it here just in case, but likely will have no use for it.
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Text('Account Screen'),
+//     );
+//   }
+
+// }
