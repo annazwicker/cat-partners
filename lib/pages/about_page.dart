@@ -221,14 +221,14 @@ class AboutScreen extends StatelessWidget {
           height: 500,
           width: 850,
           color: const Color(0xFFFFCD00),
-          // child: TabBar(
-          //   tabs: [
-          //     Tab(icon: Icon(Icons.home), text: '1'),
-          //     Tab(icon: Icon(Icons.person), text: '2'),
-          //     Tab(icon: Icon(Icons.person), text: '3'),
-          //     Tab(icon: Icon(Icons.person), text: '4'),
-          //   ],
-          // )
+          child: TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.home), text: '1'),
+              Tab(icon: Icon(Icons.person), text: '2'),
+              Tab(icon: Icon(Icons.person), text: '3'),
+              Tab(icon: Icon(Icons.person), text: '4'),
+            ],
+          )
         ),
       ]
     );
