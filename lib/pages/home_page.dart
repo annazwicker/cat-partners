@@ -26,19 +26,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: _pages.length,
-      child: Scaffold(
-        appBar: AppBar(
-            backgroundColor: SUYellow,
-            title: Text('Southwestern Cat Partners'),
-            bottom: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
-                child: TopNavBar())),
-        body: TabBarView(
-          children: _pages,
-        ),
-      ),
+    return const MaterialApp(
+      home: TopNavBar(),
     );
   }
 }
