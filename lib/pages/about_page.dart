@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/const.dart'; 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,6 +11,7 @@ class AboutScreen extends StatelessWidget {
   final ScrollController _horizontal = ScrollController(); 
   final ScrollController _vertical = ScrollController();
   final ScrollController _hScrollCat = ScrollController();
+  late TabController _howToController;
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +47,9 @@ class AboutScreen extends StatelessWidget {
                     Container( // whitespace to separate top boxes from tabs
                       height: 40,
                       width: 10,
-                      color: const Color(0xFFFFFFFF)
+                      color: const Color(0xFFFFFFFF),
                     ),
-                    _buildHowToTabs(),
+                    NestedTabBar(),
                     Container( // whitespace after tabs
                       height: 40,
                       width: 10,
@@ -254,16 +256,90 @@ class AboutScreen extends StatelessWidget {
           height: 500,
           width: 850,
           color: const Color(0xFF828282),
-          // child: TabBar(
-          //   tabs: [
-          //     Tab(icon: Icon(Icons.home), text: '1'),
-          //     Tab(icon: Icon(Icons.person), text: '2'),
-          //     Tab(icon: Icon(Icons.person), text: '3'),
-          //     Tab(icon: Icon(Icons.person), text: '4'),
-          //   ],
-          // )
+          child: TabBar(
+            controller: _howToController,
+            tabs: const [
+              Tab(icon: Icon(Icons.home), text: '1'),
+              Tab(icon: Icon(Icons.person), text: '2'),
+              Tab(icon: Icon(Icons.person), text: '3'),
+              Tab(icon: Icon(Icons.person), text: '4'),
+            ],
+          )
         ),
       ]
+    );
+  }
+}
+class NestedTabBar extends StatefulWidget {
+  const NestedTabBar({super.key});
+  @override
+  // ignore: library_private_types_in_public_api
+  _NestedTabBarState createState() => _NestedTabBarState();
+}
+
+class _NestedTabBarState extends State<NestedTabBar>
+    with TickerProviderStateMixin {
+  late TabController _nestedTabController;
+  @override
+  void initState() {
+    super.initState();
+    _nestedTabController = TabController(length: 4, vsync: this);
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    _nestedTabController.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    int containerWidth;
+    int containerHeight;
+    {
+      if(screenWidth < 100){ // temp values, will change later
+        containerWidth = 80;
+      } else {
+        containerWidth = 200;
+      }
+    }
+    return Container(
+      height: 500,
+      width: 850,
+      color: const Color(0xFF828282),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TabBar(
+            tabAlignment: TabAlignment.center,
+            controller: _nestedTabController,
+            indicatorColor: Colors.black,
+            labelColor: SUYellow,
+            unselectedLabelColor: Colors.black54, // change to grey
+            isScrollable: true,
+            tabs: const [
+              Tab(icon: Icon(Icons.home), text: 'Home'),
+              Tab(icon: Icon(Icons.person), text: 'Admin'),
+              Tab(icon: Icon(Icons.person), text: 'Sign Up To Feed'),
+              Tab(icon: Icon(Icons.person), text: 'Account'),
+            ],
+          ),
+          SizedBox(
+            height: 400,
+            width: 810,
+            child: TabBarView(
+              controller: _nestedTabController,
+              children: const [ // containers with alignment
+                Text('hi'),
+                Text('hello'),
+                Text('pizza'),
+                Text('l')
+              ],
+            ),
+          )
+        ]
+      )
     );
   }
 }
