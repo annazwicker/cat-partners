@@ -36,7 +36,14 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Home Screen!!'),
+      child: Column(
+        children: [
+          Text('Home Screen!!'),
+          Text('Notifications'),
+          Text('Achievement Box'),
+          Text('Scheduler'),
+        ],
+      ),
     );
   }
 }
