@@ -91,3 +91,20 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Playfair Display
+      fonts:
+        - asset: fonts/PlayfairDisplay-Black.otf
+        - asset: fonts/PlayfairDisplay-BlackItalic.otf
+        - asset: fonts/PlayfairDisplay-Bold.otf
+        - asset: fonts/PlayfairDisplay-BoldItalic.otf
+        - asset: fonts/PlayfairDisplay-Italic.otf
+        - asset: fonts/PlayfairDisplay-Regular.otf
+    - family: Playfair DisplaySC
+      fonts:
+        - asset: fonts/PlayfairDisplaySC-Black.otf
+        - asset: fonts/PlayfairDisplaySC-BlackItalic.otf
+        - asset: fonts/PlayfairDisplaySC-Bold.otf
+        - asset: fonts/PlayfairDisplaySC-BoldItalic.otf
+        - asset: fonts/PlayfairDisplaySC-Italic.otf
+        - asset: fonts/PlayfairDisplaySC-Regular.otf

@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/const.dart'; 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,55 +10,46 @@ class AboutScreen extends StatelessWidget {
   final ScrollController _horizontal = ScrollController(); 
   final ScrollController _vertical = ScrollController();
   final ScrollController _hScrollCat = ScrollController();
-  late TabController _howToController;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(fontFamily: 'Playfair Display'), // SU font
       home: Scaffold( // basis of structure
         body: SingleChildScrollView(
-          controller: _vertical,
-          child: Scrollbar(
-            controller: _horizontal,
-            thumbVisibility: true,
-            trackVisibility: true,
-            child: Center( 
-              child: SingleChildScrollView(
-                controller: _horizontal,
-                scrollDirection: Axis.horizontal,
-                child: Column(  // starts widgets from top and goes down
-                  // puts each individual widget on a separate "line" -> Title, boxes, tabs
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [const Text('About This Site', 
-                              style: TextStyle(fontWeight: FontWeight.bold, height: 2, fontSize: 30 )),
-                    // puts things side to side
-                    Wrap(///////////////////////////////////////////////////// Wrap-to handle small screens
-                      spacing: 70,
-                      runSpacing: 40,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      runAlignment: WrapAlignment.spaceEvenly,
-                      children: [
-                        _buildIntro(),
-                        _buildCreditBox() 
-                      ]
-                    ),
-                    Container( // whitespace to separate top boxes from tabs
-                      height: 40,
-                      width: 10,
-                      color: const Color(0xFFFFFFFF),
-                    ),
-                    NestedTabBar(),
-                    Container( // whitespace after tabs
-                      height: 40,
-                      width: 10,
-                      color: const Color(0xFFFFFFFF)
-                    )
+          controller: _vertical, // handles vertical scrolling
+          child: Center( 
+            child: Column(  // starts widgets from top and goes down
+              // puts each individual widget on a separate "line" -> Title, boxes, tabs
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [const Text('About This Site', 
+                          style: TextStyle(fontWeight: FontWeight.bold, height: 2, fontSize: 30 )),
+                // puts things side to side
+                Wrap(///////////////////////////////////////////////////// Wrap-to handle small screens
+                  spacing: 70,
+                  runSpacing: 40,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  runAlignment: WrapAlignment.spaceEvenly,
+                  children: [
+                    _buildIntro(),
+                    _buildCreditBox() 
                   ]
+                ),
+                Container( // whitespace to separate top boxes from tabs
+                  height: 40,
+                  width: 10,
+                  color: const Color(0xFFFFFFFF),
+                ),
+                const NestedTabBar(), // handles the how-to section
+                Container( // whitespace after tabs
+                  height: 40,
+                  width: 10,
+                  color: const Color(0xFFFFFFFF)
                 )
-              ),
+              ]
             )
-          )
+          ),
         )
       )
     );
@@ -84,16 +74,17 @@ class AboutScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                RichText(
+                RichText(//////////////////////////////////////////// to add hyper link to SU cat partners page
                   text: TextSpan(
                     children: [
                       const TextSpan(
                         text: '    This site is the official Cat Partners Feeding website. This site is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the community cats on campus. To learn more about them and how to support them, go to their ', 
-                        style: TextStyle(fontSize: 14, color: Color.fromARGB(255, 0, 0, 0))
+                        style: TextStyle(fontSize: 14, fontFamily: 'Playfair Display', color: Color.fromARGB(255, 0, 0, 0))
                       ),
                       TextSpan(
                         text: 'official SU website page',
                         style: const TextStyle(
+                          fontFamily: 'Playfair Display',
                           color: Colors.blue,
                           decoration: TextDecoration.underline
                         ),
@@ -109,20 +100,20 @@ class AboutScreen extends StatelessWidget {
                       ),
                       const TextSpan(
                         text: '.', 
-                        style: TextStyle(fontSize: 14, color: Color.fromARGB(255, 0, 0, 0))
+                        style: TextStyle(fontSize: 14, fontFamily: 'Playfair Display', color: Color.fromARGB(255, 0, 0, 0))
                       )
                     ]
                   )
                 ),
-                Container(
-                    height: 40,
+                Container( ///////////// used to separate pictures and text
+                    height: 60,
                     width: 10,
                     color: const Color(0xFF828282)
                   ),
-                SizedBox(
+                SizedBox( ////////////////////////// to have all cat pictures
                   height: 100,
                   width: 340,
-                  child: Scrollbar(
+                  child: Scrollbar( /////// mini scroll for cat pics
                     controller: _hScrollCat,
                     thumbVisibility: true,
                     trackVisibility: true,
@@ -165,7 +156,6 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildCreditBox(){
-    // change - make boxes proportion change based on size
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -222,7 +212,7 @@ class AboutScreen extends StatelessWidget {
           top: 110,
           right: 70,
           child: Column(
-            children: [
+            children: [ ////////////// credits, please don't alter unless changing pictures
               const SizedBox(
                 height: 90,
                 width: 90,
@@ -248,28 +238,12 @@ class AboutScreen extends StatelessWidget {
       ],
     );
   }
-
-  Widget _buildHowToTabs(){
-    return Stack(
-      children: [
-        Container(
-          height: 500,
-          width: 850,
-          color: const Color(0xFF828282),
-          child: TabBar(
-            controller: _howToController,
-            tabs: const [
-              Tab(icon: Icon(Icons.home), text: '1'),
-              Tab(icon: Icon(Icons.person), text: '2'),
-              Tab(icon: Icon(Icons.person), text: '3'),
-              Tab(icon: Icon(Icons.person), text: '4'),
-            ],
-          )
-        ),
-      ]
-    );
-  }
 }
+
+
+/*
+  The following classes is for implementing the tabs bar for the how-to section
+*/
 class NestedTabBar extends StatefulWidget {
   const NestedTabBar({super.key});
   @override
@@ -283,7 +257,7 @@ class _NestedTabBarState extends State<NestedTabBar>
   @override
   void initState() {
     super.initState();
-    _nestedTabController = TabController(length: 4, vsync: this);
+    _nestedTabController = TabController(length: 4, vsync: this); // length: 4 = 4 tabs
   }
   @override
   void dispose() {
@@ -294,18 +268,26 @@ class _NestedTabBarState extends State<NestedTabBar>
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    int containerWidth;
-    int containerHeight;
+    double containerWidth;
+    double containerHeight;
+
+    // adjustable size of tabs section
     {
-      if(screenWidth < 100){ // temp values, will change later
-        containerWidth = 80;
+      if(screenWidth <= 410){ // temp values, will change later
+        containerWidth = 390;
+        containerHeight = 850;
+      } else if(screenWidth > 410 && screenWidth < 870){
+        containerWidth = screenWidth - 20;
+        containerHeight = -screenWidth + 1370;
       } else {
-        containerWidth = 200;
+        containerWidth = 850;
+        containerHeight = 500;
       }
     }
+
     return Container(
-      height: 500,
-      width: 850,
+      height: containerHeight,
+      width: containerWidth,
       color: const Color(0xFF828282),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -318,7 +300,7 @@ class _NestedTabBarState extends State<NestedTabBar>
             labelColor: SUYellow,
             unselectedLabelColor: Colors.black54, // change to grey
             isScrollable: true,
-            tabs: const [
+            tabs: const [ ///////////////// the tab options
               Tab(icon: Icon(Icons.home), text: 'Home'),
               Tab(icon: Icon(Icons.person), text: 'Admin'),
               Tab(icon: Icon(Icons.person), text: 'Sign Up To Feed'),
@@ -326,13 +308,27 @@ class _NestedTabBarState extends State<NestedTabBar>
             ],
           ),
           SizedBox(
-            height: 400,
-            width: 810,
-            child: TabBarView(
+            height: screenHeight-330,
+            width: screenWidth-80,
+            child: TabBarView( //////////////////////////what is contained in each tab, must match TabBar length
               controller: _nestedTabController,
               children: const [ // containers with alignment
-                Text('hi'),
-                Text('hello'),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('The Home page is where users will defualt towards when loging in.'),
+                    Text('Here you can view the current time slots filled in for the next few days.'),
+                    Text('Along with that, any news will also be viewable here as well.'),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', textAlign: TextAlign.center),
+                  ],
+                ),
                 Text('pizza'),
                 Text('l')
               ],
