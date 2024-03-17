@@ -44,6 +44,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
 
   @override
   Widget build(BuildContext context) {
+    // added extra padding around the form
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Form(
@@ -61,9 +62,8 @@ class AccountInfoFormState extends State<AccountInfoForm> {
               _buildTextField('Phone Number', 'Enter your phone number', (value) {
                 _phoneNumber = value;
               }),
-              // TODO: should not be a buildTextField, needs to be a dropdown
-              _buildTextField('Status', 'Select your status', (value) {
-                _status = value;
+              _buildDropdownField('Status', ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student'], (value) {
+              _status = value;
               }),
               _buildTextField('Rescue Group Affiliation', 'Enter your rescue group affiliation', (value) {
                 _rescuegroupaffiliation = value;
@@ -113,12 +113,40 @@ class AccountInfoFormState extends State<AccountInfoForm> {
             hintText: hintText,
           ),
         ),
-        SizedBox(height: 10), // Add some spacing between fields
+        SizedBox(height: 15), // Add some spacing between fields
       ],
     );
   }
 }
 
+
+  Widget _buildDropdownField(String title, List<String> options, Function(String?) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        DropdownButtonFormField<String>(
+          items: options.map((String option) {
+            return DropdownMenuItem<String>(
+              value: option,
+              child: Text(option),
+            );
+          }).toList(),
+          onChanged: onChanged,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please select an option';
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: 10),
+    ],
+  );
+}
 
 // This was the original test code for the account page
 // keeping it here just in case, but likely will have no use for it.
