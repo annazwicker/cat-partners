@@ -112,6 +112,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
           decoration: InputDecoration(
             hintText: hintText,
           ),
+          maxLines: null,
         ),
         SizedBox(height: 15), // Add some spacing between fields
       ],
