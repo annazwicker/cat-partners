@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         // alignment: AlignmentDirectional.center,
         children: [
           if (_isWindowOpen)
@@ -66,9 +67,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         icon: Icon(Icons.close)),
                   ),
-                  //Text overflows when there's too much in it
-                  Container(
-                      padding: EdgeInsets.all(8), child: Text('Notifications'))
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                          // margin: EdgeInsets.all(8),
+                          padding: EdgeInsets.only(
+                              top: 20, bottom: 45, left: 20, right: 20),
+                          child: Text(
+                              'The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and black striped pattern. This is usually caused by the contents being too big for the RenderFlex.')),
+                    ),
+                  )
                 ]),
               ),
             ),
