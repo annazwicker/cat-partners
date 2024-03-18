@@ -47,34 +47,43 @@ class _HomeScreenState extends State<HomeScreen> {
         // alignment: AlignmentDirectional.center,
         children: [
           if (_isWindowOpen)
-            Container(
-              margin: EdgeInsets.all(20),
-              color: SUYellow,
-              height: MediaQuery.of(context).size.height * 0.08,
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: Stack(alignment: AlignmentDirectional.center, children: [
-                Positioned(
-                  right: 0,
-                  top: 0,
-                  child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isWindowOpen = false;
-                        });
-                      },
-                      icon: Icon(Icons.close)),
-                ),
-                Positioned(child: Text('Notifications'))
-              ]),
+            IntrinsicHeight(
+              child: Container(
+                margin: EdgeInsets.all(20),
+                color: SUYellow,
+                width: MediaQuery.of(context).size.width * 0.75,
+                // height: MediaQuery.of(context).size.height * 0.08,
+                constraints: BoxConstraints(
+                    minHeight: MediaQuery.of(context).size.height * 0.08),
+                child: Column(children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isWindowOpen = false;
+                          });
+                        },
+                        icon: Icon(Icons.close)),
+                  ),
+                  //Text overflows when there's too much in it
+                  Container(
+                      padding: EdgeInsets.all(8), child: Text('Notifications'))
+                ]),
+              ),
             ),
           Align(
               alignment: Alignment.centerLeft,
               child: Container(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.width * 0.1,
                   color: SUYellow,
                   margin: EdgeInsets.all(20),
                   padding: EdgeInsets.all(20),
                   child: Text('Achievement Box'))),
           Container(
+              width: MediaQuery.of(context).size.width * 0.75,
+              height: MediaQuery.of(context).size.width * 0.3,
               color: SUYellow,
               margin: EdgeInsets.all(20),
               padding: EdgeInsets.all(20),
