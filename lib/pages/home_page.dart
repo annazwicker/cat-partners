@@ -32,16 +32,48 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  bool _isWindowOpen = true;
+
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
+      child: Stack(
+        alignment: AlignmentDirectional.center,
         children: [
-          Text('Home Screen!!'),
-          Text('Notifications'),
-          Text('Achievement Box'),
-          Text('Scheduler'),
+          if (_isWindowOpen)
+            Positioned(
+                top: 25,
+                child: Container(
+                  color: SUYellow,
+                  height: MediaQuery.of(context).size.height * 0.08,
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child:
+                      Stack(alignment: AlignmentDirectional.center, children: [
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isWindowOpen = false;
+                            });
+                          },
+                          icon: Icon(Icons.close)),
+                    ),
+                    Positioned(child: Text('Notifications'))
+                  ]),
+                )),
+          Positioned(top: 0, left: 25, child: Text('Achievement Box')),
+          Positioned(
+            top: 150,
+            child: Text('Scheduler'),
+          ),
         ],
       ),
     );
