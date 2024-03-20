@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/const.dart'; 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -106,12 +108,12 @@ class AboutScreen extends StatelessWidget {
                   )
                 ),
                 Container( ///////////// used to separate pictures and text
-                    height: 60,
+                    height: 40,
                     width: 10,
                     color: const Color(0xFF828282)
                   ),
                 SizedBox( ////////////////////////// to have all cat pictures
-                  height: 100,
+                  height: 130,
                   width: 340,
                   child: Scrollbar( /////// mini scroll for cat pics
                     controller: _hScrollCat,
@@ -290,8 +292,6 @@ class _NestedTabBarState extends State<NestedTabBar>
       width: containerWidth,
       color: const Color(0xFF828282),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TabBar(
             tabAlignment: TabAlignment.center,
@@ -307,33 +307,57 @@ class _NestedTabBarState extends State<NestedTabBar>
               Tab(icon: Icon(Icons.person), text: 'Account'),
             ],
           ),
-          SizedBox(
-            height: screenHeight-330,
-            width: screenWidth-80,
-            child: TabBarView( //////////////////////////what is contained in each tab, must match TabBar length
-              controller: _nestedTabController,
-              children: const [ // containers with alignment
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('The Home page is where users will defualt towards when loging in.'),
-                    Text('Here you can view the current time slots filled in for the next few days.'),
-                    Text('Along with that, any news will also be viewable here as well.'),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', textAlign: TextAlign.center),
-                  ],
-                ),
-                Text('pizza'),
-                Text('l')
-              ],
-            ),
-          )
+          TabBarView( //////////////////////////what is contained in each tab, must match TabBar length
+            controller: _nestedTabController,
+            children: const [ // containers with alignment
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('The Home page is where users will defualt towards when loging in.', style: TextStyle(fontSize: 18),),
+                  Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),),
+                  Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                  Text('', style: TextStyle(fontSize: 18),),
+                  Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                  Text(''),
+                  Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),),
+                ],
+              ),
+              Column(
+                children: [
+                  Text('The Account page is where information about you is stored', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                  Text('This information can be changed depending on your current status, either by yourself or by the admins(should need be)', style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
+                  Text('Here are the following information categories:', style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
+                  // Expanded(
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Text('Name: This should be the name that the school has and/or your preferred name',style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
+                  //       Text("Email: How the admins can contact you. It doesn't have to be your school email(especially for alumnai and other individuals)", style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
+                  //       Text('Phone Number: How admins can contact you', style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
+                  //       Text('Status: What is your affliation with the school and organization. Can change', style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
+                  //       Text('Notifications: Mark whether or not you want to be notified of time slots or other important things', style: TextStyle(fontSize: 18), textAlign: TextAlign.left)
+                  //     ],
+                  //   ),
+                  // )
+                ],
+              )
+            ],
+          ),
         ]
       )
     );
