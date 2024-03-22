@@ -47,6 +47,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
+  # to use a hyperlink in text
+  url_launcher: ^6.2.5
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -59,9 +62,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - images/testPfp.jpg
+    - images/testCat.PNG
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -88,3 +91,20 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Playfair Display
+      fonts:
+        - asset: fonts/PlayfairDisplay-Black.otf
+        - asset: fonts/PlayfairDisplay-BlackItalic.otf
+        - asset: fonts/PlayfairDisplay-Bold.otf
+        - asset: fonts/PlayfairDisplay-BoldItalic.otf
+        - asset: fonts/PlayfairDisplay-Italic.otf
+        - asset: fonts/PlayfairDisplay-Regular.otf
+    - family: Playfair DisplaySC
+      fonts:
+        - asset: fonts/PlayfairDisplaySC-Black.otf
+        - asset: fonts/PlayfairDisplaySC-BlackItalic.otf
+        - asset: fonts/PlayfairDisplaySC-Bold.otf
+        - asset: fonts/PlayfairDisplaySC-BoldItalic.otf
+        - asset: fonts/PlayfairDisplaySC-Italic.otf
+        - asset: fonts/PlayfairDisplaySC-Regular.otf
