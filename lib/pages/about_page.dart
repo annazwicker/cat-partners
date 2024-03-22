@@ -115,7 +115,7 @@ class AboutScreen extends StatelessWidget {
               const Text('    This site was created during the Spring semester of 2024 as part of a Computer Science Capstone project. Along with input from Cat Partners, Anna Wicker, Jayfen Beauchua, Yunhyeong "Daniel" Na, and Marlon Mata were able to make this site possible', 
                 style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0))),
               Container( ///////////// used to separate pictures and text
-                  height: 30,
+                  height: 10,
                   width: 10,
                   color: const Color(0xFF828282)
                 ),
@@ -139,7 +139,7 @@ class AboutScreen extends StatelessWidget {
   Widget _horizontalCatPics(double currentWidth){
     return SizedBox( ////////////////////////// to have all cat pictures
         height: 150,
-        width: currentWidth-50,
+        width: currentWidth-150,
       child: Scrollbar( /////// mini scroll for cat pics
           controller: _ScrollCat,
           thumbVisibility: true,
@@ -189,8 +189,8 @@ class AboutScreen extends StatelessWidget {
 
   Widget _verticalCatPics(double currentHeight){
     return SizedBox( ////////////////////////// to have all cat pictures
-        height: currentHeight-390,
-        width: 180,
+        height: currentHeight-370,
+        width: 310,
       child: Scrollbar( /////// mini scroll for cat pics
           controller: _ScrollCat,
           thumbVisibility: true,
@@ -204,37 +204,46 @@ class AboutScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children:[
                   SizedBox(
-                    height: 170,
-                    width: 170,
+                    height: 150,
+                    width: 150,
                     child: Image(image: AssetImage('images/testCat.PNG'))
                   ),
                   SizedBox(
-                    height: 170,
-                    width: 170,
+                    height: 150,
+                    width: 150,
                     child: Image(image: AssetImage('images/testCat.PNG'))
                   ),
                 ]
               ),
-              
-              SizedBox(
-                height: 170,
-                width: 170,
-                child: Image(image: AssetImage('images/testCat.PNG'))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: Image(image: AssetImage('images/testCat.PNG'))
+                  ),
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: Image(image: AssetImage('images/testCat.PNG'))
+                  ),
+                ]
               ),
-              SizedBox(
-                height: 170,
-                width: 170,
-                child: Image(image: AssetImage('images/testCat.PNG'))
-              ),
-              SizedBox(
-                height: 170,
-                width: 170,
-                child: Image(image: AssetImage('images/testCat.PNG'))
-              ),
-              SizedBox(
-                height: 170,
-                width: 170,
-                child: Image(image: AssetImage('images/testCat.PNG'))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: Image(image: AssetImage('images/testCat.PNG'))
+                  ),
+                  SizedBox(
+                    height: 150,
+                    width: 150,
+                    child: Image(image: AssetImage('images/testCat.PNG'))
+                  ),
+                ]
               ),
               // add text
             ]
@@ -321,10 +330,10 @@ class _NestedTabBarState extends State<NestedTabBar>
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Home page is where users will defualt towards when loging in.', style: TextStyle(fontSize: 18),),
+                      child: Text('The Home page is where users will defualt towards when loging in.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     ),
-                    Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),),
-                    Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),),
+                    Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
                 ),
                 Column( ///// Add padding
@@ -336,7 +345,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                       child: Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                     ),
                     Text('', style: TextStyle(fontSize: 18),),
-                    Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),),
+                    Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
                 ),
                 Column(
