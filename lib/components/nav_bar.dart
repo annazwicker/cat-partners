@@ -18,12 +18,12 @@ class _TopNavBarState extends State<TopNavBar> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    AboutScreen(),
-    AdminScreen(),
-    FeederScreen(),
-    AccountScreen(),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomeScreen(),
+    const AboutScreen(),
+    const AdminScreen(),
+    const FeederScreen(),
+    const AccountScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -39,7 +39,7 @@ class _TopNavBarState extends State<TopNavBar> {
         backgroundColor: SUYellow,
         title: const Text('Southwestern Cat Partners'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
+          preferredSize: const Size.fromHeight(kToolbarHeight),
           child: BottomNavigationBar(
             backgroundColor: SUYellow,
             type: BottomNavigationBarType.fixed,
@@ -72,7 +72,7 @@ class _TopNavBarState extends State<TopNavBar> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Color.fromARGB(255, 0, 0, 0),
+            selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
             onTap: _onItemTapped,
           ),
         ),
