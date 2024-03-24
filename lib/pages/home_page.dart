@@ -4,6 +4,7 @@ import 'package:flutter_application_1/pages/about_page.dart';
 import 'package:flutter_application_1/pages/account_page.dart';
 import 'package:flutter_application_1/pages/admin_page.dart';
 import 'package:flutter_application_1/pages/feeder_page.dart';
+import 'package:flutter_application_1/const.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   final int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const HomeScreen(),
+    HomeScreen(),
     const AboutScreen(),
     const AdminScreen(),
     const FeederScreen(),
