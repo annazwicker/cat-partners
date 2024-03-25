@@ -121,7 +121,7 @@ class AboutScreen extends StatelessWidget {
                 ),
                 Builder( /////// builder - to add an if-else statement depending on window size
                   builder: (context){ /// context -> window stuff
-                    if(screenWidth < 620){
+                    if(screenWidth < 700){
                       return _verticalCatPics(containerHeight);
                     } else {
                       return _horizontalCatPics(containerWidth);
@@ -189,7 +189,7 @@ class AboutScreen extends StatelessWidget {
 
   Widget _verticalCatPics(double currentHeight){
     return SizedBox( ////////////////////////// to have all cat pictures
-        height: currentHeight-370,
+        height: currentHeight-340,
         width: 310,
       child: Scrollbar( /////// mini scroll for cat pics
           controller: _ScrollCat,
@@ -288,13 +288,14 @@ class _NestedTabBarState extends State<NestedTabBar>
     {
       if(screenWidth <= 410){
         containerWidth = 390;
-        containerHeight = 850;
-      } else if(screenWidth > 410 && screenWidth < 870){
+        containerHeight = 800;
+      } else if(screenWidth > 410 && screenWidth < 880){
+        double temp = 800 + ((57/94) * 410);
         containerWidth = screenWidth - 20;
-        containerHeight = -screenWidth + 1370;
+        containerHeight = ((-57/94) * screenWidth) + temp;
       } else {
-        containerWidth = 850;
-        containerHeight = 500;
+        containerWidth = 860;
+        containerHeight = 515;
       }
     }
 
@@ -321,10 +322,10 @@ class _NestedTabBarState extends State<NestedTabBar>
           SizedBox( // contents of tabs
             height: containerHeight-100,
             width: containerWidth-80,
-            child: TabBarView( //////////////////////////what is contained in each tab, must match TabBar length
+            child: TabBarView( //////////////////////////what is contained in each tab, children amount must match TabBar length
               controller: _nestedTabController, // same controller
-              children: const [
-                Column(
+              children: [
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -336,50 +337,98 @@ class _NestedTabBarState extends State<NestedTabBar>
                     Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
                 ),
-                Column( ///// Add padding
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                const Column( ///// Add padding
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                     ),
-                    Text('', style: TextStyle(fontSize: 18),),
                     Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                const Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                      child: Text('This is where you can sign up for feeding slots and view taken and open slots.', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                     ),
-                    Text(''),
-                    Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),),
+                    Text('You have the option to apply for multiple slots at the same time.', style: TextStyle(fontSize: 18),),
+                    Text('Some things to take note are:', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
                 ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Account page is where information about you is stored', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                      child: Text('The Account page is where information about you is stored', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
                     ),
-                    Text('This information can be changed depending on your current status, either by yourself or by the admins(should need be)', style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
-                    Text('Here are the following information categories:', style: TextStyle(fontSize: 18), textAlign: TextAlign.center,),
-                    // Expanded(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Text('Name: This should be the name that the school has and/or your preferred name',style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                    //       Text("Email: How the admins can contact you. It doesn't have to be your school email(especially for alumnai and other individuals)", style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                    //       Text('Phone Number: How admins can contact you', style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                    //       Text('Status: What is your affliation with the school and organization. Can change', style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                    //       Text('Notifications: Mark whether or not you want to be notified of time slots or other important things', style: TextStyle(fontSize: 18), textAlign: TextAlign.left)
-                    //     ],
-                    //   ),
-                    // )
+                    const Text('This information can be changed depending on your current status, either by yourself or by the admins(should need be)', style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                      child: Text('Here are the following information categories:', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Name: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'This is what other people will see on the feeding sign up and home page. It should be the name the school has or your preferred name', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      textAlign: TextAlign.left,
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'This is how anyone can contact you(mainly the admins). Fortuantely, it is not required for the email to be the school-provided email, but it does have the be a gmail account.', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      textAlign: TextAlign.left,
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Phone Number: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'Another method of contact. Mostly for immediate contact', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Status: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'Your current relation with the school based on a list of available options. Make sure this gets updated when something changes(i.e. graduation)', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Profile Picture: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'A nice image to identify yourself from others, so long as it is school-appropriate.', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(text: 'Make sure all the information here is up-to-date and that you press submit to lock in any changes.', 
+                            style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                          ]
+                        )
+                      ),
+                    ),
                   ],
                 )
               ],
