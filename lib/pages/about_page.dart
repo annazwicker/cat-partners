@@ -8,7 +8,7 @@ class AboutScreen extends StatelessWidget {
   AboutScreen({super.key, Key? keyInstance});
   // stores ScrollControllers with labeled names
   final ScrollController _vertical = ScrollController();
-  final ScrollController _ScrollCat = ScrollController();
+  final ScrollController _scrollCat = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class AboutScreen extends StatelessWidget {
                       text: 'official SU website page',
                       style: const TextStyle(
                         fontFamily: 'Playfair Display',
-                        color: Colors.blue,
+                        color: Color.fromARGB(255, 3, 132, 239),
                         decoration: TextDecoration.underline,
                         fontSize: 16
                       ),
@@ -141,12 +141,12 @@ class AboutScreen extends StatelessWidget {
         height: 150,
         width: currentWidth-150,
       child: Scrollbar( /////// mini scroll for cat pics
-          controller: _ScrollCat,
+          controller: _scrollCat,
           thumbVisibility: true,
           trackVisibility: true,
           child: ListView(
             scrollDirection: Axis.horizontal,
-            controller: _ScrollCat,
+            controller: _scrollCat,
             children: const [
               // put images in componenets 
               // perhaps change it so images uploaded can be brought into here
@@ -192,12 +192,12 @@ class AboutScreen extends StatelessWidget {
         height: currentHeight-340,
         width: 310,
       child: Scrollbar( /////// mini scroll for cat pics
-          controller: _ScrollCat,
+          controller: _scrollCat,
           thumbVisibility: true,
           trackVisibility: true,
           child: ListView(
             scrollDirection: Axis.vertical,
-            controller: _ScrollCat,
+            controller: _scrollCat,
             children: const [
               // put images in componenets 
               Row(
