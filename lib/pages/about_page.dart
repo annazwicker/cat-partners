@@ -3,10 +3,10 @@ import "package:flutter/material.dart";
 import 'package:flutter_application_1/const.dart'; 
 // ignore: depend_on_referenced_packages
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:file_picker/file_picker.dart';
 
 //comment
-// Done by Marlon Mata 
+// Done by Marlon Maat 
 class AboutScreen extends StatelessWidget {
   AboutScreen({super.key, Key? keyInstance});
   // stores ScrollControllers with labeled names
@@ -76,8 +76,8 @@ class AboutScreen extends StatelessWidget {
         ),
         // help position text, Positioned only works within Stack
         Positioned(// to position text
-          child: SizedBox(//////////////////////////////// Container - to enclose text
-            height: containerHeight-20,
+          child: SizedBox(//////////////////////////////// Container - to enclose everything
+            height: containerHeight-10,
             width: containerWidth-20,
             child: Column(///////////////////////////////// Column - help align text
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -115,7 +115,7 @@ class AboutScreen extends StatelessWidget {
                   ]
                 )
               ),
-              const Text('    This site was created during the Spring semester of 2024 as part of a Computer Science Capstone project. Along with input from Cat Partners, Anna Wicker, Jayfen Beauchua, Yunhyeong "Daniel" Na, and Marlon Mata were able to make this site possible', 
+              const Text('    This site was created during the Spring semester of 2024 as part of a Computer Science Capstone project. Along with input from Cat Partners, Anna Wicker, Jayden Beauchea, Yunhyeong "Daniel" Na, and Marlon Mata were able to make this site possible', 
                 style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0))),
               Container( ///////////// used to separate pictures and text
                   height: 10,
@@ -129,6 +129,17 @@ class AboutScreen extends StatelessWidget {
                     } else {
                       return _horizontalCatPics(containerWidth);
                     }
+                  }
+                ),
+                const SizedBox(
+                  width: 5,
+                  height: 2,
+                ),
+                Builder( /////// builder - to add an if-else statement depending on window size
+                  builder: (context){ /// context -> window stuff
+                    //if(isAdmin){
+                      return _createButtons();
+                    //}
                   }
                 )
               ],
@@ -254,6 +265,23 @@ class AboutScreen extends StatelessWidget {
         )
     );
   }
+
+  Widget _createButtons() {
+    return TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: SUYellow,
+      ),
+      onPressed: () async {
+        FilePickerResult? result = await FilePicker.platform.pickFiles();
+        if (result != null) {
+
+        } 
+      }, 
+      child: const Text("Upload an image", style: TextStyle(fontSize: 12),)
+    );
+  }
+  
+  
 }
 
 
