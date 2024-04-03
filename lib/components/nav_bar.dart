@@ -20,7 +20,7 @@ class _TopNavBarState extends State<TopNavBar> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    const AboutScreen(),
+    AboutScreen(),
     const AdminScreen(),
     const FeederScreen(),
     const AccountScreen(),
