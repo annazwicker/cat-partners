@@ -6,6 +6,10 @@ import 'package:flutter_application_1/pages/admin_page.dart';
 import 'package:flutter_application_1/pages/feeder_page.dart';
 import 'package:flutter_application_1/const.dart';
 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_application_1/pages/album_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 

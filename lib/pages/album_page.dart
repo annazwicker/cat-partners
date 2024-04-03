@@ -47,16 +47,16 @@ class Album {
   }
 }
 
-class AdminScreen extends StatefulWidget {
-  const AdminScreen({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  State<AdminScreen> createState() {
-    return _AdminScreenState();
+  State<MyApp> createState() {
+    return _MyAppState();
   }
 }
 
-class _AdminScreenState extends State<AdminScreen> {
+class _MyAppState extends State<MyApp> {
   final TextEditingController _controller = TextEditingController();
   Future<Album>? _futureAlbum;
 
