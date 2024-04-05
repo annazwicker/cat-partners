@@ -6,9 +6,6 @@ import 'package:flutter_application_1/pages/admin_page.dart';
 import 'package:flutter_application_1/pages/feeder_page.dart';
 import 'package:flutter_application_1/const.dart';
 
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_application_1/pages/album_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   final int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    HomeScreen(),
+    const HomeScreen(),
     AboutScreen(),
     const AdminScreen(),
     const FeederScreen(),
@@ -37,6 +34,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -45,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   bool _isWindowOpen = true;
 
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
           if (_isWindowOpen)
             IntrinsicHeight(
               child: Container(
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 color: SUYellow,
                 width: MediaQuery.of(context).size.width * 0.75,
                 // height: MediaQuery.of(context).size.height * 0.08,
@@ -69,15 +69,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             _isWindowOpen = false;
                           });
                         },
-                        icon: Icon(Icons.close)),
+                        icon: const Icon(Icons.close)),
                   ),
                   Expanded(
                     child: Center(
                       child: Container(
                           // margin: EdgeInsets.all(8),
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               top: 20, bottom: 45, left: 20, right: 20),
-                          child: Text(
+                          child: const Text(
                               'The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and black striped pattern. This is usually caused by the contents being too big for the RenderFlex.')),
                     ),
                   )
@@ -90,16 +90,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: MediaQuery.of(context).size.width * 0.3,
                   height: MediaQuery.of(context).size.width * 0.1,
                   color: SUYellow,
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.all(20),
-                  child: Text('Achievement Box'))),
+                  margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
+                  child: const Text('Achievement Box'))),
           Container(
               width: MediaQuery.of(context).size.width * 0.75,
               height: MediaQuery.of(context).size.width * 0.3,
               color: SUYellow,
-              margin: EdgeInsets.all(20),
-              padding: EdgeInsets.all(20),
-              child: Text('Scheduler')),
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
+              child: const Text('Scheduler')),
         ],
       ),
     );
