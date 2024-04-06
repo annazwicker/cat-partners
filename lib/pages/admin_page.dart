@@ -4,14 +4,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+
+
 Future<Album> createAlbum(String title) async {
   final response = await http.post(
-    Uri.parse('https://jsonplaceholder.typicode.com/albums'),
+    Uri.parse('https://us-central1-catpartners.cloudfunctions.net/get-catpartner/'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Max-Age": "3600",
     },
     body: jsonEncode(<String, String>{
-      'title': title,
+      "message": "Hello World"
     }),
   );
 
