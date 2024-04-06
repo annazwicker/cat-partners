@@ -18,12 +18,12 @@ class _TopNavBarState extends State<TopNavBar> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static List<Widget> _widgetOptions = <Widget>[
+  final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     AboutScreen(),
     AdminScreen(),
     FeederScreen(),
-    AccountScreen(),
+    const AccountScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -77,7 +77,7 @@ class _TopNavBarState extends State<TopNavBar> {
           ),
         ),
       ),
-      body: Center(
+      body: Center( 
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
     );

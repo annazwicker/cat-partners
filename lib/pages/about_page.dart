@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:file_picker/file_picker.dart';
 
 //comment
-// Done by Marlon Maat 
+// Done by Marlon Mata 
 class AboutScreen extends StatelessWidget {
   AboutScreen({super.key, Key? keyInstance});
   // stores ScrollControllers with labeled names
@@ -135,13 +135,6 @@ class AboutScreen extends StatelessWidget {
                   width: 5,
                   height: 2,
                 ),
-                Builder( /////// builder - to add an if-else statement depending on window size
-                  builder: (context){ /// context -> window stuff
-                    //if(isAdmin){
-                      return _createButtons();
-                    //}
-                  }
-                )
               ],
             ),
           ),
@@ -265,23 +258,6 @@ class AboutScreen extends StatelessWidget {
         )
     );
   }
-
-  Widget _createButtons() {
-    return TextButton(
-      style: TextButton.styleFrom(
-        backgroundColor: SUYellow,
-      ),
-      onPressed: () async {
-        FilePickerResult? result = await FilePicker.platform.pickFiles();
-        if (result != null) {
-
-        } 
-      }, 
-      child: const Text("Upload an image", style: TextStyle(fontSize: 12),)
-    );
-  }
-  
-  
 }
 
 
