@@ -18,19 +18,19 @@ Future<Album> createAlbum(String title) async {
         'title': title,
       }),
     );
-  final response = await http.post(
-    Uri.parse('https://us-central1-catpartners.cloudfunctions.net/get-catpartner/'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Max-Age": "3600",
-    },
-    body: jsonEncode(<String, String>{
-      "message": "Hello World"
-    }),
-  );
+  // final response = await http.post(
+  //   Uri.parse('https://us-central1-catpartners.cloudfunctions.net/get-catpartner'),
+  //   headers: <String, String>{
+  //     'Content-Type': 'application/json; charset=UTF-8',
+  //     "Access-Control-Allow-Origin": "*",
+  //     "Access-Control-Allow-Methods": "POST",
+  //     "Access-Control-Allow-Headers": "Content-Type",
+  //     "Access-Control-Max-Age": "3600",
+  //   },
+  //   body: jsonEncode(<String, String>{
+  //     "message": "Hello World"
+  //   }),
+  // );
 
     if (response.statusCode == 200) {
       return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
