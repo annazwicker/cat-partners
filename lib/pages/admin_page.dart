@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_functions/cloud_functions.dart';
 
+import 'package:http/http.dart' as http;
+
 
 //initialize client SDK
 final functions = FirebaseFunctions.instance;
@@ -13,17 +15,23 @@ final functions = FirebaseFunctions.instance;
 
 
 
-Future<List<dynamic>> getFruit() async {
+Future<void> getFruit() async {
   try {
-    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('on_request_example');
-    final results = await callable();
-    final reqData = results.data;
-    print("result: $reqData");
-    if (reqData is List<dynamic>) {
-      return reqData;
-    } else {
-      throw Exception('Unexpected data format returned from Cloud Function');
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('hello_pubsub');
+    final response = await callable();
+    
+    if(response.data != null){
+      print(response.data);
     }
+    
+
+    // final reqData = results.data;
+    // print("result: $reqData");
+    // if (reqData is List<dynamic>) {
+    //   return reqData;
+    // } else {
+    //   throw Exception('Unexpected data format returned from Cloud Function');
+    // }
   } catch (e) {
     print("Error calling Cloud Function: $e");
     throw Exception('Failed to get fruit: $e');
@@ -56,9 +64,7 @@ class _AdminScreenState extends State<AdminScreen> {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _futureFruit = getFruit();
-                });
+                getFruit();
               },
               child: Text('Get Fruit'),
             ),

@@ -21,11 +21,20 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -51,31 +60,5 @@ class DefaultFirebaseOptions {
     authDomain: 'catpartners.firebaseapp.com',
     storageBucket: 'catpartners.appspot.com',
     measurementId: 'G-L99DCXZ5X1',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBs9drKqZhpP7tLfEky5GBnQzqmtwGtfyc',
-    appId: '1:519338738024:android:b2eafbb15dac4cdab516dd',
-    messagingSenderId: '519338738024',
-    projectId: 'catpartners',
-    storageBucket: 'catpartners.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAg46bvw8IYU-9QTsY9xP-qKrFCxfluj-Y',
-    appId: '1:519338738024:ios:e2a3e743a10e9af1b516dd',
-    messagingSenderId: '519338738024',
-    projectId: 'catpartners',
-    storageBucket: 'catpartners.appspot.com',
-    iosBundleId: 'com.example.flutterApplication1',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAg46bvw8IYU-9QTsY9xP-qKrFCxfluj-Y',
-    appId: '1:519338738024:ios:d519427946f3d455b516dd',
-    messagingSenderId: '519338738024',
-    projectId: 'catpartners',
-    storageBucket: 'catpartners.appspot.com',
-    iosBundleId: 'com.example.flutterApplication1.RunnerTests',
   );
 }
