@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 // Stations + cats
 final List<int> testStationIDs = [0, 1, 2];
 final Map<int, Map<String, dynamic>> testStationData = {
@@ -14,6 +16,9 @@ final Map<int, Map<String, dynamic>> testStationData = {
     'cats': ['Gray Mama', 'Itty Bitty', 'Gaia', 'Teddy']
   },
 };
+
+
+var format = DateFormat('yyyy-MM-dd');
 
 // TODO REPLACE with call to DB
 final List<String> listOfStations = ['Caskey', 'Mabee', 'Admin'];
