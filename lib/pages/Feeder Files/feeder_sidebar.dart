@@ -24,6 +24,13 @@ class _FeederSidebarState extends State<FeederSidebar> {
 
   @override void initState() {
     // TODO: implement initState
+
+    // DEBUG: Change placeholder string.
+    widget.controller.addListener(() {
+      setState(() {
+        placeholderString = widget.controller.testStr;
+      });
+    });
     super.initState();
   }
 

@@ -17,5 +17,13 @@ class FeederController extends ChangeNotifier {
 
   // Entry view
   late Map<String, dynamic>? currentEntry;
+
+  // Debug
+  late String testStr;
+
+  void setString(String newString){
+    testStr = newString;
+    notifyListeners();
+  }
   
 }

@@ -194,8 +194,7 @@ class _FeederTableState extends State<FeederTable> {
   TableCell buildEntryCell(String feederName){
     GestureDetector g = GestureDetector(
       onTap: () {
-        // TODO can't print :(
-        print('aiee!!');
+        widget.controller.setString(feederName); // TODO DEBUG
       },
       child: Text(feederName)
     );
