@@ -37,12 +37,35 @@ class _FeederSidebarState extends State<FeederSidebar> {
 
   @override
   Widget build(BuildContext context) {
+    widget.controller.checkState();
+    Widget body = switch (widget.controller.currentState){
+      PageState.empty => defaultBody(),
+      PageState.select => selectBody(),
+      PageState.view => viewBody(),
+    };
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sidebar title'),
         ),
-      body: Text(placeholderString),
+      body: body,
     );
+  }
+
+  Widget viewBody(){
+    // Will hold basic structure of view mode sidebar
+    return Text(placeholderString);
+  }
+
+  Widget selectBody(){
+    // Will hold basic structure of selection mode sidebar
+    Map<String, dynamic> currentEntry = widget.controller.currentEntry!;
+    return Text(placeholderString);
+
+  }
+
+  Widget defaultBody(){
+    // Will hold basic structure of default (empty) sidebar
+    return Text(placeholderString);
   }
 
   selectCell(String placeholder) {

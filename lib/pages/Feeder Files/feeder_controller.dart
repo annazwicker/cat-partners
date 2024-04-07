@@ -25,5 +25,16 @@ class FeederController extends ChangeNotifier {
     testStr = newString;
     notifyListeners();
   }
+
+  /// Asserts that, for the Controller's current state, certain variables 
+  /// are in order.
+  void checkState(){
+    // TODO create an empty list for select view if list is null
+    switch (currentState){
+      case PageState.view:
+        assert (currentEntry != null);
+      default:
+    }
+  }
   
 }
