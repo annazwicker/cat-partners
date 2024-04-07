@@ -168,12 +168,11 @@ class _FeederTableState extends State<FeederTable> {
     String formattedDate = format.format(rowData['date']);
     cells.add(buildCell(Text(formattedDate)));
     for (var entry in rowData['data']) {
-      // Display user's name  
-      if (entry[feedIDString] != null) {
-        cells.add(buildEntryCell(entry[feedIDString]));
-      } else {
-        cells.add(buildEntryCell(''));
-      }
+      // CellWrapper holds all cell data
+      cells.add(buildCell(CellWrapper(
+        data: entry, 
+        controller: widget.controller
+      )));
     }
     return TableRow(
       children: cells
@@ -201,3 +200,40 @@ class _FeederTableState extends State<FeederTable> {
     return buildCell(g);
   }
 }
+
+/// Wrapper Widget with Cell contents
+class CellWrapper extends StatelessWidget{
+  const CellWrapper({super.key,
+  required this.data,
+  required this.controller});
+
+  // TODO ought to be an entryID to a shared data from DB call
+  final Map<String, dynamic> data;
+  final FeederController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    String feederName = optToString(data[feedIDString]);
+    return GestureDetector(
+      onTap: () {
+        controller.setString(feederName); 
+      },
+      child: Text(feederName)
+    );
+  }
+
+}
+
+/// Given a piece of data that may be a String or null, returns that data.
+/// Returns '' if the data is null.
+String optToString(String? maybeString){
+  if (maybeString == null) {
+    return ''; 
+  }
+  else {
+    return maybeString;
+  }
+}
+
+
+
