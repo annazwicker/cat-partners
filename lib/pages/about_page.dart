@@ -94,7 +94,7 @@ class AboutScreen extends StatelessWidget {
                       text: 'official SU website page',
                       style: const TextStyle(
                         fontFamily: 'Playfair Display',
-                        color: Color.fromARGB(255, 3, 132, 239),
+                        color: Color.fromARGB(255, 68, 169, 252),
                         decoration: TextDecoration.underline,
                         fontSize: 16
                       ),
