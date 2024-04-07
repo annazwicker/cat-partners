@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
+import 'package:flutter_application_1/pages/Feeder%20Files/feeder_table.dart';
+import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart';
 
 class FeederSidebar extends StatefulWidget {
   const FeederSidebar({
@@ -43,29 +45,49 @@ class _FeederSidebarState extends State<FeederSidebar> {
       PageState.select => selectBody(),
       PageState.view => viewBody(),
     };
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sidebar title'),
-        ),
-      body: body,
-    );
+    return body;
   }
 
   Widget viewBody(){
     // Will hold basic structure of view mode sidebar
-    return Text(placeholderString);
+    Map<String, dynamic> currentEntry = widget.controller.currentEntry!;
+    return Scaffold( 
+      appBar: AppBar(
+        title: const Text('Entry'),
+        ),
+      body: Center( child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Text(format.format(currentEntry['date'])),
+          Row(
+            children: <Widget>[
+              Text(optToString(currentEntry[feedIDString])),
+              const Text('button placeholder!'),
+            ]
+          ),
+          Text(optToString(currentEntry[noteIDString])),
+        ]
+    )));
   }
 
   Widget selectBody(){
-    // Will hold basic structure of selection mode sidebar
-    Map<String, dynamic> currentEntry = widget.controller.currentEntry!;
-    return Text(placeholderString);
-
+    // Will hold basic structure of select mode sidebar
+    return Scaffold( 
+      appBar: AppBar(
+        title: const Text('Select'),
+        ), 
+      body: Text(placeholderString)
+    );
   }
 
   Widget defaultBody(){
     // Will hold basic structure of default (empty) sidebar
-    return Text(placeholderString);
+    return Scaffold( 
+      appBar: AppBar(
+        title: const Text('Welcome!'),
+        ), 
+      body: Text(placeholderString)
+    );
   }
 
   selectCell(String placeholder) {
