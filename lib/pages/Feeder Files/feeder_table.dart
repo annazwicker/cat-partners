@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:intl/intl.dart'; // DateFormat
 
 // To be used after date cell reformatting
@@ -18,7 +19,10 @@ final Map<int, String> monthMap = {
 };
 
 class FeederTable extends StatefulWidget {
-  const FeederTable({super.key});
+  const FeederTable({super.key,
+  required this.controller});
+
+  final FeederController controller;
 
   @override
   State<FeederTable> createState() => _FeederTableState();
@@ -130,14 +134,6 @@ final List<Map<String, dynamic>> testData = [
 class _FeederTableState extends State<FeederTable> {
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> data = [
-      {
-        'col1': 'words', 
-        'col2': 'more words'},
-      {
-        'col1': 'yet more words',
-        'col2': 'the bogo bingus' },
-    ];
     return Table(
       border: TableBorder.all(),
       children: [
@@ -149,12 +145,11 @@ class _FeederTableState extends State<FeederTable> {
 
   /// Builds the table's header row with a list of stations.
   TableRow headerRow(){
-    // TODO header row needs special formatting.
     List<TableCell> cells = [];
     cells.add(buildCell(const Text('Date')));
-    listOfStations.forEach((station) {
+    for (var station in listOfStations) {
       cells.add(buildCell(Text(station)));
-    });
+    }
     return TableRow(
       children: cells
     );
@@ -175,9 +170,9 @@ class _FeederTableState extends State<FeederTable> {
     for (var entry in rowData['data']) {
       // Display user's name  
       if (entry[feedIDString] != null) {
-        cells.add(buildCell(Text(entry[feedIDString])));
+        cells.add(buildEntryCell(entry[feedIDString]));
       } else {
-        cells.add(buildCell(const Text('')));
+        cells.add(buildEntryCell(''));
       }
     }
     return TableRow(
