@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart";
 
 import "Feeder Files/feeder_sidebar.dart";
 import "Feeder Files/feeder_table.dart";
@@ -11,6 +12,8 @@ class FeederScreen extends StatefulWidget {
 }
 
 class _FeederScreenState extends State<FeederScreen> {
+
+  FeederController controller = FeederController();
   
   Widget tableWrap(FeederTable table) {
     return Flexible ( 
@@ -41,8 +44,8 @@ class _FeederScreenState extends State<FeederScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FeederTable fTable = const FeederTable();
-    FeederSidebar fSidebar = const FeederSidebar();
+    FeederTable fTable = FeederTable(controller: controller);
+    FeederSidebar fSidebar = FeederSidebar(controller: controller);
     
     return Scaffold(
       appBar: AppBar(
