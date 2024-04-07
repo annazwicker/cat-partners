@@ -4,6 +4,9 @@ import 'package:flutter_application_1/firebase_options.dart';
 import 'package:flutter_application_1/pages/home_page.dart';
 
 
+// late final Widget screen;
+
+
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

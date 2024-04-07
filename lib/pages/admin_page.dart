@@ -1,70 +1,35 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
+
+import 'package:cloud_functions/cloud_functions.dart';
+
+
+//initialize client SDK
+final functions = FirebaseFunctions.instance;
 
 
 
-Future<Album> createAlbum(String title) async {
+
+
+Future<List<dynamic>> getFruit() async {
   try {
-    final response = await http.post(
-      Uri.parse(
-          'https://us-central1-catpartners.cloudfunctions.net/get-catpartner'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'title': title,
-      }),
-    );
-  // final response = await http.post(
-  //   Uri.parse('https://us-central1-catpartners.cloudfunctions.net/get-catpartner'),
-  //   headers: <String, String>{
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //     "Access-Control-Allow-Origin": "*",
-  //     "Access-Control-Allow-Methods": "POST",
-  //     "Access-Control-Allow-Headers": "Content-Type",
-  //     "Access-Control-Max-Age": "3600",
-  //   },
-  //   body: jsonEncode(<String, String>{
-  //     "message": "Hello World"
-  //   }),
-  // );
-
-    if (response.statusCode == 200) {
-      return Album.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('on_request_example');
+    final results = await callable();
+    final reqData = results.data;
+    print("result: $reqData");
+    if (reqData is List<dynamic>) {
+      return reqData;
     } else {
-      throw Exception(
-          'Failed to create album. Server responded with status code ${response.statusCode}');
+      throw Exception('Unexpected data format returned from Cloud Function');
     }
   } catch (e) {
-    // Handle exception
-    print('Error creating album: $e');
-    throw Exception('Failed to create album: $e');
+    print("Error calling Cloud Function: $e");
+    throw Exception('Failed to get fruit: $e');
   }
 }
 
-class Album {
-  final int id;
-  final String title;
-
-  const Album({required this.id, required this.title});
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return switch (json) {
-      {
-        'id': int id,
-        'title': String title,
-      } =>
-        Album(
-          id: id,
-          title: title,
-        ),
-      _ => throw const FormatException('Failed to load album.'),
-    };
-  }
-}
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -77,60 +42,51 @@ class AdminScreen extends StatefulWidget {
 
 class _AdminScreenState extends State<AdminScreen> {
   final TextEditingController _controller = TextEditingController();
-  Future<Album>? _futureAlbum;
+  Future<List<dynamic>>? _futureFruit; // Define Future for getFruit function
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Create Data Example',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Get Fruit Example'),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Create Data Example'),
-        ),
-        body: Container(
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(8),
-          child: (_futureAlbum == null) ? buildColumn() : buildFutureBuilder(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _futureFruit = getFruit();
+                });
+              },
+              child: Text('Get Fruit'),
+            ),
+            SizedBox(height: 20),
+            FutureBuilder<List<dynamic>>(
+              future: _futureFruit,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  return Column(
+                    children: [
+                      Text('Fruits:'),
+                      SizedBox(height: 10),
+                      for (var fruit in snapshot.data!)
+                        Text(fruit.toString()),
+                    ],
+                  );
+                } else {
+                  return SizedBox(); // Return an empty widget if no data is available
+                }
+              },
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Column buildColumn() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TextField(
-          controller: _controller,
-          decoration: const InputDecoration(hintText: 'Enter Title'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _futureAlbum = createAlbum(_controller.text);
-            });
-          },
-          child: const Text('Create Data'),
-        ),
-      ],
-    );
-  }
-
-  FutureBuilder<Album> buildFutureBuilder() {
-    return FutureBuilder<Album>(
-      future: _futureAlbum,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(snapshot.data!.title);
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-
-        return const CircularProgressIndicator();
-      },
     );
   }
 }
