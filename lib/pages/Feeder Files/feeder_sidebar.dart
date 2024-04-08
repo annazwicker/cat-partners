@@ -16,18 +16,11 @@ class FeederSidebar extends StatefulWidget {
 }
 
 class _FeederSidebarState extends State<FeederSidebar> {
-  // TODO sidebar states
-  // 1) Default
-  // 2) Add-select (adding one/multiple entries)
-  // 3) Selected filled entry
-  //  a) yours
-  //  b) someone else's
-  String placeholderString = 'placeholder';
 
   @override void initState() {
-    // TODO: implement initState
-
-    // DEBUG: Change placeholder string.
+    // Resets state on any Controller change
+    // TODO specialize if needed (are there Controller
+    // changes that don't necessitate a reload?)
     widget.controller.addListener(() {
       setState(() {});
     });
@@ -54,45 +47,55 @@ class _FeederSidebarState extends State<FeederSidebar> {
         title: const Text('Entry'),
         ),
       body: Center( child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Text(format.format(currentEntry['date'])), // Date
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.all(16.0),
+            child: Text('Date: ${format.format(currentEntry['date'])}'),
+          ), // Date
           Row( // Name + remove button
             children: <Widget>[
-              Text(optToString(currentEntry[feedIDString])),
-              const Text('button placeholder!'),
+              Container(
+                alignment: Alignment.topLeft,
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                child: Text('Feeder: ${optToString(currentEntry[feedIDString])}'),
+              ),
+              // TODO add button
             ]
           ),
           // TODO Notes must be editable for user's entries.
-          Text(optToString(currentEntry[noteIDString])), // Notes
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+            child: Text('Notes: \n${optToString(currentEntry[noteIDString])}')
+          ), // Notes
         ]
     )));
   }
 
+  /// Holds build return of selection mode sidebar
   Widget selectBody(){
-    // Will hold basic structure of select mode sidebar
     return Scaffold( 
       appBar: AppBar(
         title: const Text('Select'),
         ), 
-      body: Text(placeholderString)
+      body: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: const Text('Selection mode') // TODO implement
+      ),
     );
   }
 
+  /// Holds build return of default sidebar
   Widget defaultBody(){
-    // Will hold basic structure of default (empty) sidebar
     return Scaffold( 
       appBar: AppBar(
         title: const Text('Welcome!'),
         ), 
-      body: Text(placeholderString)
+      body: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: const Text('Select an entry to get started.') // TODO add text
+      ),
     );
   }
-
-  selectCell(String placeholder) {
-    setState(() {
-      placeholderString = placeholder;
-    });
-  }
-
 }

@@ -67,7 +67,10 @@ class _FeederTableState extends State<FeederTable> {
   TableCell buildCell(dynamic cellData){
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
-      child: cellData
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: cellData
+      )
     );
   }
 }
@@ -92,8 +95,8 @@ class CellWrapper extends StatelessWidget{
       onTap: () {
         controller.toViewState(data);
       },
-      child: Text(feederName)
-    );
+      child: Text(feederName),
+    ); 
   }
 
 }
