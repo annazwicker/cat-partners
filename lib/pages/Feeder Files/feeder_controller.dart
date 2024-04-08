@@ -30,18 +30,37 @@ class FeederController extends ChangeNotifier {
   /// Asserts that, for the Controller's current state, certain variables 
   /// are in order.
   void checkState(){
-    // TODO create an empty list for select view if list is null
-    switch (currentState){
+    checkThisState(currentState);
+  }
+  
+  void checkThisState(PageState state){
+    assert (currentState == state);
+    switch (state){
       case PageState.view:
         assert (currentEntry != null);
+      case PageState.select:
+        assert (selectedEntries != null);
       default:
     }
   }
 
-  /// Adds given entry to selection
-  void addSelection(Map<String, dynamic> entry){
-    assert (currentState == PageState.select);
-    selectedEntries!.add(entry);
+
+  /// Adds given entry to selection if it's not included,
+  /// And removes entry from selection if it is.
+  void toggleSelection(Map<String, dynamic> entry){
+    checkThisState(PageState.select);
+    if (selectedEntries!.contains(entry)){
+      selectedEntries!.remove(entry);
+      notifyListeners();
+    } else {
+      selectedEntries!.add(entry);
+      notifyListeners();
+    }
+  }
+
+  List<Map<String, dynamic>> getSelection(){
+    checkThisState(PageState.select);
+    return selectedEntries!;
   }
 
   /// Changes current page state to View, viewing the given entry.
