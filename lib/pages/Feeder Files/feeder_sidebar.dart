@@ -29,9 +29,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
 
     // DEBUG: Change placeholder string.
     widget.controller.addListener(() {
-      setState(() {
-        placeholderString = widget.controller.testStr;
-      });
+      setState(() {});
     });
     super.initState();
   }
@@ -58,14 +56,15 @@ class _FeederSidebarState extends State<FeederSidebar> {
       body: Center( child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Text(format.format(currentEntry['date'])),
-          Row(
+          Text(format.format(currentEntry['date'])), // Date
+          Row( // Name + remove button
             children: <Widget>[
               Text(optToString(currentEntry[feedIDString])),
               const Text('button placeholder!'),
             ]
           ),
-          Text(optToString(currentEntry[noteIDString])),
+          // TODO Notes must be editable for user's entries.
+          Text(optToString(currentEntry[noteIDString])), // Notes
         ]
     )));
   }
