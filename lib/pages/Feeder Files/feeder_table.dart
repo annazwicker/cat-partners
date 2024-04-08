@@ -70,19 +70,6 @@ class _FeederTableState extends State<FeederTable> {
       child: cellData
     );
   }
-
-  /// Builds an interactable cell denoting an entry.
-  /// 
-  /// feederName : Name of the user assigned the entry.
-  TableCell buildEntryCell(String feederName){
-    GestureDetector g = GestureDetector(
-      onTap: () {
-        widget.controller.setString(feederName); // TODO DEBUG
-      },
-      child: Text(feederName)
-    );
-    return buildCell(g);
-  }
 }
 
 /// Wrapper Widget with Cell contents
