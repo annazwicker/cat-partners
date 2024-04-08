@@ -81,7 +81,31 @@ class _FeederSidebarState extends State<FeederSidebar> {
         ), 
       body: Container(
         padding: const EdgeInsets.all(16.0),
-        child: const Text('Selection mode') // TODO implement
+        child: Column(children: [
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+            child: Text('Selected entries: '),
+          ),
+          Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+            child: Column(
+              children: [
+                // TODO convert Column to Table?
+                for (var entry in widget.controller.getSelection()) 
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Text(format.format(entry['date'])),
+                      Text(entry['station']),
+                    ],)
+                )
+              ]
+            ),
+          )
+        ],) // TODO implement
       ),
     );
   }
