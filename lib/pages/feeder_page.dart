@@ -49,7 +49,7 @@ class _FeederScreenState extends State<FeederScreen> {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Schedule'),
+        title: const Text('Feeder Sign Up'),
       ),
       body: Row(
         children: [tableWrap(fTable), sidebarWrap(fSidebar)],
