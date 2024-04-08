@@ -50,11 +50,13 @@ class _FeederTableState extends State<FeederTable> {
     var format = DateFormat('yyyy-MM-dd');
     String formattedDate = format.format(rowData['date']);
     cells.add(buildCell(Text(formattedDate)));
-    for (var entry in rowData['data']) {
+    // for (var entry in rowData['data']) {
+    for (int i = 0; i < rowData['data'].length; i++) {
       // CellWrapper holds all cell data
       cells.add(buildCell(CellWrapper(
-        data: entry, 
+        data: rowData['data'][i], 
         date: rowData['date'],
+        station: testStationData[i]!,
         controller: widget.controller
       )));
     }
@@ -77,10 +79,12 @@ class CellWrapper extends StatelessWidget{
   const CellWrapper({super.key,
   required this.data,
   required this.date,
+  required this.station,
   required this.controller});
 
   // TODO ought to be an entryID to a shared data from DB call
   final DateTime date;
+  final Map<String, dynamic> station;
   final Map<String, dynamic> data;
   final FeederController controller;
 
@@ -88,6 +92,9 @@ class CellWrapper extends StatelessWidget{
   Widget build(BuildContext context) {
     String feederName = optToString(data[feedIDString]);
     data['date'] = date;
+    data['station'] = station['name'];
+    data['cats'] = station['cats'];
+
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
@@ -95,7 +102,7 @@ class CellWrapper extends StatelessWidget{
           // Enter selection for empty entries
           if (data[feedIDString] == null){
             controller.toSelectState();
-            controller.addSelection(data);
+            controller.toggleSelection(data);
           }
           // Enter view for assigned entries
           else {
