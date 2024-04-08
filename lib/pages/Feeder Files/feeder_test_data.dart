@@ -104,4 +104,59 @@ final List<Map<String, dynamic>> testData = [
           },
         ]
       },
+      {
+        'date': DateTime.utc(2024, 1, 5), 
+        'data': [
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false, false],
+          },
+          
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false],
+          },
+          
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false, false, false],
+          },
+        ]
+      },{
+        'date': DateTime.utc(2024, 1, 6), 
+        'data': [
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false, false],
+          },
+          
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false],
+          },
+          
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false, false, false],
+          },
+        ]
+      },{
+        'date': DateTime.utc(2024, 1, 7), 
+        'data': [
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false, false],
+          },
+          
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false],
+          },
+          
+          {feedIDString: null,
+           noteIDString: '',
+           sightingsIDString: [false, false, false, false],
+          },
+        ]
+      },
     ];
