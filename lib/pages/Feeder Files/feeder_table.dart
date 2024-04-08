@@ -100,9 +100,10 @@ class CellWrapper extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     String feederName = optToString(data[feedIDString]);
+    data['date'] = date;
     return GestureDetector(
       onTap: () {
-        controller.setString(feederName); 
+        controller.toViewState(data);
       },
       child: Text(feederName)
     );

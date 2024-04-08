@@ -17,6 +17,7 @@ class FeederController extends ChangeNotifier {
 
   // Entry view
   late Map<String, dynamic>? currentEntry;
+  late bool isUsersEntry; // TODO true if user is viewing their own entry
 
   // Debug
   late String testStr;
@@ -35,6 +36,19 @@ class FeederController extends ChangeNotifier {
         assert (currentEntry != null);
       default:
     }
+  }
+
+  /// Changes current page state to View, viewing the given entry.
+  void toViewState(Map<String, dynamic> entry) {
+    currentEntry = entry;
+    currentState = PageState.view;
+    notifyListeners();
+  }
+
+  /// Changes current page state to empty.
+  void toEmptyState() {
+    currentState = PageState.empty;
+    notifyListeners();
   }
   
 }
