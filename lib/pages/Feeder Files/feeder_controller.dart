@@ -38,17 +38,42 @@ class FeederController extends ChangeNotifier {
     }
   }
 
+  /// Adds given entry to selection
+  void addSelection(Map<String, dynamic> entry){
+    assert (currentState == PageState.select);
+    selectedEntries!.add(entry);
+  }
+
   /// Changes current page state to View, viewing the given entry.
   void toViewState(Map<String, dynamic> entry) {
+    // TODO Once Controller uses user IDs, check
+    // given userID against stored and update if they're
+    // different.
     currentEntry = entry;
     currentState = PageState.view;
     notifyListeners();
   }
 
-  /// Changes current page state to empty.
+  /// Changes current page state to empty and notifies listeners.
   void toEmptyState() {
-    currentState = PageState.empty;
-    notifyListeners();
+    toThisState(PageState.select);
+  }
+
+  /// Changes current page state to selection, and notifies
+  /// listeners if state wasn't already selection.
+  void toSelectState() {
+    if(currentState != PageState.select){
+      selectedEntries = [];
+      currentState = PageState.select;
+      notifyListeners();
+    }
+  }
+
+  void toThisState(PageState newState) {
+    if(currentState != newState){
+      currentState = newState;
+      notifyListeners();
+    }
   }
   
 }

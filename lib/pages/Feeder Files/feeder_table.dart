@@ -67,10 +67,7 @@ class _FeederTableState extends State<FeederTable> {
   TableCell buildCell(dynamic cellData){
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: cellData
-      )
+      child: cellData
     );
   }
 }
@@ -91,13 +88,25 @@ class CellWrapper extends StatelessWidget{
   Widget build(BuildContext context) {
     String feederName = optToString(data[feedIDString]);
     data['date'] = date;
-    return GestureDetector(
-      onTap: () {
-        controller.toViewState(data);
-      },
-      child: Text(feederName),
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: () {
+          // Enter selection for empty entries
+          if (data[feedIDString] == null){
+            controller.toSelectState();
+            controller.addSelection(data);
+          }
+          // Enter view for assigned entries
+          else {
+            controller.toViewState(data);
+          }          
+        },
+        child: Text(feederName),
+      ),
     ); 
   }
+
 
 }
 
