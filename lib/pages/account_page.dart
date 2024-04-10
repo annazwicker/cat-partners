@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart'; 
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() => runApp(const AccountScreen());
@@ -143,7 +141,6 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
-            
                         // Process the collected data (you can send it to a server or save it in a database)
                         print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation');
                       }
@@ -169,7 +166,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
           _pfpByte == null ? 
           const CircleAvatar(
             radius: 200,
-            backgroundImage: AssetImage('images/testCat.png')
+            backgroundImage: AssetImage('images/defualtPFP.jpg')
           ) :
           CircleAvatar(
             radius: 200,

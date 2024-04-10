@@ -309,21 +309,22 @@ class _NestedTabBarState extends State<NestedTabBar>
     return Container( // contains the tabs, wont take entire screen
       height: containerHeight,
       width: containerWidth,
-      color: const Color(0xFF828282),
+      color: const Color.fromARGB(255, 202, 202, 202),
       child: Column(
         children: [
           TabBar( // tabs; must match length of TabController(length: 4, vsync: this)
             tabAlignment: TabAlignment.center,
             controller: _nestedTabController, // controller that controls tabs
             indicatorColor: Colors.black,
-            labelColor: SUYellow,
+            labelColor: Colors.black,
             unselectedLabelColor: Colors.black54, // change to grey
             isScrollable: true,
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Playfair Display"),
             tabs: const [ ///////////////// the tab options, length must match
               Tab(icon: Icon(Icons.home), text: 'Home'),
-              Tab(icon: Icon(Icons.person), text: 'Admin'),
-              Tab(icon: Icon(Icons.person), text: 'Sign Up To Feed'),
-              Tab(icon: Icon(Icons.person), text: 'Account'),
+              Tab(icon: Icon(Icons.admin_panel_settings), text: 'Admin'),
+              Tab(icon: Icon(Icons.local_dining), text: 'Sign Up To Feed'),
+              Tab(icon: Icon(Icons.account_box), text: 'Account'),
             ],
           ),
           SizedBox( // contents of tabs
@@ -370,18 +371,18 @@ class _NestedTabBarState extends State<NestedTabBar>
                   children: [
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Account page is where information about you is stored', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
+                      child: Text('The Account page is where information about you is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
                     ),
-                    const Text('This information can be changed depending on your current status, either by yourself or by the admins(should need be)', style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                    const Text('This information can be changed and updated at any time, by yourself or by admins.', style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                      child: Text('Here are the following information categories:', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                      child: Text('This website keeps the following information about you:', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
                     ),
                     RichText(
                       text: const TextSpan(
                         children: [
                           TextSpan(text: 'Name: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                          TextSpan(text: 'This is what other people will see on the feeding sign up and home page. It should be the name the school has or your preferred name', 
+                          TextSpan(text: 'This is what other people will see on the feeding sign up and home page. Please use your first name or preferred name.', 
                           style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                         ]
                       )
@@ -391,7 +392,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                       text: const TextSpan(
                         children: [
                           TextSpan(text: 'Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                          TextSpan(text: 'This is how anyone can contact you(mainly the admins). Fortuantely, it is not required for the email to be the school-provided email, but it does have the be a gmail account.', 
+                          TextSpan(text: 'Method of contact visible to admins. This is provided by Google Sign On. You do not need an SU email to use this site.', 
                           style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                         ]
                       )
@@ -401,7 +402,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                       text: const TextSpan(
                         children: [
                           TextSpan(text: 'Phone Number: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                          TextSpan(text: 'Another method of contact. Mostly for immediate contact', 
+                          TextSpan(text: 'Another method of contact visible only to admins.', 
                           style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                         ]
                       )
@@ -409,8 +410,8 @@ class _NestedTabBarState extends State<NestedTabBar>
                     RichText(
                       text: const TextSpan(
                         children: [
-                          TextSpan(text: 'Status: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                          TextSpan(text: 'Your current relation with the school based on a list of available options. Make sure this gets updated when something changes(i.e. graduation)', 
+                          TextSpan(text: 'Status/Rescue Group: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'Your current relation with the school (student, alum, non-student, etc.) and any rescue group afflications.', 
                           style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                         ]
                       )
@@ -419,7 +420,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                       text: const TextSpan(
                         children: [
                           TextSpan(text: 'Profile Picture: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                          TextSpan(text: 'A nice image to identify yourself from others, so long as it is school-appropriate.', 
+                          TextSpan(text: 'A nice image to identify yourself to others. Must be school-appropriate.', 
                           style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                         ]
                       )
