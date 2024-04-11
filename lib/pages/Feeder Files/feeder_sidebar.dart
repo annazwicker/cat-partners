@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_table.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart';
@@ -79,7 +80,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
       appBar: AppBar(
         title: const Text('Select'),
         ), 
-      body: Container(
+      body: Container( // TODO wrap in scrollable
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
           Container(
@@ -90,21 +91,41 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: Column(
+            child: Table(
               children: [
-                // TODO convert Column to Table?
+                const TableRow(
+                  decoration:BoxDecoration(
+                    color: SUYellow
+                  ),
+                  children: [
+                    TableCell(child: Text('Date', 
+                      style:TextStyle(fontWeight:FontWeight.bold))),
+                    TableCell(child: Text('Station',
+                      style:TextStyle(fontWeight:FontWeight.bold))),
+                  ]
+                ),
                 for (var entry in widget.controller.getSelection()) 
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    children: [
-                      Text(format.format(entry['date'])),
-                      Text(entry['station']),
-                    ],)
+                TableRow(
+                  children: [
+                      TableCell(child: Text(format.format(entry['date']))),
+                      TableCell(child: Text(entry['station'])),
+                    ],
                 )
               ]
             ),
-          )
+          ),
+          // TODO confirm button should stick to bottom of sidebar
+          Container(
+            alignment: Alignment.bottomCenter,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: SUYellow,
+                foregroundColor: Colors.black),
+              onPressed: () 
+              // TODO assigns user to all selected entries and returns to default mode.
+              {}, 
+            child: const Text('Confirm')),
+          ),
         ],) // TODO implement
       ),
     );
