@@ -127,7 +127,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                 _buildTextField('Phone Number', 'Enter your phone number', (value) {
                   _phoneNumber = value;
                 }),
-                _buildDropdownField('Status', ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student'], (value) {
+                _buildDropdownField('Status', ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student', 'Friend of Cats'], (value) {
                 _status = value;
                 }),
                 _buildTextField('Rescue Group Affiliation', 'Enter your rescue group affiliation', (value) {
