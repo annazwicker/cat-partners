@@ -5,6 +5,7 @@ import 'package:flutter_application_1/pages/about_page.dart';
 import 'package:flutter_application_1/pages/account_page.dart';
 import 'package:flutter_application_1/pages/admin_page.dart';
 import 'package:flutter_application_1/pages/feeder_page.dart';
+import 'package:flutter_application_1/pages/test_page.dart';
 
 class TopNavBar extends StatefulWidget {
   const TopNavBar({super.key});
@@ -18,12 +19,13 @@ class _TopNavBarState extends State<TopNavBar> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomeScreen(),
     AboutScreen(),
-    AdminScreen(),
-    FeederScreen(),
-    AccountScreen(),
+    const AdminScreen(),
+    const FeederScreen(),
+    const AccountScreen(),
+    const TestScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -39,7 +41,7 @@ class _TopNavBarState extends State<TopNavBar> {
         backgroundColor: SUYellow,
         title: const Text('Southwestern Cat Partners'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
+          preferredSize: const Size.fromHeight(kToolbarHeight),
           child: BottomNavigationBar(
             backgroundColor: SUYellow,
             type: BottomNavigationBarType.fixed,
@@ -70,9 +72,14 @@ class _TopNavBarState extends State<TopNavBar> {
                 label: 'Account',
                 backgroundColor: SUYellow,
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Testing',
+                backgroundColor: SUYellow,
+              ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Color.fromARGB(255, 0, 0, 0),
+            selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
             onTap: _onItemTapped,
           ),
         ),
