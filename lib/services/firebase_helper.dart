@@ -28,7 +28,7 @@ class FirebaseHelper {
         final user = <String, dynamic>{
           "first": "Ada",
           "last": "Lovelace",
-          "born": 1815
+          "born": 2009
         };
 
         // Add a new document with a generated ID
@@ -39,20 +39,22 @@ class FirebaseHelper {
 
 
 
-      var stationRef = _db.collection('station').doc("0");
+      var stationRef = _db.collection('station').doc("101");
 
       //create hard coded json document example
       Map <String, dynamic> hardCodedJson = {
-        'stationID' : "0",
-        'name' : 'Admissions',
-        'description' : 'Admissions back patio',
+        'name' : 'AMogususs',
+        'description' : 'The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A sing lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start. ding﻿',
         'photo' : 'placeholder.img',
       };
 
       //set document to a specific value
       stationRef.set(hardCodedJson);
 
-      print("Entered the try block at least");
+      print("set stationRef");
+
+
+      //retrieve document and create a Station object
       return true;
       
     } catch(e){
