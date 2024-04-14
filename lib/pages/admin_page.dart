@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/const.dart';
+import 'package:flutter_application_1/pages/admin_tabs_content/edit_accounts_content.dart';
+import 'package:flutter_application_1/pages/admin_tabs_content/edit_admin_content.dart';
 
 class AdminScreen extends StatelessWidget {
-  const AdminScreen({Key? key}) : super(key: key);
+  const AdminScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'Playfair Display'),
-      home: Scaffold(
+      home: const Scaffold(
         body: SingleChildScrollView(
           child: Center(
             child: Column(
@@ -18,9 +21,9 @@ class AdminScreen extends StatelessWidget {
                 //   'About This Site',
                 //   style: TextStyle(fontWeight: FontWeight.bold, height: 2, fontSize: 30),
                 // ),
-                const SizedBox(height: 40),
-                const NestedTabBar(),
-                const SizedBox(height: 40),
+                SizedBox(height: 40),
+                NestedTabBar(),
+                SizedBox(height: 40),
               ],
             ),
           ),
@@ -31,9 +34,10 @@ class AdminScreen extends StatelessWidget {
 }
 
 class NestedTabBar extends StatefulWidget {
-  const NestedTabBar({Key? key}) : super(key: key);
+  const NestedTabBar({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _NestedTabBarState createState() => _NestedTabBarState();
 }
 
@@ -75,19 +79,20 @@ class _NestedTabBarState extends State<NestedTabBar>
     return Container(
       height: containerHeight,
       width: containerWidth,
-      color: const Color(0xFF828282),
+      color: Color.fromARGB(255, 202, 202, 202),
       child: Column(
         children: [
           TabBar(
             tabAlignment: TabAlignment.center,
             controller: _nestedTabController,
             indicatorColor: Colors.black,
-            labelColor: Colors.yellow,
+            labelColor: Colors.black,
             unselectedLabelColor: Colors.black54,
             isScrollable: true,
+            labelStyle: TextStyle(fontWeight: FontWeight.bold),
             tabs: const [
-              Tab(icon: Icon(Icons.edit), text: 'Edit Accounts'),
-              Tab(icon: Icon(Icons.person), text: 'Edit Admin Users'),
+              Tab(icon: Icon(Icons.account_box), text: 'Edit Accounts'),
+              Tab(icon: Icon(Icons.admin_panel_settings), text: 'Edit Admin Users'),
               Tab(icon: Icon(Icons.pets), text: 'Edit Cats'),
               Tab(icon: Icon(Icons.local_dining), text: 'Edit Feeding Stations'),
               Tab(icon: Icon(Icons.download), text: 'Export Data'),
@@ -100,8 +105,10 @@ class _NestedTabBarState extends State<NestedTabBar>
               controller: _nestedTabController,
               children: const [
                 // Contents for each tab
-                Text('Edit Accounts Content'),
-                Text('Edit Admin Users Content'),
+                // Edit Accounts tab content
+                EditAccountsContent(textColor: Colors.black),
+                // Edit Admin tab content
+                EditAdminContent(textColor: Colors.black),
                 Text('Edit Cats Content'),
                 Text('Edit Feeding Stations Content'),
                 Text('Export Data Content'),

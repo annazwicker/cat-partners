@@ -51,22 +51,22 @@ class _TopNavBarState extends State<TopNavBar> {
                 backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.business),
+                icon: Icon(Icons.info),
                 label: 'About',
                 backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.school),
+                icon: Icon(Icons.admin_panel_settings),
                 label: 'Admin',
                 backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.local_dining),
                 label: 'Sign Up to Feed',
                 backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.account_box),
                 label: 'Account',
                 backgroundColor: SUYellow,
               ),
