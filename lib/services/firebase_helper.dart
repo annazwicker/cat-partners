@@ -58,7 +58,9 @@ class FirebaseHelper {
     return _catsRef.snapshots();
   }
 
-
+  void addEntry(Entry entry) async {
+    _entriesRef.add(entry);
+  }
 
   static Future <bool> saveStation({
     // required BuildContext context,

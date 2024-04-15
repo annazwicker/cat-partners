@@ -1,3 +1,4 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_1/services/firebase_helper.dart";
 
@@ -36,11 +37,12 @@ class _TestScreenState extends State<TestScreen> {
                   );
                 }
                 return ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: entries.length,
                   itemBuilder: (context, index) {
                     Entry entry = entries[index].data();
-                    String entryId = entries[index].id;
+                    // String entryId = entries[index].id;
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 10,
@@ -59,7 +61,34 @@ class _TestScreenState extends State<TestScreen> {
                   },
                 );
               }
-            )
+            ),
+            StreamBuilder(
+              stream: _dbHelper.getStationStream(), 
+              builder: (context, snapshot)
+              {
+                List<QueryDocumentSnapshot> stations = snapshot.data?.docs ?? [];
+                if(stations.isEmpty){
+                  return const Center(
+                    child: Text('No stations for entries!')
+                  );
+                }
+                return ElevatedButton(
+                  onPressed: () {
+                    for (var station in stations) {
+                      Entry entry = Entry(
+                        assignedUser: null, 
+                        date: Timestamp.fromDate(DateTime(2024, DateTime.april, 7)), 
+                        note: '', 
+                        stationID: station.reference,
+                      );
+                      _dbHelper.addEntry(entry);
+                    }
+                    
+                  }, 
+                child: const Text('Generate!'));
+              }
+            ),
+            
           ]
         )
       )
