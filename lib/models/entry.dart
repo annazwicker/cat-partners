@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Entry {
@@ -31,6 +29,30 @@ class Entry {
     'stationID' : stationID,
   };
 
+  Entry copyWith({
+    DocumentReference? assignedUser,
+    Timestamp? date,
+    String? note,
+    DocumentReference? stationID,
+  }) {
+    return Entry (
+      assignedUser: assignedUser ?? this.assignedUser, 
+      date: date ?? this.date, 
+      note: note ?? this.note, 
+      stationID: stationID ?? this.stationID);
+  }
 
+  DateTime getDate() {
+    return date.toDate();
+  }
+  
+  String getNote() {
+    return note;
+  }
+
+  /// TODO retrieve assigned user's first name OR null
+  // String? getUserName(FirebaseHelper _dbHelper) {
+  //   return _dbHelper._
+  // }
 
 }
