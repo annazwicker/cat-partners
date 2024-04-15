@@ -94,7 +94,7 @@ class EditAccountsContent extends StatelessWidget {
                     // Handle dropdown value change
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
                     // Add functionality for adding an account
@@ -146,7 +146,7 @@ class EditAccountsContent extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height:25),
                 ElevatedButton(
                   onPressed: () {
                     // Add functionality for adding an account

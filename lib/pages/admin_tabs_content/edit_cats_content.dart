@@ -88,7 +88,7 @@ class EditCatsContent extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 9),
                 _buildDropdownField(
                   'Select Feeding Station',
                   ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
@@ -129,18 +129,9 @@ class EditCatsContent extends StatelessWidget {
                     color: textColor,
                   ),
                 ),
-                const SizedBox(height: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Please select a cat',
-                       style: TextStyle(
-                        color: textColor,
-                        fontWeight: FontWeight.bold
-                        ),
-                    ),
-                     const SizedBox(height: 20),
                         _buildDropdownField(
                          'Select Cat',
                         ['Gray Mama', 'Gaia', 'Itty Bitty', 'Teddy', 'Patches', 'Ziggy', 'Super Cal', 'Pumpkin'],

@@ -3,6 +3,7 @@ import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/edit_accounts_content.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/edit_admin_content.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/edit_cats_content.dart';
+import 'package:flutter_application_1/pages/admin_tabs_content/edit_feeding_stations_content.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -112,7 +113,8 @@ class _NestedTabBarState extends State<NestedTabBar>
                 EditAdminContent(textColor: Colors.black),
                 // Edit Cats tab content
                 EditCatsContent(textColor: Colors.black),
-                Text('Edit Feeding Stations Content'),
+                // Edit Feeding Stations tab content
+                EditFeedingStationsContent(textColor: Colors.black),
                 Text('Export Data Content'),
               ],
             ),

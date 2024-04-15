@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class EditAdminContent extends StatelessWidget {
+class EditFeedingStationsContent extends StatelessWidget {
   final Color textColor;
 
-  const EditAdminContent({Key? key, required this.textColor}) : super(key: key);
+  const EditFeedingStationsContent({Key? key, required this.textColor}) : super(key: key);
 
   Widget _buildDropdownField(
   String title,
@@ -62,7 +62,7 @@ class EditAdminContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Add Account',
+                  'Add Feeding Station',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class EditAdminContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Email:',
+                      'Name:',
                       style: TextStyle(
                         color: textColor,
                         fontWeight: FontWeight.bold
@@ -96,7 +96,7 @@ class EditAdminContent extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
                   ),
-                  child: const Text('Add Account'),
+                  child: const Text('Add Feeding Station'),
                 ),
               ],
             ),
@@ -114,7 +114,7 @@ class EditAdminContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Delete Admin User',
+                  'Delete Feeding Station',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -124,11 +124,11 @@ class EditAdminContent extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDropdownField(
-                    'Select Feeding Station',
-                    ['Kelly Lessard', 'Jayden Beauchea', 'Daniel Na', 'Anna Wicker', 'Marlon Mata'],
-                      (String? value) {
-                    },
+                        _buildDropdownField(
+                         'Select Feeding Station',
+                        ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
+                         (String? value) {
+                        },
                 ),
                   ],
                 ),
