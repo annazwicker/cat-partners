@@ -44,8 +44,18 @@ class FirebaseHelper {
       fromFirestore: (snapshots, _) => Cat.fromJson( snapshots.data()!,), 
       toFirestore: toFirestore
       );
-    
-    
+  }
+
+  Stream<QuerySnapshot> getEntryStream() {
+    return _entriesRef.snapshots();
+  }
+
+  Stream<QuerySnapshot> getStationStream() {
+    return _stationsRef.snapshots();
+  }
+
+  Stream<QuerySnapshot> getCatStream() {
+    return _catsRef.snapshots();
   }
 
 
