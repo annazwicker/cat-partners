@@ -3,14 +3,50 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
+import '../models/cat.dart';
+import '../models/entry.dart';
+import '../models/station.dart';
+
+/// Constants for the names of Firestore's collections.
+/// To reduce chance of error.
+const String userColRef = 'users';
+const String stationColRef = 'station';
+const String entryColRef = 'entry';
+const String catColRef = 'cat';
+const String sightingColRef = 'sighting';
 
 class FirebaseHelper {
-  const FirebaseHelper._();
+  // const FirebaseHelper._();
 
   static final FirebaseAuth _auth = FirebaseAuth.instance;
-
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  late final CollectionReference _entriesRef;
+  late final CollectionReference _stationsRef;
+  late final CollectionReference _catsRef;
+
+  FirebaseHelper(){
+    // Mapping used by all reference initializers
+    Map<String, Object?> toFirestore(item, _) => item.toJson();
+    
+    _entriesRef = _db.collection(entryColRef).withConverter<Entry>(
+      fromFirestore: (snapshots, _) => Entry.fromJson( snapshots.data()!,), 
+      toFirestore: toFirestore
+      );
+    
+    _stationsRef = _db.collection(stationColRef).withConverter<Station>(
+      fromFirestore: (snapshots, _) => Station.fromJson( snapshots.data()!,), 
+      toFirestore: toFirestore
+      );
+    
+    _catsRef = _db.collection(catColRef).withConverter<Cat>(
+      fromFirestore: (snapshots, _) => Cat.fromJson( snapshots.data()!,), 
+      toFirestore: toFirestore
+      );
+    
+    
+  }
 
 
 
