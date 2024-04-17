@@ -52,19 +52,19 @@ class FirebaseHelper {
       );
   }
 
-  Stream<QuerySnapshot> getEntryStream() {
+  Stream<QuerySnapshot<Entry>> getEntryStream() {
     return _entriesRef.snapshots();
   }
 
-  Stream<QuerySnapshot> getStationStream() {
+  Stream<QuerySnapshot<Station>> getStationStream() {
     return _stationsRef.snapshots();
   }
 
-  Stream<QuerySnapshot> getCatStream() {
+  Stream<QuerySnapshot<Cat>> getCatStream() {
     return _catsRef.snapshots();
   }
 
-  Stream<QuerySnapshot> getUserStream() {
+  Stream<QuerySnapshot<UserDoc>> getUserStream() {
     return _usersRef.snapshots();
   }
 
