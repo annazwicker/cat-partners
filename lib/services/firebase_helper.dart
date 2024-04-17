@@ -127,9 +127,7 @@ class FirebaseHelper {
 
         // Get entries with given date 
         List<QueryDocumentSnapshot<Entry>> entries = [];
-        DateTime nextDate = date.add(const Duration(days: 1));
-        Timestamp nextStamp = Timestamp.fromDate(nextDate);
-        _entriesRef.where('date', isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp).get().then(
+        entriesOnDateQuery(date).get().then(
           (querySnapshot) { entries = querySnapshot.docs; },
           onError: (e) { 
             print(e); 
@@ -159,6 +157,25 @@ class FirebaseHelper {
     // TODO adds entries for the given date, if they don't exist.
   }
 
+  List<QueryDocumentSnapshot<Entry>> getEntries(DateTime date) {
+    ensureEntries(date);
+    List<QueryDocumentSnapshot<Entry>> entries = [];
+    entriesOnDateQuery(date).get().then(
+      (querySnapshot) {
+        entries = querySnapshot.docs.toList();
+      }
+    );
+    return entries;
+  }
+
+  /// Returns a query that queries the database for all entries on the given [date].
+  Query<Entry> entriesOnDateQuery(DateTime date) {
+    DateTime nextDate = date.add(const Duration(days: 1));
+
+    Timestamp stamp = Timestamp.fromDate(date);
+    Timestamp nextStamp = Timestamp.fromDate(nextDate);
+    return _entriesRef.where('date', isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
+  }
 
   static Future <bool> saveStation({
     // required BuildContext context,
