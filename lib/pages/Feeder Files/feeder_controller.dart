@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/firebase_helper.dart';
+
 enum PageState { 
   empty,  // Default view. Displays basic information.
   select, // Entry selection. User selects multiple entries.
@@ -7,6 +9,7 @@ enum PageState {
   }
 
 class FeederController extends ChangeNotifier {
+  final FirebaseHelper fh;
   PageState currentState = PageState.empty;
 
   // Shared
@@ -21,6 +24,10 @@ class FeederController extends ChangeNotifier {
 
   // Debug
   late String testStr;
+
+  FeederController({
+    required this.fh
+  });
 
   void setString(String newString){
     testStr = newString;

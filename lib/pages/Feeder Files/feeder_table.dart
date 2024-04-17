@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:intl/intl.dart';
 
+import '../../services/firebase_helper.dart';
 import 'feeder_test_data.dart'; // Test data for dev
 
 class FeederTable extends StatefulWidget {
   const FeederTable({super.key,
-  required this.controller});
+  required this.controller,
+  required this.fh});
 
   final FeederController controller;
+  final FirebaseHelper fh;
 
   @override
   State<FeederTable> createState() => _FeederTableState();

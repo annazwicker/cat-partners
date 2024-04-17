@@ -3,14 +3,17 @@ import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_table.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart';
+import 'package:flutter_application_1/services/firebase_helper.dart';
 
 class FeederSidebar extends StatefulWidget {
   const FeederSidebar({
     super.key, 
     required this.controller,
+    required this.fh
   }); 
 
   final FeederController controller;
+  final FirebaseHelper fh;
 
   @override
   State<FeederSidebar> createState() => _FeederSidebarState();
