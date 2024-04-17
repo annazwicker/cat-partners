@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 class SearchUsersContent extends StatelessWidget {
   final Color textColor;
 
-  const SearchUsersContent({Key? key, required this.textColor}) : super(key: key);
-
+  SearchUsersContent({Key? key, required this.textColor}) : super(key: key);
+  final ScrollController _searchScroll = new ScrollController();
   
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
+      controller: _searchScroll,
+      child: Padding(
       padding: const EdgeInsets.all(20.0),
       // make the whole page a giant 'row' with columns within the row
       // to make the add accounts portion separate from the delete accounts portion
@@ -42,7 +44,7 @@ class SearchUsersContent extends StatelessWidget {
                         ),
                     ),
                     const SizedBox(height: 10),
-                    TextField(
+                    const TextField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -56,7 +58,7 @@ class SearchUsersContent extends StatelessWidget {
                         ),
                     ),
                     const SizedBox(height: 10),
-                    TextField(
+                    const TextField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -70,14 +72,14 @@ class SearchUsersContent extends StatelessWidget {
                         ),
                     ),
                     const SizedBox(height: 10),
-                    TextField(
+                    const TextField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
                     // Add functionality for adding an account
@@ -92,6 +94,7 @@ class SearchUsersContent extends StatelessWidget {
           ),
         ],
       ),
+    )
     );
   }
 }
