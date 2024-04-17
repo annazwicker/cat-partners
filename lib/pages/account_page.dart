@@ -19,7 +19,7 @@ class AccountScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text(appTitle),
         ),
-        body: AccountInfoForm(),
+        body: const AccountInfoForm(),
       ),
     );
   }
@@ -196,7 +196,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       children: [
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         TextFormField(
           onChanged: onChanged,
@@ -211,7 +211,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
           ),
           maxLines: null,
         ),
-        SizedBox(height: 15), // Add some spacing between fields
+        const SizedBox(height: 15), // Add some spacing between fields
       ],
     );
   }
@@ -224,7 +224,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       children: [
         Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         DropdownButtonFormField<String>(
           items: options.map((String option) {
@@ -241,7 +241,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
             return null;
           },
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
     ],
   );
 }

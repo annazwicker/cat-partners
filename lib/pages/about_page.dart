@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 import 'package:flutter_application_1/const.dart'; 
 // ignore: depend_on_referenced_packages
 import 'package:url_launcher/url_launcher.dart';
-import 'package:file_picker/file_picker.dart';
 
 //comment
 // Done by Marlon Mata 
@@ -343,27 +342,66 @@ class _NestedTabBarState extends State<NestedTabBar>
                     ),
                     Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+
                   ],
                 ),
-                const Column( ///// Add padding
+                Column( ///// Add padding
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                     ),
-                    Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                  ],
-                ),
-                const Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('This is where you can sign up for feeding slots and view taken and open slots.', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                    const Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Edit the status of an account or delete an account', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'))
+                        ]
+                      )
                     ),
-                    Text('You have the option to apply for multiple slots at the same time.', style: TextStyle(fontSize: 18),),
-                    Text('Some things to take note are:', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    RichText(
+                      textAlign: TextAlign.left,
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Add new admins and remove old admins', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      textAlign: TextAlign.left,
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Edit cat information, such as station location', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'))
+                        ]
+                      )
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Edit what feeding stations are available', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'))
+                        ]
+                      )
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Export data that shows total amount of volunteer hours and who volunteered', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display'))
+                        ]
+                      )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(text: 'Make sure all the information here is up-to-date and that you press submit to lock in any changes.', 
+                            style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                          ]
+                        )
+                      ),
+                    ),
                   ],
                 ),
                 Column(

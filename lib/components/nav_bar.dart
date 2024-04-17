@@ -5,7 +5,6 @@ import 'package:flutter_application_1/pages/about_page.dart';
 import 'package:flutter_application_1/pages/account_page.dart';
 import 'package:flutter_application_1/pages/admin_page.dart';
 import 'package:flutter_application_1/pages/feeder_page.dart';
-import 'package:flutter_application_1/components/user_google.dart';
 
 class TopNavBar extends StatefulWidget {
   const TopNavBar({super.key});
@@ -16,8 +15,6 @@ class TopNavBar extends StatefulWidget {
 
 class _TopNavBarState extends State<TopNavBar> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
@@ -40,7 +37,7 @@ class _TopNavBarState extends State<TopNavBar> {
         backgroundColor: SUYellow,
         title: const Text('Southwestern Cat Partners'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
+          preferredSize: const Size.fromHeight(kToolbarHeight),
           child: BottomNavigationBar(
             backgroundColor: SUYellow,
             type: BottomNavigationBarType.fixed,
@@ -73,7 +70,7 @@ class _TopNavBarState extends State<TopNavBar> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Color.fromARGB(255, 0, 0, 0),
+            selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
             onTap: _onItemTapped,
           ),
         ),

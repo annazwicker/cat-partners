@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget{
 }
 
 class _LoginPageState extends State<LoginPage>{
-  @override
+
   final ScrollController _vertical = ScrollController();
   // Future<User?> actualUser;
 
