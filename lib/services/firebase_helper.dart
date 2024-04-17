@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../models/cat.dart';
 import '../models/entry.dart';
 import '../models/station.dart';
+import '../models/userdoc.dart';
 
 /// Constants for the names of Firestore's collections.
 /// To reduce chance of error.
@@ -21,10 +20,12 @@ class FirebaseHelper {
 
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
-
-  late final CollectionReference _entriesRef;
-  late final CollectionReference _stationsRef;
-  late final CollectionReference _catsRef;
+  
+  /// References to collections
+  late final CollectionReference<Entry> _entriesRef;
+  late final CollectionReference<Station> _stationsRef;
+  late final CollectionReference<Cat> _catsRef;
+  late final CollectionReference<UserDoc> _usersRef;
 
   FirebaseHelper(){
     // Mapping used by all reference initializers
@@ -44,6 +45,11 @@ class FirebaseHelper {
       fromFirestore: (snapshots, _) => Cat.fromJson( snapshots.data()!,), 
       toFirestore: toFirestore
       );
+      
+    _usersRef = _db.collection(userColRef).withConverter<UserDoc>(
+      fromFirestore: (snapshots, _) => UserDoc.fromJson( snapshots.data()!,), 
+      toFirestore: toFirestore
+      );
   }
 
   Stream<QuerySnapshot> getEntryStream() {
@@ -57,6 +63,16 @@ class FirebaseHelper {
   Stream<QuerySnapshot> getCatStream() {
     return _catsRef.snapshots();
   }
+
+  Stream<QuerySnapshot> getUserStream() {
+    return _usersRef.snapshots();
+  }
+
+  /// Getters
+  CollectionReference<Entry> get entriesRef { return _entriesRef; }
+  CollectionReference<Station> get stationsRef { return _stationsRef; }
+  CollectionReference<Cat> get catsRef { return _catsRef; }
+  CollectionReference<UserDoc> get usersRef { return _usersRef; }
 
   void addEntry(Entry entry) async {
     _entriesRef.add(entry);
