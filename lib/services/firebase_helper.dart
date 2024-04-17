@@ -68,6 +68,22 @@ class FirebaseHelper {
     return _usersRef.snapshots();
   }
 
+  void testing() {
+    Query<Entry> emptyNoteQuery = _entriesRef.where('note', isEqualTo: '');
+    // emptyNoteQuery.
+    // Future<QuerySnapshot<Entry>> fut = emptyNoteQuery.get();
+    emptyNoteQuery.get().then(
+      (querySnapshot) {
+        print("Successfully completed");
+        List<QueryDocumentSnapshot<Entry>> queryResults = querySnapshot.docs;
+        for (var docSnapshot in querySnapshot.docs) {
+          print('${docSnapshot.id} => ${docSnapshot.data()}');
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+  }
+
   /// Getters
   CollectionReference<Entry> get entriesRef { return _entriesRef; }
   CollectionReference<Station> get stationsRef { return _stationsRef; }
