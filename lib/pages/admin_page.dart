@@ -4,6 +4,8 @@ import 'package:flutter_application_1/pages/admin_tabs_content/edit_accounts_con
 import 'package:flutter_application_1/pages/admin_tabs_content/edit_admin_content.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/edit_cats_content.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/edit_feeding_stations_content.dart';
+import 'package:flutter_application_1/pages/admin_tabs_content/search_accounts_content.dart';
+import 'package:flutter_application_1/pages/admin_tabs_content/export_data.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -50,7 +52,7 @@ class _NestedTabBarState extends State<NestedTabBar>
   @override
   void initState() {
     super.initState();
-    _nestedTabController = TabController(length: 5, vsync: this);
+    _nestedTabController = TabController(length: 6, vsync: this);
   }
 
   @override
@@ -97,6 +99,7 @@ class _NestedTabBarState extends State<NestedTabBar>
               Tab(icon: Icon(Icons.admin_panel_settings), text: 'Edit Admin Users'),
               Tab(icon: Icon(Icons.pets), text: 'Edit Cats'),
               Tab(icon: Icon(Icons.local_dining), text: 'Edit Feeding Stations'),
+              Tab(icon: Icon(Icons.search), text: 'Search Users'),
               Tab(icon: Icon(Icons.download), text: 'Export Data'),
             ],
           ),
@@ -115,7 +118,10 @@ class _NestedTabBarState extends State<NestedTabBar>
                 EditCatsContent(textColor: Colors.black),
                 // Edit Feeding Stations tab content
                 EditFeedingStationsContent(textColor: Colors.black),
-                Text('Export Data Content'),
+                // Search users tab content
+                SearchUsersContent(textColor: Colors.black),
+                // Export Data tab content
+                ExportDataContent(textColor: Colors.black),
               ],
             ),
           )

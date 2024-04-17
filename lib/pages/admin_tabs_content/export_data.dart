@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class EditAdminContent extends StatelessWidget {
+class ExportDataContent extends StatelessWidget {
   final Color textColor;
 
-  const EditAdminContent({Key? key, required this.textColor}) : super(key: key);
+  const ExportDataContent({Key? key, required this.textColor}) : super(key: key);
 
   Widget _buildDropdownField(
   String title,
@@ -57,64 +57,12 @@ class EditAdminContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            // The add account section
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Add Admin User',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Email:',
-                      style: TextStyle(
-                        color: textColor,
-                        fontWeight: FontWeight.bold
-                        ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    // Add functionality for adding an account
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
-                  ),
-                  child: const Text('Add Admin User'),
-                ),
-              ],
-            ),
-          ),
-          // create a line between the two sections so it's clear
-          // which text boxes belong to the add and delete accounts sections
-          Container(
-            width: 1,
-            color: textColor,
-            margin: const EdgeInsets.only(left: 20.0, right: 20.0),
-          ),
-          Expanded(
             // the delete account portion
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Delete Admin User',
+                  'Export Data as a CSV file',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -125,8 +73,8 @@ class EditAdminContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildDropdownField(
-                    'Select Admin User',
-                    ['Kelly Lessard', 'Jayden Beauchea', 'Daniel Na', 'Anna Wicker', 'Marlon Mata'],
+                    'Select Academic Year',
+                    ['2020-2021', '2021-2022', '2022-2023', '2023-2024'],
                       (String? value) {
                     },
                 ),
@@ -135,12 +83,12 @@ class EditAdminContent extends StatelessWidget {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
-                    // Add functionality for adding an account
+                    // Add functionality for exporting data
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
                   ),
-                  child: const Text('Delete Admin User'),
+                  child: const Text('Export Data'),
                 ),
               ],
             ),
