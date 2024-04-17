@@ -73,10 +73,76 @@ class FirebaseHelper {
   CollectionReference<Station> get stationsRef { return _stationsRef; }
   CollectionReference<Cat> get catsRef { return _catsRef; }
   CollectionReference<UserDoc> get usersRef { return _usersRef; }
+  FirebaseFirestore get db { return _db; }
+
+  /// Let 'colRef' be a CollectionReference
+  /// Let 'someDocId' be a doc id
+  /// colRef.doc(someDocId) 
+  ///   | Returns DocumentReference to doc with id 'someDocId'
+  /// colRef.doc() 
+  ///   | Returns DocumentReference to newly-created doc with auto-id.
+  /// colRef.doc(someDocId).set(Map<String, dynamic> data) 
+  ///   | Sets/creates document with ID 'someDocId' with data 'data'
+  /// colRef.add(someClassData)
+  ///   | Creates a document with auto-ID and data 'data'
 
   void addEntry(Entry entry) async {
     _entriesRef.add(entry);
   }
+  
+  /// Ensures that entries exist for [date] by adding them if they don't exist.
+  void ensureEntries(DateTime date) async {
+    // Remove milliseconds
+    date = DateTime(date.year, date.month, date.day);
+    Timestamp stamp = Timestamp.fromDate(date);
+    _db.runTransaction(
+      (transaction) async {
+        // Get all stations
+        bool isError = false;
+        List<QueryDocumentSnapshot<Station>> stations = [];
+        _stationsRef.get().then(
+          (querySnapshot) {
+            stations = querySnapshot.docs;
+          },
+          onError: (e){ 
+            print(e);
+            isError = true; },
+        );
+
+        // Get entries with given date 
+        List<QueryDocumentSnapshot<Entry>> entries = [];
+        DateTime nextDate = date.add(const Duration(days: 1));
+        Timestamp nextStamp = Timestamp.fromDate(nextDate);
+        _entriesRef.where('date', isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp).get().then(
+          (querySnapshot) { entries = querySnapshot.docs; },
+          onError: (e) { 
+            print(e); 
+            isError = true;},
+        );
+
+        // Check if there isn't an error
+        if(!isError) {
+          for (QueryDocumentSnapshot<Station> station in stations){
+            // Query returns entry with station and date
+            List<QueryDocumentSnapshot<Entry>> statEntry = entries.where((element) => element.data().stationID.id == station.id).toList();
+            // Add entry if it doesn't exist
+            if(statEntry.isEmpty){
+              Entry newEntry = 
+                Entry(
+                  assignedUser: null, 
+                  date: stamp, 
+                  note: '', 
+                  stationID: station.reference,
+                  );
+              DocumentReference<Entry> newDocRef = _entriesRef.doc();
+              transaction.set(newDocRef, newEntry);
+            }
+          }
+        }
+    });
+    // TODO adds entries for the given date, if they don't exist.
+  }
+
 
   static Future <bool> saveStation({
     // required BuildContext context,
