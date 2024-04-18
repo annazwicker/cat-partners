@@ -64,18 +64,6 @@ class _FeederTableState extends State<FeederTable> {
                 return widget.fh.equalizeTime(p0.data().date);
               }
             );
-        
-            // Debug: print all entries
-            void debugPrint () {
-              groupedEntries.forEach((key, value) {
-              print(key.toDate());
-              for (QueryDocumentSnapshot<Entry> ent in value) {
-                print("\t ${ent.data()}");
-              }
-              },);
-            }
-        
-            List<TableRow> rows = buildAllRows(groupedEntries);
             
             return Table(
               border: TableBorder.all(),
@@ -88,15 +76,14 @@ class _FeederTableState extends State<FeederTable> {
   }
 
   List<TableRow> buildAllRows(Map<Timestamp, List<QueryDocumentSnapshot<Entry>>> groupedEntries) {
-    assert (stations != null);
     List<TableRow> rows = [];
     groupedEntries.forEach((stamp, snapshots) { 
       DateTime date = stamp.toDate();
       // Ensure data for this row is valid (iterate through stations)
       bool rowIsValid = true;
-      if(snapshots.length == stations!.length) {
+      if(snapshots.length == stations.length) {
         // There must exist an entry for each station
-        for (QueryDocumentSnapshot<Station> station in stations!) {
+        for (QueryDocumentSnapshot<Station> station in stations) {
           // Find entries with this stationID
           if(!snapshots.any((element) => element.data().getStationID().id == station.id)){
             rowIsValid = false;
@@ -137,10 +124,9 @@ class _FeederTableState extends State<FeederTable> {
 
   /// Builds the table's header row with a list of stations.
   TableRow headerRow(){
-    assert (stations != null);
     List<TableCell> cells = [];
     cells.add(buildCell(const Text('Date')));
-    for (var station in stations!) {
+    for (var station in stations) {
       cells.add(buildCell(Text(station.data().name)));
     }
     return TableRow(
