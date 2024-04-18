@@ -157,6 +157,14 @@ class FirebaseHelper {
     // TODO adds entries for the given date, if they don't exist.
   }
 
+  /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and 
+  /// milliseconds set to 0.
+  Timestamp equalizeTime(Timestamp stamp) {
+    DateTime date = stamp.toDate();
+    date = DateTime(date.year, date.month, date.day);
+    return Timestamp.fromDate(date);
+  }
+
   List<QueryDocumentSnapshot<Entry>> getEntries(DateTime date) {
     ensureEntries(date);
     List<QueryDocumentSnapshot<Entry>> entries = [];
