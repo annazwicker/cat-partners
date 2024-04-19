@@ -16,16 +16,13 @@ class TopNavBar extends StatefulWidget {
 
 class _TopNavBarState extends State<TopNavBar> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    const HomeScreen(),
+  final List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(),
     AboutScreen(),
-    const AdminScreen(),
-    const FeederScreen(),
+    AdminScreen(),
+    FeederScreen(),
     const AccountScreen(),
-    const TestScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -84,7 +81,7 @@ class _TopNavBarState extends State<TopNavBar> {
           ),
         ),
       ),
-      body: Center(
+      body: Center( 
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
     );
