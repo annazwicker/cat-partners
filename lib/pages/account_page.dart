@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 void main() => runApp(const AccountScreen());
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({Key? key});
+  const AccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -10,43 +10,45 @@ class AboutScreen extends StatelessWidget {
   AboutScreen({super.key, Key? keyInstance});
   // stores ScrollControllers with labeled names
   final ScrollController _vertical = ScrollController();
-  final ScrollController _scrollCat = ScrollController();
+  final ScrollController _ScrollCat = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(fontFamily: 'Playfair Display'), // SU font
-      home: Scaffold( // basis of structure
-        body: SingleChildScrollView(
+        theme: ThemeData(fontFamily: 'Playfair Display'), // SU font
+        home: Scaffold(
+            // basis of structure
+            body: SingleChildScrollView(
           controller: _vertical, // handles vertical scrolling
-          child: Center( 
-            child: Column(  // starts widgets from top and goes down
-              // puts each individual widget on a separate "line" -> Title, boxes, tabs
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [const Text('About This Site', 
-                          style: TextStyle(fontWeight: FontWeight.bold, height: 2, fontSize: 30 )),
-                _buildIntro(context), ///////////////////////////////////////////// builds intro box
-                Container( // whitespace to separate intro box from tabs
+          child: Center(
+              child: Column(
+                  // starts widgets from top and goes down
+                  // puts each individual widget on a separate "line" -> Title, boxes, tabs
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                const Text('About This Site',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, height: 2, fontSize: 30)),
+                _buildIntro(
+                    context), ///////////////////////////////////////////// builds intro box
+                Container(
+                  // whitespace to separate intro box from tabs
                   height: 40,
                   width: 10,
                   color: const Color(0xFFFFFFFF),
                 ),
                 const NestedTabBar(), // handles the how-to section
-                Container( // whitespace after tabs
-                  height: 40,
-                  width: 10,
-                  color: const Color(0xFFFFFFFF)
-                )
-              ]
-            )
-          ),
-        )
-      )
-    );
+                Container(
+                    // whitespace after tabs
+                    height: 40,
+                    width: 10,
+                    color: const Color(0xFFFFFFFF))
+              ])),
+        )));
   }
 
-  Widget _buildIntro(BuildContext context){
+  Widget _buildIntro(BuildContext context) {
     // checks the size of the window
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth;
@@ -54,25 +56,26 @@ class AboutScreen extends StatelessWidget {
 
     // adjustable size intro box
     {
-      if(screenWidth <= 410){
+      if (screenWidth <= 410) {
         containerWidth = 370;
         containerHeight = 950;
-      } else if(screenWidth > 410 && screenWidth < 810){
-        containerWidth = (1.075*screenWidth) - 70.75;
-        containerHeight = (-1.2*screenWidth) + 1362;
+      } else if (screenWidth > 410 && screenWidth < 810) {
+        containerWidth = (1.075 * screenWidth) - 70.75;
+        containerHeight = (-1.2 * screenWidth) + 1362;
       } else {
         containerWidth = 800;
         containerHeight = 390;
       }
     }
-    return Stack(// box + text overlayed on top of each other
+    return Stack(
+      // box + text overlayed on top of each other
       alignment: Alignment.center,
       children: [
-        Container(// for color box
-          height: containerHeight,
-          width: containerWidth,
-          color: const Color(0xFF828282)
-        ),
+        Container(
+            // for color box
+            height: containerHeight,
+            width: containerWidth,
+            color: const Color(0xFF828282)),
         // help position text, Positioned only works within Stack
         Positioned(// to position text
           child: SizedBox(//////////////////////////////// Container - to enclose everything
@@ -82,14 +85,18 @@ class AboutScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                RichText(//////////////////////////////////////////// to add hyper link to SU cat partners page
-                  text: TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: '    This site is the official Cat Partners Feeding website. This site is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the community cats on campus. To learn more about them and how to support them, go to their ', 
-                      style: TextStyle(fontSize: 16, fontFamily: 'Playfair Display', color: Color.fromARGB(255, 0, 0, 0))
-                    ),
-                    TextSpan( // location of link
+                RichText(
+                    //////////////////////////////////////////// to add hyper link to SU cat partners page
+                    text: TextSpan(children: [
+                  const TextSpan(
+                      text:
+                          '    This site is the official Cat Partners Feeding website. This site is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the community cats on campus. To learn more about them and how to support them, go to their ',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Playfair Display',
+                          color: Color.fromARGB(255, 0, 0, 0))),
+                  TextSpan(
+                      // location of link
                       text: 'official SU website page',
                       style: const TextStyle(
                         fontFamily: 'Playfair Display',
@@ -142,123 +149,99 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
-  Widget _horizontalCatPics(double currentWidth){
-    return SizedBox( ////////////////////////// to have all cat pictures
+  Widget _horizontalCatPics(double currentWidth) {
+    return SizedBox(
+        ////////////////////////// to have all cat pictures
         height: 150,
-        width: currentWidth-150,
-      child: Scrollbar( /////// mini scroll for cat pics
-          controller: _scrollCat,
-          thumbVisibility: true,
-          trackVisibility: true,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            controller: _scrollCat,
-            children: const [
-              // put images in componenets 
-              // perhaps change it so images uploaded can be brought into here
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: Image(image: AssetImage('images/testCat.PNG'))
-              ),
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: Image(image: AssetImage('images/testCat.PNG'))
-              ),
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: Image(image: AssetImage('images/testCat.PNG'))
-              ),
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: Image(image: AssetImage('images/testCat.PNG'))
-              ),
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: Image(image: AssetImage('images/testCat.PNG'))
-              ),
-              SizedBox(
-                height: 150,
-                width: 150,
-                child: Image(image: AssetImage('images/testCat.PNG'))
-              ),
-              // add text
-            ]
-          )
-        )
-    );
+        width: currentWidth - 150,
+        child: Scrollbar(
+            /////// mini scroll for cat pics
+            controller: _ScrollCat,
+            thumbVisibility: true,
+            trackVisibility: true,
+            child: ListView(
+                scrollDirection: Axis.horizontal,
+                controller: _ScrollCat,
+                children: const [
+                  // put images in componenets
+                  // perhaps change it so images uploaded can be brought into here
+                  SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: Image(image: AssetImage('images/testCat.PNG'))),
+                  SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: Image(image: AssetImage('images/testCat.PNG'))),
+                  SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: Image(image: AssetImage('images/testCat.PNG'))),
+                  SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: Image(image: AssetImage('images/testCat.PNG'))),
+                  SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: Image(image: AssetImage('images/testCat.PNG'))),
+                  SizedBox(
+                      height: 150,
+                      width: 150,
+                      child: Image(image: AssetImage('images/testCat.PNG'))),
+                  // add text
+                ])));
   }
 
-  Widget _verticalCatPics(double currentHeight){
-    return SizedBox( ////////////////////////// to have all cat pictures
-        height: currentHeight-340,
+  Widget _verticalCatPics(double currentHeight) {
+    return SizedBox(
+        ////////////////////////// to have all cat pictures
+        height: currentHeight - 370,
         width: 310,
-      child: Scrollbar( /////// mini scroll for cat pics
-          controller: _scrollCat,
-          thumbVisibility: true,
-          trackVisibility: true,
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            controller: _scrollCat,
-            children: const [
-              // put images in componenets 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children:[
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: Image(image: AssetImage('images/testCat.PNG'))
-                  ),
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: Image(image: AssetImage('images/testCat.PNG'))
-                  ),
-                ]
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children:[
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: Image(image: AssetImage('images/testCat.PNG'))
-                  ),
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: Image(image: AssetImage('images/testCat.PNG'))
-                  ),
-                ]
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children:[
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: Image(image: AssetImage('images/testCat.PNG'))
-                  ),
-                  SizedBox(
-                    height: 150,
-                    width: 150,
-                    child: Image(image: AssetImage('images/testCat.PNG'))
-                  ),
-                ]
-              ),
-              // add text
-            ]
-          )
-        )
-    );
+        child: Scrollbar(
+            /////// mini scroll for cat pics
+            controller: _ScrollCat,
+            thumbVisibility: true,
+            trackVisibility: true,
+            child: ListView(
+                scrollDirection: Axis.vertical,
+                controller: _ScrollCat,
+                children: const [
+                  // put images in componenets
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Image(image: AssetImage('images/testCat.PNG'))),
+                    SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Image(image: AssetImage('images/testCat.PNG'))),
+                  ]),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Image(image: AssetImage('images/testCat.PNG'))),
+                    SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Image(image: AssetImage('images/testCat.PNG'))),
+                  ]),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Image(image: AssetImage('images/testCat.PNG'))),
+                    SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Image(image: AssetImage('images/testCat.PNG'))),
+                  ]),
+                  // add text
+                ])));
   }
 }
-
 
 /*
   The following classes is for implementing the tabs bar for the how-to section
@@ -276,13 +259,16 @@ class _NestedTabBarState extends State<NestedTabBar>
   @override
   void initState() {
     super.initState();
-    _nestedTabController = TabController(length: 4, vsync: this); // length: 4 = 4 tabs
+    _nestedTabController =
+        TabController(length: 4, vsync: this); // length: 4 = 4 tabs
   }
+
   @override
   void dispose() {
     super.dispose();
     _nestedTabController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     // gets window size
@@ -292,16 +278,15 @@ class _NestedTabBarState extends State<NestedTabBar>
 
     // adjustable size of tabs section
     {
-      if(screenWidth <= 410){
+      if (screenWidth <= 410) {
         containerWidth = 390;
-        containerHeight = 800;
-      } else if(screenWidth > 410 && screenWidth < 880){
-        double temp = 800 + ((57/94) * 410);
+        containerHeight = 850;
+      } else if (screenWidth > 410 && screenWidth < 870) {
         containerWidth = screenWidth - 20;
-        containerHeight = ((-57/94) * screenWidth) + temp;
+        containerHeight = -screenWidth + 1370;
       } else {
-        containerWidth = 860;
-        containerHeight = 515;
+        containerWidth = 850;
+        containerHeight = 500;
       }
     }
 
@@ -326,19 +311,24 @@ class _NestedTabBarState extends State<NestedTabBar>
               Tab(icon: Icon(Icons.account_box), text: 'Account'),
             ],
           ),
-          SizedBox( // contents of tabs
-            height: containerHeight-100,
-            width: containerWidth-80,
-            child: TabBarView( //////////////////////////what is contained in each tab, children amount must match TabBar length
+          SizedBox(
+            // contents of tabs
+            height: containerHeight - 100,
+            width: containerWidth - 80,
+            child: TabBarView(
+              //////////////////////////what is contained in each tab, must match TabBar length
               controller: _nestedTabController, // same controller
-              children: [
-                const Column(
+              children: const [
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Home page is where users will defualt towards when loging in.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                      child: Text(
+                          'The Home page is where users will defualt towards when loging in.',
+                          style: TextStyle(fontSize: 18),
+                          textAlign: TextAlign.center),
                     ),
                     Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
@@ -350,7 +340,14 @@ class _NestedTabBarState extends State<NestedTabBar>
                   children: [
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                      child: Text(
+                          'This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________',
+                          style: TextStyle(fontSize: 18),
+                          textAlign: TextAlign.center),
+                    ),
+                    Text(
+                      '',
+                      style: TextStyle(fontSize: 18),
                     ),
                     const Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     RichText(
@@ -405,9 +402,8 @@ class _NestedTabBarState extends State<NestedTabBar>
                   ],
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text('The Account page is where information about you is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
                     ),
@@ -480,8 +476,6 @@ class _NestedTabBarState extends State<NestedTabBar>
               ],
             ),
           )
-        ]
-      )
-    );
+        ]));
   }
 }
