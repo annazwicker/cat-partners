@@ -401,6 +401,22 @@ class _NestedTabBarState extends State<NestedTabBar>
                     ),
                   ],
                 ),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Text(
+                          'Feeder',
+                          style: TextStyle(fontSize: 18),
+                          textAlign: TextAlign.center),
+                    ),
+                    Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+
+                  ],
+                ),
                 Column(
                   children: [
                     const Padding(
