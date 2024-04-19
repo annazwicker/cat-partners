@@ -53,34 +53,36 @@ class FirebaseHelper {
       );
   }
 
-  Stream<QuerySnapshot> getEntryStream() {
-    //TEST
-
-    // DocumentReference<Station> stationDocRef = _stationsRef.doc('2');
-    // Timestamp date = Timestamp.fromDate(DateTime(2024, DateTime.april, 7)); 
-
-    // DateTime now = DateTime.now();
-    // DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
-    // final threeWeeksFromNow = nowNoSeconds.add(const Duration(days: -5));
-
-
-    // print(nowNoSeconds);
-    // print(threeWeeksFromNow);
-
-    // return _entriesRef.where("date", isEqualTo: date).snapshots();
+  Stream<QuerySnapshot<Entry>> getEntryStream() {
     return _entriesRef.snapshots();
   }
 
-  Stream<QuerySnapshot> getStationStream() {
+  Stream<QuerySnapshot<Station>> getStationStream() {
     return _stationsRef.snapshots();
   }
 
-  Stream<QuerySnapshot> getCatStream() {
+  Stream<QuerySnapshot<Cat>> getCatStream() {
     return _catsRef.snapshots();
   }
 
-  Stream<QuerySnapshot> getUserStream() {
+  Stream<QuerySnapshot<UserDoc>> getUserStream() {
     return _usersRef.snapshots();
+  }
+
+  void testing() {
+    Query<Entry> emptyNoteQuery = _entriesRef.where('note', isEqualTo: '');
+    // emptyNoteQuery.
+    // Future<QuerySnapshot<Entry>> fut = emptyNoteQuery.get();
+    emptyNoteQuery.get().then(
+      (querySnapshot) {
+        print("Successfully completed");
+        List<QueryDocumentSnapshot<Entry>> queryResults = querySnapshot.docs;
+        for (var docSnapshot in querySnapshot.docs) {
+          print('${docSnapshot.id} => ${docSnapshot.data()}');
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
   }
 
 
@@ -100,14 +102,107 @@ class FirebaseHelper {
     
   }
 
+
+
   /// Getters
   CollectionReference<Entry> get entriesRef { return _entriesRef; }
   CollectionReference<Station> get stationsRef { return _stationsRef; }
   CollectionReference<Cat> get catsRef { return _catsRef; }
   CollectionReference<UserDoc> get usersRef { return _usersRef; }
+  FirebaseFirestore get db { return _db; }
+
+  /// Let 'colRef' be a CollectionReference
+  /// Let 'someDocId' be a doc id
+  /// colRef.doc(someDocId) 
+  ///   | Returns DocumentReference to doc with id 'someDocId'
+  /// colRef.doc() 
+  ///   | Returns DocumentReference to newly-created doc with auto-id.
+  /// colRef.doc(someDocId).set(Map<String, dynamic> data) 
+  ///   | Sets/creates document with ID 'someDocId' with data 'data'
+  /// colRef.add(someClassData)
+  ///   | Creates a document with auto-ID and data 'data'
 
   void addEntry(Entry entry) async {
     _entriesRef.add(entry);
+  }
+  
+  /// Ensures that entries exist for [date] by adding them if they don't exist.
+  void ensureEntries(DateTime date) async {
+    // Remove milliseconds
+    date = DateTime(date.year, date.month, date.day);
+    Timestamp stamp = Timestamp.fromDate(date);
+    _db.runTransaction(
+      (transaction) async {
+        // Get all stations
+        bool isError = false;
+        List<QueryDocumentSnapshot<Station>> stations = [];
+        _stationsRef.get().then(
+          (querySnapshot) {
+            stations = querySnapshot.docs;
+          },
+          onError: (e){ 
+            print(e);
+            isError = true; },
+        );
+
+        // Get entries with given date 
+        List<QueryDocumentSnapshot<Entry>> entries = [];
+        entriesOnDateQuery(date).get().then(
+          (querySnapshot) { entries = querySnapshot.docs; },
+          onError: (e) { 
+            print(e); 
+            isError = true;},
+        );
+
+        // Check if there isn't an error
+        if(!isError) {
+          for (QueryDocumentSnapshot<Station> station in stations){
+            // Query returns entry with station and date
+            List<QueryDocumentSnapshot<Entry>> statEntry = entries.where((element) => element.data().stationID.id == station.id).toList();
+            // Add entry if it doesn't exist
+            if(statEntry.isEmpty){
+              Entry newEntry = 
+                Entry(
+                  assignedUser: null, 
+                  date: stamp, 
+                  note: '', 
+                  stationID: station.reference,
+                  );
+              DocumentReference<Entry> newDocRef = _entriesRef.doc();
+              transaction.set(newDocRef, newEntry);
+            }
+          }
+        }
+    });
+    // TODO adds entries for the given date, if they don't exist.
+  }
+
+  /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and 
+  /// milliseconds set to 0.
+  Timestamp equalizeTime(Timestamp stamp) {
+    DateTime date = stamp.toDate();
+    date = DateTime(date.year, date.month, date.day);
+    return Timestamp.fromDate(date);
+  }
+
+  List<QueryDocumentSnapshot<Entry>> getEntries(DateTime date) {
+    ensureEntries(date);
+    List<QueryDocumentSnapshot<Entry>> entries = [];
+    entriesOnDateQuery(date).get().then(
+      (querySnapshot) {
+        entries = querySnapshot.docs.toList();
+      }
+    );
+    return entries;
+  }
+
+  /// Returns a query that queries the database for all entries on the given [date].
+  Query<Entry> entriesOnDateQuery(DateTime date) {
+    DateTime nextDate = date.add(const Duration(days: 1));
+
+    Timestamp stamp = Timestamp.fromDate(date);
+    Timestamp nextStamp = Timestamp.fromDate(nextDate);
+    return _entriesRef.where('date', isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
   }
 
   static Future <bool> saveStation({

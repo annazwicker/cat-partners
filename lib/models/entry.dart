@@ -1,6 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class Entry {
+
+  static const String userRefString = 'assignedUser';
+  static const String dateString = 'date';
+  static const String noteString = 'string';
+  static const String stationRefString = 'stationID';
+
   late final DocumentReference? assignedUser;
   final Timestamp date;
   final String note;
@@ -16,17 +23,17 @@ class Entry {
 
   //static method that converts JSON query document into Cat class object
   factory Entry.fromJson(Map<String, dynamic> json) => Entry(
-    assignedUser: json['assignedUser'],
-    date: json['date'],
+    assignedUser: json[userRefString],
+    date: json[dateString],
     note: json['note'],
     stationID: json['stationID'],
   );
 
   Map<String, dynamic> toJson() => {
-    'assignedUser' : assignedUser,
-    'date' : date,
-    'note' : note,
-    'stationID' : stationID,
+    userRefString : assignedUser,
+    dateString : date,
+    noteString : note,
+    stationRefString : stationID,
   };
 
   Entry copyWith({
@@ -48,6 +55,19 @@ class Entry {
   
   String getNote() {
     return note;
+  }
+
+  DocumentReference getStationID() {
+    return stationID;
+  }
+
+  DocumentReference? getUserID() {
+    return assignedUser;
+  }
+
+  @override
+  String toString() {
+    return toJson().toString();
   }
 
   /// TODO retrieve assigned user's first name OR null

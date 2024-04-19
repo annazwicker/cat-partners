@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/Feeder%20Files/feeder_data_source.dart';
+
+import '../../models/entry.dart';
+import '../../services/firebase_helper.dart';
 
 enum PageState { 
   empty,  // Default view. Displays basic information.
@@ -7,25 +12,25 @@ enum PageState {
   }
 
 class FeederController extends ChangeNotifier {
+  final FirebaseHelper fh;
+  final FeederDataSource fds;
+
   PageState currentState = PageState.empty;
 
   // Shared
-  late int? currentUserID; // placeholder; should be global variable across app
+  // late int? currentUserID; // placeholder; should be global variable across app
 
   // Entry select
-  late List<Map<String, dynamic>>? selectedEntries;
+  late List<QueryDocumentSnapshot<Entry>>? selectedEntries;
 
   // Entry view
-  late Map<String, dynamic>? currentEntry;
+  // late Map<String, dynamic>? currentEntry;
+  late QueryDocumentSnapshot<Entry> currentEntry;
   late bool isUsersEntry; // TODO true if user is viewing their own entry
 
-  // Debug
-  late String testStr;
-
-  void setString(String newString){
-    testStr = newString;
-    notifyListeners();
-  }
+  FeederController({
+    required this.fh
+  }) : fds = FeederDataSource(fh: fh);
 
   /// Asserts that, for the Controller's current state, certain variables 
   /// are in order.
@@ -44,10 +49,9 @@ class FeederController extends ChangeNotifier {
     }
   }
 
-
   /// Adds given entry to selection if it's not included,
   /// And removes entry from selection if it is.
-  void toggleSelection(Map<String, dynamic> entry){
+  void toggleSelection(QueryDocumentSnapshot<Entry> entry){
     checkThisState(PageState.select);
     if (selectedEntries!.contains(entry)){
       selectedEntries!.remove(entry);
@@ -58,13 +62,13 @@ class FeederController extends ChangeNotifier {
     }
   }
 
-  List<Map<String, dynamic>> getSelection(){
+  List<QueryDocumentSnapshot<Entry>> getSelection(){
     checkThisState(PageState.select);
     return selectedEntries!;
   }
 
   /// Changes current page state to View, viewing the given entry.
-  void toViewState(Map<String, dynamic> entry) {
+  void toViewState(QueryDocumentSnapshot<Entry> entry) {
     // TODO Once Controller uses user IDs, check
     // given userID against stored and update if they're
     // different.
