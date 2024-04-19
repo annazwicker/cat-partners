@@ -7,13 +7,10 @@ import 'package:flutter_application_1/pages/admin_tabs_content/edit_feeding_stat
 import 'package:flutter_application_1/pages/admin_tabs_content/search_accounts_content.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/export_data.dart';
 
-class AdminScreen extends StatelessWidget {
+class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
 
-  @override
-  State<AdminScreen> createState() {
-    return _AdminScreenState();
-  }
+  State<AdminScreen> createState() => _AdminScreenState();
 }
 
 class _AdminScreenState extends State<AdminScreen> {
@@ -139,10 +136,6 @@ class _NestedTabBarState extends State<NestedTabBar>
       ),
     );
   }
-}
-
-void main() {
-  runApp(AdminScreen());
 }
 
 void main() {
