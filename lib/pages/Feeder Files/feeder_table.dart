@@ -1,5 +1,8 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:intl/intl.dart';
 
@@ -64,10 +67,19 @@ class _FeederTableState extends State<FeederTable> {
                 return widget.fh.equalizeTime(p0.data().date);
               }
             );
+
+            var entriesAsList = groupedEntries.entries.toList();
+            entriesAsList.sort( (a, b) => a.key.compareTo(b.key));
+            groupedEntries = Map.fromEntries(entriesAsList);
             
-            return Table(
-              border: TableBorder.all(),
-              children: [headerRow()] + buildAllRows(groupedEntries),          
+            var rows = buildAllRows(groupedEntries);
+            var t = Table(
+                  border: TableBorder.all(),
+                  children: [headerRow()] + rows);
+            // return t;
+            return SingleChildScrollView(
+              controller: ScrollController(),
+              child: t
             );
           }
         );
@@ -114,7 +126,8 @@ class _FeederTableState extends State<FeederTable> {
       // CellWrapper holds all cell data
       cells.add(buildCell(CellWrapper(
         data: data[i], 
-        controller: widget.controller
+        controller: widget.controller,
+        fh: widget.fh,
       )));
     }
     return TableRow(
@@ -127,7 +140,11 @@ class _FeederTableState extends State<FeederTable> {
     List<TableCell> cells = [];
     cells.add(buildCell(const Text('Date')));
     for (var station in stations) {
-      cells.add(buildCell(Text(station.data().name)));
+      cells.add(buildCell(
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(station.data().name))
+      ));
     }
     return TableRow(
       children: cells
@@ -135,7 +152,7 @@ class _FeederTableState extends State<FeederTable> {
   }
 
   /// Builds a cell holding the given Widget.
-  TableCell buildCell(dynamic cellData){
+  TableCell buildCell(Widget cellData){
     return TableCell(
       verticalAlignment: TableCellVerticalAlignment.middle,
       child: cellData
@@ -144,62 +161,65 @@ class _FeederTableState extends State<FeederTable> {
 }
 
 /// Wrapper Widget with Cell contents
-class CellWrapper extends StatelessWidget{
-  const CellWrapper({super.key,
-  required this.data,
-  // required this.date,
-  // required this.station,
-  required this.controller});
+class CellWrapper extends StatefulWidget{
 
-  // TODO ought to be an entryID to a shared data from DB call
-  // final DateTime date;
-  // final Map<String, dynamic> station;
+  CellWrapper({super.key,
+  required this.data,
+  required this.controller,
+  required this.fh});
+
   final QueryDocumentSnapshot<Entry> data;
   final FeederController controller;
+  final FirebaseHelper fh;
+
+  @override
+  State<CellWrapper> createState() => _CellWrapperState();
+}
+
+class _CellWrapperState extends State<CellWrapper> {
+
+  late String _cellText;
+
+  Future<String> _initCellText() async {
+    DocumentReference? userID = widget.data.data().assignedUser;
+    String futureCellText = '';
+    if(userID != null){
+      await widget.fh.usersRef.doc(userID.id).get().then((value) {
+        UserDoc? userData = value.data();
+        if (userData == null) {
+          futureCellText = 'ERROR';
+        } else {
+          futureCellText = "${userData.first} ${userData.last}";
+        }
+      },
+      onError: (e) => print(e));
+    }
+    return futureCellText;
+  }
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference? userID = data.data().assignedUser;
-    String feederName = '';
-    if(userID != null){
-      userID.get().then((value) {
-        // print("not null!");
-        UserDoc? userData = UserDoc.fromJson(value.data() as Map<String, dynamic>) ;
-        feederName = "${userData.first} ${userData.last}";
-      });
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      child: GestureDetector(
-        onTap: () {
-          // TODO re-enable
-          // Enter selection for empty entries
-          // if (data[feedIDString] == null){
-          //   controller.toSelectState();
-          //   controller.toggleSelection(data);
-          // }
-          // // Enter view for assigned entries
-          // else {
-          //   controller.toViewState(data);
-          // }          
-        },
-        child: Text(feederName),
-      ),
+    return FutureBuilder(
+      future: _initCellText(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData){
+          return Container(
+          padding: const EdgeInsets.all(8.0),
+          child: const Text('Loading...'),
+          );
+        }
+        _cellText = snapshot.data!;
+        return Container(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () {
+              print(_cellText); 
+            },
+            child: Text(_cellText),
+          ),
+        );
+      }
     ); 
-  }
-
-
-}
-
-/// Given a piece of data that may be a String or null, returns that data.
-/// Returns '' if the data is null.
-String optToString(String? maybeString){
-  if (maybeString == null) {
-    return ''; 
-  }
-  else {
-    return maybeString;
   }
 }
 
