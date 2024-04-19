@@ -178,7 +178,7 @@ class CellWrapper extends StatefulWidget{
 
 class _CellWrapperState extends State<CellWrapper> {
 
-  late String _cellText;
+  late DocumentSnapshot<UserDoc>? assignedUser;
 
   Future<String> _initCellText() async {
     DocumentReference? userID = widget.data.data().assignedUser;
@@ -200,7 +200,7 @@ class _CellWrapperState extends State<CellWrapper> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _initCellText(),
+      future: widget.controller.fds.getAssignedUser(widget.data),
       builder: (context, snapshot) {
         if (!snapshot.hasData){
           return Container(
@@ -208,14 +208,26 @@ class _CellWrapperState extends State<CellWrapper> {
           child: const Text('Loading...'),
           );
         }
-        _cellText = snapshot.data!;
+        (bool, DocumentSnapshot<UserDoc>?) userTuple = snapshot.data!;
+        String cellText = '';
+        if(userTuple.$1){ // There is an assigned user
+          assignedUser = userTuple.$2;
+          UserDoc? userData = assignedUser!.data();
+          if (userData == null) {
+            cellText = 'ERROR';
+          } else {
+            cellText = "${userData.first} ${userData.last}";
+          }
+        }
+        
         return Container(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: () {
-              print(_cellText); 
+              print(cellText); 
+
             },
-            child: Text(_cellText),
+            child: Text(cellText),
           ),
         );
       }

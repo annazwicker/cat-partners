@@ -16,17 +16,25 @@ class FeederDataSource extends ChangeNotifier {
     tableStream = fh.getEntryStream();
   }
 
-  // Future<DocumentSnapshot<UserDoc>> getAssignedUser(QueryDocumentSnapshot<Entry> entrySnapshot) async {
-  //   DocumentReference? userID = entrySnapshot.data().assignedUser;
-  //   String futureCellText = '';
-  //   DocumentSnapshot<UserDoc> toReturn;
-  //   if(userID != null){
-  //     await fh.usersRef.doc(userID.id).get().then((value) {
-  //       toReturn = value;
-  //     },
-  //     onError: (e) => print(e));
-  //   }
-  //   return toReturn;
-  // }
+  /// Returns the DocumentSnapshot<UserDoc> of the user document referenced by the
+  /// entry in the given QueryDocumentSnapshot. The bool in the first part of the tuple
+  /// is true if and only if such a user exists; i.e., if [entrySnapshot] both has
+  /// a non-null assignedUser field and that user exists in the database.
+  Future<(bool, DocumentSnapshot<UserDoc>?)> getAssignedUser(QueryDocumentSnapshot<Entry> entrySnapshot) async {
+    /// A tuple with a bool is used to allow this Future to return a non-null value
+    /// even when the given Entry has no assignedUser. Otherwise, FutureBuilders using
+    /// this function won't be able to differentiate waiting on this function from the
+    /// function returning a null value.
+    DocumentReference? userID = entrySnapshot.data().assignedUser;
+    DocumentSnapshot<UserDoc>? toReturn;
+    bool userExists = false;
+    if(userID != null){
+      var snap = await fh.usersRef.doc(userID.id).get();
+      toReturn = snap;
+      userExists = true;
+    }
+    assert (userExists == (toReturn != null));
+    return (userExists, toReturn);
+  }
   
 }
