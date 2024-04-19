@@ -40,11 +40,12 @@ dependencies:
   file_picker: ^3.0.3
   image_picker: ^1.0.7
   mime: ^1.0.5
-  firebase_auth: ^4.17.5
-  google_sign_in: ^6.2.1
+  firebase_auth: ^4.7.3
+  google_sign_in: ^6.1.4
   flutter_signin_button: ^2.0.0
   google_auth: ^0.0.3
-  firebase_core: ^2.25.4
+  firebase_core: ^2.15.1
+  cloud_firestore: ^4.8.5
 
 dev_dependencies:
   flutter_test:

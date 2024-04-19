@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage>{
                           // print(error.message);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message ?? "Something went wrong")));
                         } on Exception catch (error){
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+                          print(error.toString());
                         }
                       },
                     )
