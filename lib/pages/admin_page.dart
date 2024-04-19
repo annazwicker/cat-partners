@@ -11,6 +11,16 @@ class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
 
   @override
+  State<AdminScreen> createState() {
+    return _AdminScreenState();
+  }
+}
+
+class _AdminScreenState extends State<AdminScreen> {
+  final TextEditingController _controller = TextEditingController();
+  Future<List<dynamic>>? _futureFruit; // Define Future for getFruit function
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'Playfair Display'),
@@ -129,6 +139,10 @@ class _NestedTabBarState extends State<NestedTabBar>
       ),
     );
   }
+}
+
+void main() {
+  runApp(AdminScreen());
 }
 
 void main() {
