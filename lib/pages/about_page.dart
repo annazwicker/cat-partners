@@ -318,8 +318,8 @@ class _NestedTabBarState extends State<NestedTabBar>
             child: TabBarView(
               //////////////////////////what is contained in each tab, must match TabBar length
               controller: _nestedTabController, // same controller
-              children: const [
-                Column(
+              children: [
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -345,7 +345,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                           style: TextStyle(fontSize: 18),
                           textAlign: TextAlign.center),
                     ),
-                    Text(
+                    const Text(
                       '',
                       style: TextStyle(fontSize: 18),
                     ),
@@ -403,7 +403,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                 ),
                 Column(
                   children: [
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text('The Account page is where information about you is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
                     ),
