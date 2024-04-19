@@ -62,7 +62,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
               Container(
                 alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                child: Text('Feeder: ${optToString(currentEntry[feedIDString])}'),
+                child: Text('Feeder: ${currentEntry[feedIDString] ?? ''}'),
               ),
               // TODO add button
             ]
@@ -71,7 +71,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: Text('Notes: \n${optToString(currentEntry[noteIDString])}')
+            child: Text('Notes: \n${currentEntry[noteIDString] ?? ''}')
           ), // Notes
         ]
     )));
