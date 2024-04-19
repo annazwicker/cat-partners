@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_table.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart';
 import 'package:flutter_application_1/services/firebase_helper.dart';
+
+import '../../models/entry.dart';
 
 class FeederSidebar extends StatefulWidget {
   const FeederSidebar({
@@ -45,7 +48,8 @@ class _FeederSidebarState extends State<FeederSidebar> {
 
   Widget viewBody(){
     // Will hold basic structure of view mode sidebar
-    Map<String, dynamic> currentEntry = widget.controller.currentEntry!;
+    QueryDocumentSnapshot<Entry> currentEntry = widget.controller.currentEntry;
+    Entry currentEntryData = currentEntry.data();
     return Scaffold( 
       appBar: AppBar(
         title: const Text('Entry'),
@@ -55,14 +59,14 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.all(16.0),
-            child: Text('Date: ${format.format(currentEntry['date'])}'),
+            child: Text('Date: ${format.format(currentEntryData.date.toDate())}'),
           ), // Date
           Row( // Name + remove button
             children: <Widget>[
               Container(
                 alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                child: Text('Feeder: ${currentEntry[feedIDString] ?? ''}'),
+                child: const Text('Feeder: ${'placeholder'}'),
               ),
               // TODO add button
             ]
@@ -71,7 +75,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: Text('Notes: \n${currentEntry[noteIDString] ?? ''}')
+            child: Text('Notes: \n${currentEntryData.note ?? ''}')
           ), // Notes
         ]
     )));

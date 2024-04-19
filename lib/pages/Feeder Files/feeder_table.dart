@@ -57,7 +57,7 @@ class _FeederTableState extends State<FeederTable> {
         }
         stations = stationSnapshot.data!;
         return StreamBuilder(
-          stream: widget.fh.getEntryStream(),
+          stream: widget.controller.fds.tableStream,
           builder: (context, snapshot) {
             List<QueryDocumentSnapshot<Entry>> allEntries = snapshot.data?.docs ?? [];
         
