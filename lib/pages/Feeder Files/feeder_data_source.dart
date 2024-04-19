@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/entry.dart';
+import '../../models/station.dart';
 import '../../models/userdoc.dart';
 import '../../services/firebase_helper.dart';
 
@@ -9,11 +10,32 @@ class FeederDataSource extends ChangeNotifier {
 
   FirebaseHelper fh;
   late Stream<QuerySnapshot<Entry>> tableStream;
+  late Future<List<QueryDocumentSnapshot<Station>>> stations;
+  
 
   FeederDataSource({
     required this.fh,
   }){
+    stations = _initStations();
     tableStream = fh.getEntryStream();
+  }
+
+  Future<List<QueryDocumentSnapshot<Station>>> _initStations() async {
+    // bool isError = false;
+    List<QueryDocumentSnapshot<Station>> listStations = [];
+    await fh.stationsRef.get().then(
+      (stationSnapshot) {
+        listStations = stationSnapshot.docs;
+      },
+      onError: (e) {
+        print(e);
+        // isError = true;
+      }
+    );
+    listStations.sort((a, b) {
+      return a.id.compareTo(b.id);
+    });
+    return listStations;
   }
 
   /// Returns the DocumentSnapshot<UserDoc> of the user document referenced by the
@@ -37,4 +59,9 @@ class FeederDataSource extends ChangeNotifier {
     return (userExists, toReturn);
   }
   
+}
+
+class EntryWrapper {
+  late QueryDocumentSnapshot<Entry> entrySnapshot;
+  late DocumentSnapshot<UserDoc> entryUser;
 }

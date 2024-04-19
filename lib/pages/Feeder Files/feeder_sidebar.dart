@@ -7,6 +7,7 @@ import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
 import '../../models/entry.dart';
+import '../../models/userdoc.dart';
 
 class FeederSidebar extends StatefulWidget {
   const FeederSidebar({
@@ -48,8 +49,9 @@ class _FeederSidebarState extends State<FeederSidebar> {
 
   Widget viewBody(){
     // Will hold basic structure of view mode sidebar
-    QueryDocumentSnapshot<Entry> currentEntry = widget.controller.currentEntry;
+    QueryDocumentSnapshot<Entry> currentEntry = widget.controller.currentEntry!;
     Entry currentEntryData = currentEntry.data();
+    String entryUserName = widget.controller.getCurrentEntryUserName();
     return Scaffold( 
       appBar: AppBar(
         title: const Text('Entry'),
@@ -66,7 +68,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
               Container(
                 alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                child: const Text('Feeder: ${'placeholder'}'),
+                child: Text('Feeder: $entryUserName'),
               ),
               // TODO add button
             ]
@@ -114,8 +116,8 @@ class _FeederSidebarState extends State<FeederSidebar> {
                 for (var entry in widget.controller.getSelection()) 
                 TableRow(
                   children: [
-                      TableCell(child: Text(format.format(entry['date']))),
-                      TableCell(child: Text(entry['station'])),
+                      TableCell(child: Text(format.format(entry.data().date.toDate()))),
+                      TableCell(child: Text(entry.data().stationID.id)),
                     ],
                 )
               ]

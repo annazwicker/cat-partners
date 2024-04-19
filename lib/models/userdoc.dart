@@ -8,15 +8,18 @@ class UserDoc {
   static const String birthYearString = 'born';
 
   /// Fields
-  final String first;
-  final String last;
-  final int born;
+  final String _first;
+  final String _last;
+  final int _born;
 
   UserDoc({
-    required this.first,
-    required this.last,
-    required this.born,
-  });
+    required first,
+    required last,
+    required born,
+  }) :
+    _first = first,
+    _last = last,
+    _born = born;
 
   factory UserDoc.fromJson(Map<String, dynamic> json) => UserDoc(
     first: json[firstNameString],
@@ -25,8 +28,12 @@ class UserDoc {
   );
 
   Map<String, dynamic> toJson() => {
-    firstNameString: first,
-    lastNameString: last,
-    birthYearString: born,
+    firstNameString: _first,
+    lastNameString: _last,
+    birthYearString: _born,
   };
+
+  String getName() {
+    return "$_first $_last";
+  }
 }

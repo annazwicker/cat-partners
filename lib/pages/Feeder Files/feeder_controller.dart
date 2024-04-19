@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_data_source.dart';
 
 import '../../models/entry.dart';
+import '../../models/userdoc.dart';
 import '../../services/firebase_helper.dart';
 
 enum PageState { 
@@ -24,8 +25,8 @@ class FeederController extends ChangeNotifier {
   late List<QueryDocumentSnapshot<Entry>>? selectedEntries;
 
   // Entry view
-  // late Map<String, dynamic>? currentEntry;
-  late QueryDocumentSnapshot<Entry> currentEntry;
+  late QueryDocumentSnapshot<Entry>? currentEntry;
+  late DocumentSnapshot<UserDoc>? currentEntryUser;
   late bool isUsersEntry; // TODO true if user is viewing their own entry
 
   FeederController({
@@ -38,6 +39,8 @@ class FeederController extends ChangeNotifier {
     checkThisState(currentState);
   }
   
+  /// Asserts that the Controller is in the PageState [state], and that
+  /// certain variables are non-null.
   void checkThisState(PageState state){
     assert (currentState == state);
     switch (state){
@@ -67,12 +70,22 @@ class FeederController extends ChangeNotifier {
     return selectedEntries!;
   }
 
+  /// Gets the name of the user currently selected 
+  String getCurrentEntryUserName() {
+    checkThisState(PageState.view);
+    if(currentEntryUser != null) {
+      UserDoc? data = currentEntryUser!.data();
+      return data == null ? 'ERROR' : data.getName();
+    } else { return ''; }
+  }
+
   /// Changes current page state to View, viewing the given entry.
-  void toViewState(QueryDocumentSnapshot<Entry> entry) {
+  void toViewState(QueryDocumentSnapshot<Entry> entry, DocumentSnapshot<UserDoc>? entryUser) {
     // TODO Once Controller uses user IDs, check
     // given userID against stored and update if they're
     // different.
     currentEntry = entry;
+    currentEntryUser = entryUser;
     currentState = PageState.view;
     notifyListeners();
   }

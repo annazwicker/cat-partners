@@ -29,28 +29,10 @@ class _FeederTableState extends State<FeederTable> {
   // late Stream<QuerySnapshot<Entry>> entryStream;
   late List<QueryDocumentSnapshot<Station>> stations;
 
-  Future<List<QueryDocumentSnapshot<Station>>> _initStations() async {
-    // bool isError = false;
-    List<QueryDocumentSnapshot<Station>> listStations = [];
-    await widget.fh.stationsRef.get().then(
-      (stationSnapshot) {
-        listStations = stationSnapshot.docs;
-      },
-      onError: (e) {
-        print(e);
-        // isError = true;
-      }
-    );
-    listStations.sort((a, b) {
-      return a.id.compareTo(b.id);
-    });
-    return listStations;
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _initStations(),
+      future: widget.controller.fds.stations,
       builder: (stationContext, stationSnapshot) {
         if (!stationSnapshot.hasData) {
           return const CircularProgressIndicator();
@@ -97,7 +79,7 @@ class _FeederTableState extends State<FeederTable> {
         // There must exist an entry for each station
         for (QueryDocumentSnapshot<Station> station in stations) {
           // Find entries with this stationID
-          if(!snapshots.any((element) => element.data().getStationID().id == station.id)){
+          if(!snapshots.any((element) => element.data().stationID.id == station.id)){
             rowIsValid = false;
             break;
           }
@@ -178,24 +160,7 @@ class CellWrapper extends StatefulWidget{
 
 class _CellWrapperState extends State<CellWrapper> {
 
-  late DocumentSnapshot<UserDoc>? assignedUser;
-
-  Future<String> _initCellText() async {
-    DocumentReference? userID = widget.data.data().assignedUser;
-    String futureCellText = '';
-    if(userID != null){
-      await widget.fh.usersRef.doc(userID.id).get().then((value) {
-        UserDoc? userData = value.data();
-        if (userData == null) {
-          futureCellText = 'ERROR';
-        } else {
-          futureCellText = "${userData.first} ${userData.last}";
-        }
-      },
-      onError: (e) => print(e));
-    }
-    return futureCellText;
-  }
+  DocumentSnapshot<UserDoc>? assignedUser;
 
   @override
   Widget build(BuildContext context) {
@@ -216,23 +181,37 @@ class _CellWrapperState extends State<CellWrapper> {
           if (userData == null) {
             cellText = 'ERROR';
           } else {
-            cellText = "${userData.first} ${userData.last}";
+            cellText = userData.getName();
           }
         }
         
         return Container(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
-            onTap: () {
-              print(cellText); 
-
-            },
+            onTap: doOnTap,
             child: Text(cellText),
           ),
         );
       }
     ); 
   }
+
+  bool hasUser() {
+    return assignedUser != null; 
+    }
+
+  void doOnTap() {
+    // Enter view for unassigned entries
+    if (!hasUser()){
+      widget.controller.toSelectState();
+      widget.controller.toggleSelection(widget.data);
+    }
+    // Enter view for assigned entries
+    else {
+      widget.controller.toViewState(widget.data, assignedUser);
+    }
+  }
+
 }
 
 
