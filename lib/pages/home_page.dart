@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_application_1/components/nav_bar.dart";
 import 'package:flutter_application_1/const.dart';
+import "package:flutter_application_1/services/firebase_helper.dart";
+
 
 
 class HomePage extends StatefulWidget {
@@ -12,6 +14,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  final _dbHelper = FirebaseHelper();
+  
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -61,7 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: Center(
                       child: Container(
-                          // margin: EdgeInsets.all(8),
                           padding: const EdgeInsets.only(
                               top: 20, bottom: 45, left: 20, right: 20),
                           child: const Text(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart';
 
 import '../models/cat.dart';
 import '../models/entry.dart';
@@ -53,6 +54,20 @@ class FirebaseHelper {
   }
 
   Stream<QuerySnapshot> getEntryStream() {
+    //TEST
+
+    // DocumentReference<Station> stationDocRef = _stationsRef.doc('2');
+    // Timestamp date = Timestamp.fromDate(DateTime(2024, DateTime.april, 7)); 
+
+    // DateTime now = DateTime.now();
+    // DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
+    // final threeWeeksFromNow = nowNoSeconds.add(const Duration(days: -5));
+
+
+    // print(nowNoSeconds);
+    // print(threeWeeksFromNow);
+
+    // return _entriesRef.where("date", isEqualTo: date).snapshots();
     return _entriesRef.snapshots();
   }
 
@@ -66,6 +81,23 @@ class FirebaseHelper {
 
   Stream<QuerySnapshot> getUserStream() {
     return _usersRef.snapshots();
+  }
+
+
+
+  //home_page methods
+    Stream<QuerySnapshot> getUrgentEntries() {
+
+
+    // DocumentReference<Station> stationDocRef = _stationsRef.doc('2');
+    // Timestamp date = Timestamp.fromDate(DateTime(2024, DateTime.april, 7)); 
+
+    DateTime now = DateTime.now();
+    DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
+    DateTime tomorrow = nowNoSeconds.add(const Duration(days: 1));
+
+    return _entriesRef.where("date", isGreaterThanOrEqualTo: nowNoSeconds).where("date", isLessThanOrEqualTo: tomorrow).snapshots();
+    
   }
 
   /// Getters

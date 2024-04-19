@@ -21,14 +21,15 @@ class _TestScreenState extends State<TestScreen> {
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feeder Page'),
+        title: Text('Testing Page'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             StreamBuilder(
-              stream: _dbHelper.getEntryStream(),
+              // stream: _dbHelper.getEntryStream(),
+              stream: _dbHelper.getUrgentEntries(),
               builder: (context, snapshot) {
                 List entries = snapshot.data?.docs ?? [];
                 if(entries.isEmpty) {

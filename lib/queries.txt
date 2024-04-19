@@ -52,34 +52,78 @@ final feederCount = entryRef.where("date", isGreaterThanOrEqualTo: Today).where(
 
 ABOUT Page
 
-1. just the cat pictures
+1. just the cat pictures -- all cats
 
-
+final catsRef = _db.collection("cat");
 
 Account Page
 
 1. save and retrieve first name, last name, email, phone number, status, rescue group
 
-
+final usersRef = _db.collection("users");
+//simply retrieve the entire document, there's no need to make a where query
+final currentUserRef = usersRef.document("userDocumentID"); //.snapshots()
 
 Admin Page
 1. retrieve users from email, delete those users
-2. retrieve admin users' first and last names
+
+        //get list of all users
+final usersRef = _db.collection("users");
+String searchTerm = "placeholder";
+    //loop through all users to run string.contains method on them
+s
+        //convert to workable snapshots
+        //loop through entire collection
+        //return list
+List users = snapshot.data?.docs ?? [];
+List searchResult = [];
+for (final user in users){
+    UserDoc userData = user.data();
+    if ((userData.name.contains(searchTerm)) || (user.email.contains(searchTerm))){
+        searchResult.add(user);
+    }
+}
+
+
+2. retrieve admin users
+
+_usersRef.where("isAdmin", isEqualTo: true);
+
+
+
 3. retrieve cat names -- delete cat
         add new cat
+
+
+async method
+
+_catsRef.add(catObject);
+
+_catsRef.doc("catID").delete().then(
+    onError: (e) => print("Error deleting document);
+);
+
+
+//update
+
+_catsRef.doc("catID").update({"name": "Fluffles"}).then(
+    onError: (e) => print("Error updating name of document);
+);
+
 4. retrieve feeding stations
         add new station
-5. retrieve users based on first name, last name, email
 
-6. csv for user entries in given date
-        
+_catsRef.add(stationObject);
 
+
+5. csv for user entries in given date
+
+???
 
 Feeder Page
 
 1. 3 weeks from current date of entries
-2. 
 
 
-
+_entryRef.where("date", isGreaterThanOrEqualTo: today).where("date", isLessThanOrEqualTo: today + threeWeeks);
 
