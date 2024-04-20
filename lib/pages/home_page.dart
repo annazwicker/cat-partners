@@ -4,6 +4,11 @@ import 'package:flutter_application_1/const.dart';
 import "package:flutter_application_1/services/firebase_helper.dart";
 
 
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:intl/intl.dart";
+import "../models/entry.dart";
+
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,8 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  final _dbHelper = FirebaseHelper();
   
   @override
   Widget build(BuildContext context) {
@@ -32,66 +35,129 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  @override
-  bool _isWindowOpen = true;
+
+  final _dbHelper = FirebaseHelper();
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        // alignment: AlignmentDirectional.center,
-        children: [
-          if (_isWindowOpen)
-            IntrinsicHeight(
-              child: Container(
-                margin: const EdgeInsets.all(20),
-                color: SUYellow,
-                width: MediaQuery.of(context).size.width * 0.75,
-                // height: MediaQuery.of(context).size.height * 0.08,
-                constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.height * 0.08),
-                child: Column(children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isWindowOpen = false;
-                          });
-                        },
-                        icon: const Icon(Icons.close)),
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                          padding: const EdgeInsets.only(
-                              top: 20, bottom: 45, left: 20, right: 20),
-                          child: const Text(
-                              'The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and black striped pattern. This is usually caused by the contents being too big for the RenderFlex.')),
-                    ),
-                  )
-                ]),
-              ),
-            ),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  height: MediaQuery.of(context).size.width * 0.1,
-                  color: SUYellow,
-                  margin: const EdgeInsets.all(20),
-                  padding: const EdgeInsets.all(20),
-                  child: const Text('Achievement Box'))),
-          Container(
-              width: MediaQuery.of(context).size.width * 0.75,
-              height: MediaQuery.of(context).size.width * 0.3,
-              color: SUYellow,
-              margin: const EdgeInsets.all(20),
-              padding: const EdgeInsets.all(20),
-              child: const Text('Scheduler')),
-        ],
+    Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Page'),
       ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            //notification box
+            StreamBuilder(
+              stream: _dbHelper.getUrgentEntries(),
+              builder: (context, snapshot) {
+                List entries = snapshot.data?.docs ?? [];
+                entries.sort((a, b) {
+                  DateTime aE = a.data().date.toDate();
+                  DateTime bE = b.data().date.toDate();
+                  DateTime aDT = DateTime(aE.year, aE.month, aE.day);
+                  DateTime bDT = DateTime(bE.year, bE.month, bE.day);
+                  int comp = aDT.compareTo(bDT);
+                  if(comp == 0){
+                    String aS = a.data().stationID.id;
+                    String bS = b.data().stationID.id;
+                    return aS.compareTo(bS);
+                  }
+                  return comp;
+                });
+                if(entries.isEmpty) {
+                  return const Center(
+                    child: Text('No entries found.')
+                  );
+                }
+                return Flexible(
+                  child: ListView.builder(
+                    // physics: const AlwaysScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: entries.length,
+                    itemBuilder: (context, index) {
+                      Entry entry = entries[index].data();
+                      // String entryId = entries[index].id;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 10,
+                        ),
+                        child: SingleChildScrollView(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Flexible(child: Text(entry.date.toDate().toString())),
+                              Flexible(child: Text(entry.assignedUser?.id ?? 'nullUser')),
+                              Flexible(child: Text(entry.note)),
+                              Flexible(child: Text(entry.stationID.id))
+                            ],
+                          ),
+                        )
+                      );
+                    },
+                  ),
+                );
+              }
+            ),
+            //achievement box
+            StreamBuilder(
+              stream: _dbHelper.getUpcomingUserEntries(_dbHelper.getCurrentUser()),
+              builder: (context, snapshot) {
+                List entries = snapshot.data?.docs ?? [];
+                entries.sort((a, b) {
+                  DateTime aE = a.data().date.toDate();
+                  DateTime bE = b.data().date.toDate();
+                  DateTime aDT = DateTime(aE.year, aE.month, aE.day);
+                  DateTime bDT = DateTime(bE.year, bE.month, bE.day);
+                  int comp = aDT.compareTo(bDT);
+                  if(comp == 0){
+                    String aS = a.data().stationID.id;
+                    String bS = b.data().stationID.id;
+                    return aS.compareTo(bS);
+                  }
+                  return comp;
+                });
+                if(entries.isEmpty) {
+                  return const Center(
+                    child: Text('No entries found.')
+                  );
+                }
+                return Flexible(
+                  child: ListView.builder(
+                    // physics: const AlwaysScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: entries.length,
+                    itemBuilder: (context, index) {
+                      Entry entry = entries[index].data();
+                      // String entryId = entries[index].id;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 10,
+                        ),
+                        child: SingleChildScrollView(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Flexible(child: Text(entry.date.toDate().toString())),
+                              Flexible(child: Text(entry.assignedUser?.id ?? 'nullUser')),
+                              Flexible(child: Text(entry.note)),
+                              Flexible(child: Text(entry.stationID.id))
+                            ],
+                          ),
+                        )
+                      );
+                    },
+                  ),
+                );
+              }
+            ),
+            
+          ]
+        )
+      )
     );
   }
 }

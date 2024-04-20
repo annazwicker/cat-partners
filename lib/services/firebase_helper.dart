@@ -88,12 +88,14 @@ class FirebaseHelper {
 
 
   //home_page methods
+
+
+  /**
+   * queries all today and tomorrow entries that don't have people assigned to them yet
+   */
     Stream<QuerySnapshot> getUrgentEntries() {
-
-
     // DocumentReference<Station> stationDocRef = _stationsRef.doc('2');
     // Timestamp date = Timestamp.fromDate(DateTime(2024, DateTime.april, 7)); 
-
     DateTime now = DateTime.now();
     DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
     DateTime tomorrow = nowNoSeconds.add(const Duration(days: 1));
@@ -102,7 +104,33 @@ class FirebaseHelper {
     
   }
 
+/**
+ * queries all of a given user's upcoming entries
+ */
+  Stream<QuerySnapshot> getUpcomingUserEntries(DocumentReference userRef){
+    print(userRef);
+    
+    
+    // DateTime now = DateTime.now();
+    DateTime now = DateTime.now().add(const Duration(days: -30));
+    DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
 
+    DocumentReference<Station> station = _stationsRef.doc('0');
+
+    return _entriesRef
+    // .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
+    .where("assignedUser", isEqualTo: userRef)
+
+    // .where("stationID", isEqualTo: station)
+    .snapshots();
+
+  }
+
+  DocumentReference getCurrentUser(){
+   return _usersRef.doc('nay@southwestern.edu');
+  //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
+    
+  }
 
   /// Getters
   CollectionReference<Entry> get entriesRef { return _entriesRef; }
