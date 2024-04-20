@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
-import 'package:flutter_application_1/pages/Feeder%20Files/feeder_table.dart';
-import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart';
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
 import '../../models/entry.dart';
 import '../../models/station.dart';
-import '../../models/userdoc.dart';
+import 'feeder_data_source.dart';
 
 class FeederSidebar extends StatefulWidget {
   const FeederSidebar({
@@ -53,23 +51,39 @@ class _FeederSidebarState extends State<FeederSidebar> {
     QueryDocumentSnapshot<Entry> currentEntry = widget.controller.currentEntry!;
     Entry currentEntryData = currentEntry.data();
     String entryUserName = widget.controller.getCurrentEntryUserName();
+
+    List<String> prints = [
+      formatAbbr.format(currentEntryData.date.toDate()), 
+      entryUserName,
+      currentEntryData.note
+      ];
+    
+    IconButton exitButton() => IconButton(
+      onPressed: () {
+        widget.controller.toEmptyState();
+      }, 
+      icon: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Icon(Icons.close),
+      )); 
     return Scaffold( 
       appBar: AppBar(
         title: const Text('Entry'),
+        actions: [exitButton()]
         ),
       body: Center( child: Column(
         children: <Widget>[
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.all(16.0),
-            child: Text('Date: ${format.format(currentEntryData.date.toDate())}'),
+            child: Text('Date: ${prints[0]}'),
           ), // Date
           Row( // Name + remove button
             children: <Widget>[
               Container(
                 alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                child: Text('Feeder: $entryUserName'),
+                child: Text('Feeder: ${prints[1]}'),
               ),
               // TODO add button
             ]
@@ -78,7 +92,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: Text('Notes: \n${currentEntryData.note ?? ''}')
+            child: Text('Notes: \n${prints[2]}')
           ), // Notes
         ]
     )));
@@ -149,7 +163,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
       station = await widget.controller.fds.getStation(data.stationID);
       rows.add(TableRow(
           children: [
-              TableCell(child: Text(format.format(data.date.toDate()))),
+              TableCell(child: Text(formatAbbr.format(data.date.toDate()))),
               TableCell(child: Text(station.name)),
             ],
         ));

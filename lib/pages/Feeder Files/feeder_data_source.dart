@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../models/entry.dart';
 import '../../models/station.dart';
 import '../../models/userdoc.dart';
 import '../../services/firebase_helper.dart';
+
+
+var formatDashes = DateFormat('yyyy-MM-dd');
+var formatAbbr = DateFormat('yMMMd');
 
 class FeederDataSource extends ChangeNotifier {
 

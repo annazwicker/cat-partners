@@ -95,7 +95,7 @@ class FeederController extends ChangeNotifier {
 
   /// Changes current page state to empty and notifies listeners.
   void toEmptyState() {
-    toThisState(PageState.select);
+    toThisState(PageState.empty);
   }
 
   /// Changes current page state to selection, and notifies

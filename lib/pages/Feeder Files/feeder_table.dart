@@ -12,6 +12,17 @@ import '../../models/userdoc.dart';
 import '../../services/firebase_helper.dart';
 import 'package:collection/collection.dart';
 
+import 'feeder_data_source.dart';
+
+Widget commonCellWrapping(String text, {Color? color}) {
+  return Container(
+    alignment: Alignment.center,
+    color: color,
+        padding: const EdgeInsets.all(8.0),
+        child: Text(text)
+  );
+}
+
 class FeederTable extends StatefulWidget {
   const FeederTable({super.key,
   required this.controller,
@@ -55,13 +66,15 @@ class _FeederTableState extends State<FeederTable> {
             groupedEntries = Map.fromEntries(entriesAsList);
             
             var rows = buildAllRows(groupedEntries);
-            var t = Table(
-                  border: TableBorder.all(),
-                  children: [headerRow()] + rows);
             // return t;
             return SingleChildScrollView(
               controller: ScrollController(),
-              child: t
+              child: Table(
+                  columnWidths: const {
+                    0: FixedColumnWidth(100),
+                  },
+                  border: TableBorder.all(),
+                  children: [headerRow()] + rows)
             );
           }
         );
@@ -101,9 +114,8 @@ class _FeederTableState extends State<FeederTable> {
   TableRow buildRow(Timestamp date, List<QueryDocumentSnapshot<Entry>> data){
     List<TableCell> cells = [];
     // Add date first
-    var format = DateFormat('yyyy-MM-dd');
-    String formattedDate = format.format(date.toDate());
-    cells.add(buildCell(Text(formattedDate)));
+    String formattedDate = formatAbbr.format(date.toDate());
+    cells.add(buildCell(commonCellWrapping(formattedDate)));
     for (int i = 0; i < data.length; i++) {
       // CellWrapper holds all cell data
       cells.add(buildCell(CellWrapper(
@@ -120,13 +132,9 @@ class _FeederTableState extends State<FeederTable> {
   /// Builds the table's header row with a list of stations.
   TableRow headerRow(){
     List<TableCell> cells = [];
-    cells.add(buildCell(const Text('Date')));
+    cells.add(buildCell(commonCellWrapping('Date', color:SUYellow)));
     for (var station in stations) {
-      cells.add(buildCell(
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(station.data().name))
-      ));
+      cells.add(buildCell(commonCellWrapping(station.data().name, color:SUYellow)));
     }
     return TableRow(
       children: cells
@@ -175,10 +183,7 @@ class _CellWrapperState extends State<CellWrapper> {
       future: widget.controller.fds.getAssignedUser(widget.data),
       builder: (context, snapshot) {
         if (!snapshot.hasData){
-          return Container(
-          padding: const EdgeInsets.all(8.0),
-          child: const Text('Loading...'),
-          );
+          return commonCellWrapping('Loading...');
         }
         (bool, DocumentSnapshot<UserDoc>?) userTuple = snapshot.data!;
         String cellText = '';
@@ -192,13 +197,9 @@ class _CellWrapperState extends State<CellWrapper> {
           }
         }
         
-        return Container(
-          color: currentColor,
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: doOnTap,
-            child: Text(cellText),
-          ),
+        return GestureDetector(
+          onTap: doOnTap,
+          child: commonCellWrapping(cellText, color: currentColor)
         );
       }
     ); 

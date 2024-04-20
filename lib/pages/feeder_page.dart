@@ -42,7 +42,7 @@ class _FeederScreenState extends State<FeederScreen> {
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: const BorderRadius.all(Radius.circular(10))),
-      margin: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(15),
       constraints: const BoxConstraints(
         maxWidth: 400,
         minWidth: 400,
