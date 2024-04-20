@@ -122,8 +122,8 @@ class FirebaseHelper {
     DocumentReference<Station> station = _stationsRef.doc('1');
 
     return _entriesRef
-    // .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
-    .where("assignedUser", isEqualTo: userRef)
+    .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
+    // .where("assignedUser", isEqualTo: userRef)
 
     // .where("stationID", isEqualTo: station)
     .snapshots();
