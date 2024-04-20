@@ -59,9 +59,20 @@ class FeederDataSource extends ChangeNotifier {
     return (userExists, toReturn);
   }
   
+  /// Returns the station referenced by [stationRef].
+  /// Said station must be in the list of stations in this FeederDataSource.
+  Future<Station> getStation(DocumentReference stationRef) async {
+    List<QueryDocumentSnapshot<Station>> stationsList = await stations;
+    var desired = stationsList.where((element) => element.reference.id == stationRef.id).toList();
+    assert (desired.length == 1);
+    return desired[0].data();
+  }
+
 }
 
 class EntryWrapper {
   late QueryDocumentSnapshot<Entry> entrySnapshot;
-  late DocumentSnapshot<UserDoc> entryUser;
+  late DocumentSnapshot<UserDoc>? entryUser;
+  late bool hasUser;
+  late DocumentSnapshot<Station> entryStation;
 }

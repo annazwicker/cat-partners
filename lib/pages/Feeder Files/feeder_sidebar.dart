@@ -7,6 +7,7 @@ import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
 import '../../models/entry.dart';
+import '../../models/station.dart';
 import '../../models/userdoc.dart';
 
 class FeederSidebar extends StatefulWidget {
@@ -100,27 +101,27 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: Table(
-              children: [
-                const TableRow(
-                  decoration:BoxDecoration(
-                    color: SUYellow
-                  ),
+            child: FutureBuilder(
+              future: getSelectedEntryRows(),
+              builder: (context, snapshot) {
+                if(!snapshot.hasData) {
+                  return const Text('Loading...');
+                }
+                return Table(
                   children: [
-                    TableCell(child: Text('Date', 
-                      style:TextStyle(fontWeight:FontWeight.bold))),
-                    TableCell(child: Text('Station',
-                      style:TextStyle(fontWeight:FontWeight.bold))),
-                  ]
-                ),
-                for (var entry in widget.controller.getSelection()) 
-                TableRow(
-                  children: [
-                      TableCell(child: Text(format.format(entry.data().date.toDate()))),
-                      TableCell(child: Text(entry.data().stationID.id)),
-                    ],
-                )
-              ]
+                    const TableRow(
+                      decoration:BoxDecoration(
+                        color: SUYellow
+                      ),
+                      children: [
+                        TableCell(child: Text('Date', 
+                          style:TextStyle(fontWeight:FontWeight.bold))),
+                        TableCell(child: Text('Station',
+                          style:TextStyle(fontWeight:FontWeight.bold))),
+                      ]
+                    )] + snapshot.data!
+                );
+              }
             ),
           ),
           // TODO confirm button should stick to bottom of sidebar
@@ -138,6 +139,23 @@ class _FeederSidebarState extends State<FeederSidebar> {
         ],) // TODO implement
       ),
     );
+  }
+
+  Future<List<TableRow>> getSelectedEntryRows() async {
+    List<TableRow> rows = [];
+    for (var entry in widget.controller.getSelection()) {
+      Entry data = entry.data();
+      Station station;
+      station = await widget.controller.fds.getStation(data.stationID);
+      rows.add(TableRow(
+          children: [
+              TableCell(child: Text(format.format(data.date.toDate()))),
+              TableCell(child: Text(station.name)),
+            ],
+        ));
+    }
+    return rows;
+
   }
 
   /// Holds build return of default sidebar
