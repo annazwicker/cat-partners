@@ -161,6 +161,13 @@ class CellWrapper extends StatefulWidget{
 class _CellWrapperState extends State<CellWrapper> {
 
   DocumentSnapshot<UserDoc>? assignedUser;
+  bool isSelected = false;
+
+  
+  static const Color onDeselect = Colors.white;
+  static const Color onSelect = Colors.lightBlue;
+  Color currentColor = onDeselect;
+
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +193,7 @@ class _CellWrapperState extends State<CellWrapper> {
         }
         
         return Container(
+          color: currentColor,
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(
             onTap: doOnTap,
@@ -203,8 +211,13 @@ class _CellWrapperState extends State<CellWrapper> {
   void doOnTap() {
     // Enter view for unassigned entries
     if (!hasUser()){
-      widget.controller.toSelectState();
-      widget.controller.toggleSelection(widget.data);
+      setState(() {
+        widget.controller.toSelectState();
+        isSelected = widget.controller.toggleSelection(widget.data);
+        currentColor = isSelected ? onSelect : onDeselect;
+        // print(isSelected);
+        // print(currentColor);
+      });
     }
     // Enter view for assigned entries
     else {

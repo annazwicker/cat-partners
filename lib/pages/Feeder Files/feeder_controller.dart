@@ -54,14 +54,17 @@ class FeederController extends ChangeNotifier {
 
   /// Adds given entry to selection if it's not included,
   /// And removes entry from selection if it is.
-  void toggleSelection(QueryDocumentSnapshot<Entry> entry){
+  /// Returns whether this entry will be in the selection AFTER this operation.
+  bool toggleSelection(QueryDocumentSnapshot<Entry> entry){
     checkThisState(PageState.select);
     if (selectedEntries!.contains(entry)){
       selectedEntries!.remove(entry);
       notifyListeners();
+      return false;
     } else {
       selectedEntries!.add(entry);
       notifyListeners();
+      return true;
     }
   }
 
