@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_application_1/components/nav_bar.dart";
+import "package:flutter_application_1/components/notification.dart";
 import 'package:flutter_application_1/const.dart';
 import "package:flutter_application_1/services/firebase_helper.dart";
+
 
 
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -37,6 +39,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final _dbHelper = FirebaseHelper();
+  var _isWindowOpen = true;
 
   @override
     Widget build(BuildContext context){
@@ -72,32 +75,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
                 return Flexible(
-                  child: ListView.builder(
-                    // physics: const AlwaysScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: entries.length,
-                    itemBuilder: (context, index) {
-                      Entry entry = entries[index].data();
-                      // String entryId = entries[index].id;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 10,
-                        ),
-                        child: SingleChildScrollView(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Flexible(child: Text(entry.date.toDate().toString())),
-                              Flexible(child: Text(entry.assignedUser?.id ?? 'nullUser')),
-                              Flexible(child: Text(entry.note)),
-                              Flexible(child: Text(entry.stationID.id))
-                            ],
-                          ),
-                        )
-                      );
-                    },
-                  ),
+                  child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        // alignment: AlignmentDirectional.center,
+        children: [
+          NotificationBox(),
+
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: MediaQuery.of(context).size.width * 0.1,
+                  color: SUYellow,
+                  margin: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
+                  child: const Text('Achievement Box'))),
+          Container(
+              width: MediaQuery.of(context).size.width * 0.75,
+              height: MediaQuery.of(context).size.width * 0.3,
+              color: SUYellow,
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
+              child: const Text('Scheduler')),
+        ],
+      )
                 );
               }
             ),

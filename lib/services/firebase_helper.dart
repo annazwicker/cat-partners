@@ -112,10 +112,14 @@ class FirebaseHelper {
     
     
     // DateTime now = DateTime.now();
-    DateTime now = DateTime.now().add(const Duration(days: -30));
+    // DateTime now = DateTime.now().add(const Duration(days: -30));
+    DateTime now = DateTime.now();
     DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
+    print(nowNoSeconds);
+    Timestamp time = Timestamp.fromDate(nowNoSeconds);
+    print(time);
 
-    DocumentReference<Station> station = _stationsRef.doc('0');
+    DocumentReference<Station> station = _stationsRef.doc('1');
 
     return _entriesRef
     // .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
