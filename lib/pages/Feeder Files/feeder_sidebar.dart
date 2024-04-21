@@ -51,11 +51,12 @@ class _FeederSidebarState extends State<FeederSidebar> {
     Entry currentEntryData = currentEntry.data();
     String entryUserName = widget.controller.getCurrentEntryUserName();
 
-    List<String> prints = [
-      formatAbbr.format(currentEntryData.date.toDate()), 
-      entryUserName,
-      currentEntryData.note
-      ];
+    Map<String, String> prints = {
+      'date': formatAbbr.format(currentEntryData.date.toDate()), 
+      'user': entryUserName,
+      'note': currentEntryData.note,
+      'station': 'stationPlaceholder',
+      };
     
     IconButton exitButton() => IconButton(
       onPressed: () {
@@ -65,6 +66,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
         padding: EdgeInsets.all(8.0),
         child: Icon(Icons.close),
       )); 
+    
     return Scaffold( 
       appBar: AppBar(
         title: const Text('Entry'),
@@ -75,14 +77,14 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.all(16.0),
-            child: Text('Date: ${prints[0]}'),
+            child: Text('Date: ${prints['date']}'),
           ), // Date
           Row( // Name + remove button
             children: <Widget>[
               Container(
                 alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                child: Text('Feeder: ${prints[1]}'),
+                child: Text('Feeder: ${prints['user']}'),
               ),
               // TODO add button
             ]
@@ -91,7 +93,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: Text('Notes: \n${prints[2]}')
+            child: Text('Notes: \n${prints['note']}')
           ), // Notes
         ]
     )));

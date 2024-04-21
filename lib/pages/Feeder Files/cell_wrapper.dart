@@ -24,27 +24,34 @@ class CellWrapper extends StatefulWidget{
 }
 
 enum CellSelectStatus {
-    inactive,
-    adding,
-    viewing
+    inactive(color: Colors.white),
+    adding(color: Colors.lightBlueAccent),
+    viewing(color: Colors.lightGreenAccent);
+    final Color color;
+
+  const CellSelectStatus({required this.color});
   }
 
 class _CellWrapperState extends State<CellWrapper> {
 
   DocumentSnapshot<UserDoc>? assignedUser;
-  bool isAddSelected = false;
-  
-  static const Color onDeselect = Colors.white;
-  static const Color onSelect = Colors.lightBlue;
-  Color currentColor = onDeselect;
+
+  /// Selection status of this cell.
+  /// Inactive: cell is not being selected
+  /// Adding: Cell is empty, and being selected for assignment by user.
+  /// Viewing: Cell's information is being viewed by user.
+  CellSelectStatus selection = CellSelectStatus.inactive;
 
   @override
   void initState() {
     widget.controller.addListener(() { 
       setState(() {
-        if(widget.controller.currentState != PageState.select){
-          isAddSelected = false;
-          currentColor = onDeselect;
+        if(widget.controller.currentState != PageState.select &&
+            selection == CellSelectStatus.adding){
+          selection = CellSelectStatus.inactive;
+        }
+        if(widget.controller.currentState == PageState.empty){
+          selection = CellSelectStatus.inactive;
         }
       });      
     });
@@ -73,7 +80,7 @@ class _CellWrapperState extends State<CellWrapper> {
         
         return GestureDetector(
           onTap: doOnTap,
-          child: commonCellWrapping(cellText, color: currentColor)
+          child: commonCellWrapping(cellText, color: selection.color)
         );
       }
     ); 
@@ -84,18 +91,27 @@ class _CellWrapperState extends State<CellWrapper> {
     }
 
   void doOnTap() {
-    // Enter view for unassigned entries
-    if (!hasUser()){
-      setState(() {
-        widget.controller.toSelectState();
-        isAddSelected = widget.controller.toggleSelection(widget.data);
-        currentColor = isAddSelected ? onSelect : onDeselect;
-      });
+    if(widget.controller.currentState != PageState.view) {
+      // Enter view for unassigned entries
+      if (!hasUser()){
+        setState(() {
+          widget.controller.toSelectState();
+          if(widget.controller.toggleSelection(widget.data)){
+            selection = CellSelectStatus.adding;
+          } else {
+            selection = CellSelectStatus.inactive;
+          }
+        });
+      }
+      // Enter view for assigned entries
+      else {
+        selection = CellSelectStatus.viewing;
+        widget.controller.toViewState(widget.data, assignedUser);
+      }
+    } else {
+      // Flash close button on view
     }
-    // Enter view for assigned entries
-    else {
-      widget.controller.toViewState(widget.data, assignedUser);
-    }
+    
   }
 
 }
