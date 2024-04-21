@@ -89,6 +89,15 @@ flutter:
     - images/testCat.PNG
     - images/defualtPFP.jpg
     - images/googleLogo.png
+    - images/SUCP_Head_Logo.PNG
+    - images/Gaia.webp
+    - images/GreyMama.webp
+    - images/Patches.webp
+    - images/Princess.jpeg
+    - images/Pumpkin.webp
+    - images/Super Cal.webp
+    - images/Teddy.webp
+    - images/Ziggy.webp
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

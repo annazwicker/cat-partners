@@ -51,7 +51,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth;
-    {// change numbers, min window is 500, max is 1536 for my device, make it change when at ~900
+    {// min window is 500, max is 1536 for my device
       if(screenWidth <= 800){
         containerWidth = screenWidth;
       } else { // screenWidth > 800
