@@ -55,9 +55,24 @@ class _FeederSidebarState extends State<FeederSidebar> {
       'date': formatAbbr.format(currentEntryData.date.toDate()), 
       'user': entryUserName,
       'note': currentEntryData.note,
-      'station': 'stationPlaceholder',
       };
+
+    Container commonCont(String string) => Container(
+    alignment: Alignment.topLeft,
+      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      child: Text(string),
+    );
     
+    Widget stationWidget =  FutureBuilder(
+      future: widget.controller.fds.getStation(currentEntryData.stationID), 
+      builder:
+      (context, snapshot) {
+        if(!snapshot.hasData){
+          return commonCont('Loading...');
+        }
+        return commonCont('Station: ${snapshot.data!.name}');
+      },);
+  
     IconButton exitButton() => IconButton(
       onPressed: () {
         widget.controller.toEmptyState();
@@ -74,27 +89,15 @@ class _FeederSidebarState extends State<FeederSidebar> {
         ),
       body: Center( child: Column(
         children: <Widget>[
-          Container(
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.all(16.0),
-            child: Text('Date: ${prints['date']}'),
-          ), // Date
+          commonCont('Date: ${prints['date']}'), // Date
+          stationWidget, // Station
           Row( // Name + remove button
             children: <Widget>[
-              Container(
-                alignment: Alignment.topLeft,
-            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-                child: Text('Feeder: ${prints['user']}'),
-              ),
+              commonCont('Feeder: ${prints['user']}'),
               // TODO add button
             ]
           ),
-          // TODO Notes must be editable for user's entries.
-          Container(
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: Text('Notes: \n${prints['note']}')
-          ), // Notes
+          commonCont('Notes: \n${prints['note']}'), // Notes
         ]
     )));
   }
