@@ -5,7 +5,7 @@ class Entry {
 
   static const String userRefString = 'assignedUser';
   static const String dateString = 'date';
-  static const String noteString = 'string';
+  static const String noteString = 'note';
   static const String stationRefString = 'stationID';
 
   final DocumentReference? _assignedUser;
@@ -34,8 +34,8 @@ class Entry {
   factory Entry.fromJson(Map<String, dynamic> json) => Entry(
     assignedUser: json[userRefString],
     date: json[dateString],
-    note: json['note'],
-    stationID: json['stationID'],
+    note: json[noteString],
+    stationID: json[stationRefString],
   );
 
   Map<String, dynamic> toJson() => {

@@ -50,7 +50,16 @@ class _FeederSidebarState extends State<FeederSidebar> {
     QueryDocumentSnapshot<Entry> currentEntry = widget.controller.currentEntry!;
     Entry currentEntryData = currentEntry.data();
     String entryUserName = widget.controller.getCurrentEntryUserName();
+    var e = widget.controller.fds.getCurrentUserTEST();
+    e.then((value) => {
 
+    });
+
+    Future<bool> isThisUserEntry() async {
+      var currentUser = await widget.controller.fds.getCurrentUserTEST();
+      return currentUser.path == currentEntryData.assignedUser!.path;
+    }
+    
     Map<String, String> prints = {
       'date': formatAbbr.format(currentEntryData.date.toDate()), 
       'user': entryUserName,
@@ -82,24 +91,67 @@ class _FeederSidebarState extends State<FeederSidebar> {
         child: Icon(Icons.close),
       )); 
     
-    return Scaffold( 
-      appBar: AppBar(
-        title: const Text('Entry'),
-        actions: [exitButton()]
-        ),
-      body: Center( child: Column(
-        children: <Widget>[
-          commonCont('Date: ${prints['date']}'), // Date
-          stationWidget, // Station
-          Row( // Name + remove button
+    return FutureBuilder(
+      future: isThisUserEntry(),
+      builder: (context, snapshot) {
+        String str = 'Verifying...';
+        bool isUsersEntry = false;
+        if(snapshot.hasData){
+          str = snapshot.data! ? 'your entry!' : 'not your entry!';
+          isUsersEntry = snapshot.data!;
+        }
+        var notesController = TextEditingController( text: prints['note']);
+        return Scaffold( 
+          appBar: AppBar(
+            title: const Text('Entry'),
+            actions: [exitButton()]
+            ),
+          body: Center( child: Column(
             children: <Widget>[
-              commonCont('Feeder: ${prints['user']}'),
-              // TODO add button
+              commonCont('Date: ${prints['date']}'), // Date
+              stationWidget, // Station
+              Row( // Name + remove button
+                children: <Widget>[
+                  commonCont('Feeder: ${prints['user']}'),
+                  // TODO add button
+                ]
+              ),
+              Container( // Notes
+                padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                alignment: Alignment.topLeft,
+                child: Focus(
+                  onFocusChange: (isFocused) {
+                    if(!isFocused){
+                      widget.controller.fh.db.runTransaction(
+                        (transaction) async {
+                          Entry newEntry = currentEntryData.copyWith(note: notesController.text);
+                          transaction.update(currentEntry.reference, newEntry.toJson());
+                        }
+                      );
+                    }
+                  },
+                  child: TextField(
+                    enabled: isUsersEntry,
+                    // readOnly: !isUsersEntry,
+                    maxLines: null,
+                    expands: true,
+                    controller: notesController,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      constraints: BoxConstraints(
+                        minHeight: 5.0,
+                        maxHeight: 150,
+                      ),
+                      hintText: 'Use this field to write anything notable \nyou see while feeding the station.',
+                      hintMaxLines: null,
+                      labelText: 'Notes'),
+                  ),
+                ),
+              ),
             ]
-          ),
-          commonCont('Notes: \n${prints['note']}'), // Notes
-        ]
-    )));
+        )));
+      }
+    );
   }
 
   /// Holds build return of selection mode sidebar

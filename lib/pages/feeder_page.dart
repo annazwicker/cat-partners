@@ -20,8 +20,14 @@ class _FeederScreenState extends State<FeederScreen> {
 
   @override
   void initState() {
-    controller = FeederController(fh: fh);
     super.initState();
+    controller = FeederController(fh: fh);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
   
   Widget tableWrap(FeederTable table) {
