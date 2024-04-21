@@ -39,8 +39,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   final _dbHelper = FirebaseHelper();
-  var _isWindowOpen = true;
-
   @override
     Widget build(BuildContext context){
     return Scaffold(
@@ -49,11 +47,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+
+          // mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             //notification box
             NotificationWidget(dbHelper: _dbHelper),
+            // NotificationWidget(dbHelper: _dbHelper),
             //achievement box
+            AchievementsBox(dbHelper: _dbHelper),
             AchievementsBox(dbHelper: _dbHelper),
             
           ]
@@ -130,13 +131,13 @@ class NotificationWidget extends StatelessWidget {
         }
     
     
-        return Flexible(
-          child: Column(
+        return 
+          Column(
             children: [
               NotificationBox(message: notificationMessage,),
             ],
-          )
-        );
+          );
+        
       }
     );
   }
@@ -168,7 +169,7 @@ class AchievementsBox extends StatelessWidget {
         return Align(
           alignment:Alignment.topLeft,
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.3,
+            // width: MediaQuery.of(context).size.width * 0.3,
             color: SUYellow,
             margin: const EdgeInsets.all(5),
             padding: const EdgeInsets.all(20),

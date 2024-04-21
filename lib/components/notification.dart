@@ -20,14 +20,13 @@ class _NotificationBoxState extends State<NotificationBox> {
         if (_isWindowOpen)
         IntrinsicHeight(
               child: Container(
-                // margin: const EdgeInsets.all(0),
+                margin: const EdgeInsets.all(5),
                 color: SUYellow,
                 width: MediaQuery.of(context).size.width * 0.75,
                 // height: MediaQuery.of(context).size.height * 0.08,
                 constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height * 0.08),
                 child: Column(children: [
-                  //x button
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
@@ -38,7 +37,6 @@ class _NotificationBoxState extends State<NotificationBox> {
                         },
                         icon: const Icon(Icons.close)),
                   ),
-                  //text content
                   Expanded(
                     child: Center(
                       child: Container(
