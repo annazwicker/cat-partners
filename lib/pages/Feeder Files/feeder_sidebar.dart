@@ -34,7 +34,6 @@ class _FeederSidebarState extends State<FeederSidebar> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     widget.controller.checkState();
@@ -110,7 +109,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
           Container(
             alignment: Alignment.topLeft,
             padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-            child: Text('Selected entries: '),
+            child: const Text('Selected entries: '),
           ),
           Container(
             alignment: Alignment.topLeft,
@@ -147,7 +146,9 @@ class _FeederSidebarState extends State<FeederSidebar> {
                 foregroundColor: Colors.black),
               onPressed: () 
               // TODO assigns user to all selected entries and returns to default mode.
-              {}, 
+              {
+                widget.controller.commitSelections();
+              }, 
             child: const Text('Confirm')),
           ),
         ],) // TODO implement

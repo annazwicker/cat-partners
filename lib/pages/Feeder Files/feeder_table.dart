@@ -176,6 +176,18 @@ class _CellWrapperState extends State<CellWrapper> {
   static const Color onSelect = Colors.lightBlue;
   Color currentColor = onDeselect;
 
+  @override
+  void initState() {
+    widget.controller.addListener(() { 
+      setState(() {
+        if(widget.controller.currentState != PageState.select){
+          isSelected = false;
+          currentColor = onDeselect;
+        }
+      });      
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,8 +228,6 @@ class _CellWrapperState extends State<CellWrapper> {
         widget.controller.toSelectState();
         isSelected = widget.controller.toggleSelection(widget.data);
         currentColor = isSelected ? onSelect : onDeselect;
-        // print(isSelected);
-        // print(currentColor);
       });
     }
     // Enter view for assigned entries

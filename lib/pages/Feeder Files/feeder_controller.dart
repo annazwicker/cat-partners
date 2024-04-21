@@ -60,6 +60,9 @@ class FeederController extends ChangeNotifier {
     if (selectedEntries!.contains(entry)){
       selectedEntries!.remove(entry);
       notifyListeners();
+      if(selectedEntries!.isEmpty) {
+        currentState = PageState.empty;
+      }
       return false;
     } else {
       selectedEntries!.add(entry);
@@ -71,6 +74,19 @@ class FeederController extends ChangeNotifier {
   List<QueryDocumentSnapshot<Entry>> getSelection(){
     checkThisState(PageState.select);
     return selectedEntries!;
+  }
+
+  void commitSelections() async {
+    checkThisState(PageState.select);
+    DocumentReference currentUserRef = await fds.getCurrentUserTEST();
+    for(QueryDocumentSnapshot<Entry> entry in selectedEntries!){
+      fh.db.runTransaction((transaction) async {
+        Entry newEntry = entry.data().copyWith(assignedUser: currentUserRef);
+        transaction.update(entry.reference, newEntry.toJson());
+        print('new Entry: $newEntry');
+      }).then((value) => print('transaction successful!'), onError: (e) => print(e),);
+    }
+    toEmptyState();
   }
 
   /// Gets the name of the user currently selected 
@@ -87,6 +103,7 @@ class FeederController extends ChangeNotifier {
     // TODO Once Controller uses user IDs, check
     // given userID against stored and update if they're
     // different.
+    fromState();
     currentEntry = entry;
     currentEntryUser = entryUser;
     currentState = PageState.view;
@@ -95,23 +112,33 @@ class FeederController extends ChangeNotifier {
 
   /// Changes current page state to empty and notifies listeners.
   void toEmptyState() {
-    toThisState(PageState.empty);
+    if(currentState != PageState.empty){
+      fromState();
+      currentState = PageState.empty;
+      notifyListeners();
+    }
   }
 
   /// Changes current page state to selection, and notifies
   /// listeners if state wasn't already selection.
   void toSelectState() {
     if(currentState != PageState.select){
+      fromState();
       selectedEntries = [];
       currentState = PageState.select;
       notifyListeners();
     }
   }
 
-  void toThisState(PageState newState) {
-    if(currentState != newState){
-      currentState = newState;
-      notifyListeners();
+  void fromState() {
+    switch (currentState) {
+      case PageState.empty:
+        // Do nothing
+      case PageState.select:
+        selectedEntries = null;
+      case PageState.view:
+        currentEntry = null;
+        currentEntryUser = null;
     }
   }
   

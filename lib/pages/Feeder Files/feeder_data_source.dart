@@ -73,6 +73,19 @@ class FeederDataSource extends ChangeNotifier {
     return desired[0].data();
   }
 
+  bool isUserLoggedIn() { return fh.isUserLoggedIn; }
+
+  Future<DocumentReference> getCurrentUserTEST() async{
+    assert (isUserLoggedIn());
+    String currentUserID = fh.currentUserIDTest!;
+    return await fh.usersRef.doc(currentUserID);
+  }
+
+  // Future<DocumentReference> getUserWithRef(String path) {
+  //   fh.usersRef.doc(path);
+  // }
+
+
 }
 
 class EntryWrapper {

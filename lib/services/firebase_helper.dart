@@ -27,6 +27,10 @@ class FirebaseHelper {
   late final CollectionReference<Cat> _catsRef;
   late final CollectionReference<UserDoc> _usersRef;
 
+  // TODO get current user ID
+  final bool isUserLoggedIn = true;
+  final String? currentUserIDTest = 'bGb48S0N1TXE7bzF52yc';
+
   FirebaseHelper(){
     // Mapping used by all reference initializers
     Map<String, Object?> toFirestore(item, _) => item.toJson();
@@ -91,16 +95,10 @@ class FirebaseHelper {
   CollectionReference<UserDoc> get usersRef { return _usersRef; }
   FirebaseFirestore get db { return _db; }
 
-  /// Let 'colRef' be a CollectionReference
-  /// Let 'someDocId' be a doc id
-  /// colRef.doc(someDocId) 
-  ///   | Returns DocumentReference to doc with id 'someDocId'
-  /// colRef.doc() 
-  ///   | Returns DocumentReference to newly-created doc with auto-id.
-  /// colRef.doc(someDocId).set(Map<String, dynamic> data) 
-  ///   | Sets/creates document with ID 'someDocId' with data 'data'
-  /// colRef.add(someClassData)
-  ///   | Creates a document with auto-ID and data 'data'
+  /// Returns document ID of current user, as string
+  String? getUserIDTest() {
+    return currentUserIDTest;
+  }
 
   void addEntry(Entry entry) async {
     _entriesRef.add(entry);
@@ -233,7 +231,6 @@ class FirebaseHelper {
     }
   }
   
-
   static Future <bool> saveUser({
     required BuildContext context,
     required String email,
@@ -260,6 +257,5 @@ class FirebaseHelper {
       return false;
     }
   }
-
   
 }
