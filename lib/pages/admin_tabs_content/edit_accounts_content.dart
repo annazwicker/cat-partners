@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
 
-class EditAccountsContent extends StatelessWidget {
+class EditAccountsContent extends StatefulWidget {
   final Color textColor;
 
   const EditAccountsContent({Key? key, required this.textColor}) : super(key: key);
+
+  @override
+  _EditAccountsContentState createState() => _EditAccountsContentState();
+}
+
+class _EditAccountsContentState extends State<EditAccountsContent> {
+  String? selectedAffiliation;
+  final TextEditingController emailController = TextEditingController();
 
   Widget _buildDropdownField(
     String title,
@@ -64,7 +72,7 @@ class EditAccountsContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -74,12 +82,13 @@ class EditAccountsContent extends StatelessWidget {
                     Text(
                       'Email:',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold
                         ),
                     ),
                     const SizedBox(height: 10),
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -91,13 +100,17 @@ class EditAccountsContent extends StatelessWidget {
                   'Select Status',
                   ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student'],
                   (String? value) {
-                    // Handle dropdown value change
+                    setState(() {
+                      selectedAffiliation = value;
+                    });
                   },
                 ),
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
-                    // Add functionality for adding an account
+                    final email = emailController.text;
+                    print('Email: $email, Selected Affiliation: $selectedAffiliation');
+                    
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
@@ -111,7 +124,7 @@ class EditAccountsContent extends StatelessWidget {
           // which text boxes belong to the add and delete accounts sections
           Container(
             width: 1,
-            color: textColor,
+            color: Colors.black,
             margin: const EdgeInsets.only(left: 20.0, right: 20.0),
           ),
           Expanded(
@@ -124,7 +137,7 @@ class EditAccountsContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -134,7 +147,7 @@ class EditAccountsContent extends StatelessWidget {
                     Text(
                       'Email:',
                        style: TextStyle(
-                        color: textColor,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold
                         ),
                     ),
