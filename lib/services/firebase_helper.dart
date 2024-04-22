@@ -144,8 +144,34 @@ class FirebaseHelper {
     //Change affiliation
     //Change rescue group
 
+    //'Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation'
+
     //add security that ensures phone number is valid
-    void changeProfileFields (DocumentReference userReference, String)
+    Future changeProfileFields (DocumentReference userReference, Map<String, dynamic> accountForm) async {
+      Map<String, dynamic> updateForm = {};
+      //change name
+
+      if (accountForm['name'] != null){
+        updateForm['name'] = accountForm['name'];
+        }
+      //change phone number
+      if (accountForm['phone'] != null){
+        updateForm['phone'] = accountForm['phone'];
+      }      
+      //change affiliation
+      if (accountForm['affiliation'] != null){
+        updateForm['affiliation'] = accountForm['affiliation'];
+      }      
+      //change rescue group
+      if (accountForm['rescueGroup'] != null){
+        updateForm['rescueGroup'] = accountForm['rescueGroup'];
+      }      
+
+      //perform update
+      return userReference.update(updateForm);
+
+
+    }
 
 
   /// Getters
