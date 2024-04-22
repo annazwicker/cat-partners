@@ -20,8 +20,14 @@ class _FeederScreenState extends State<FeederScreen> {
 
   @override
   void initState() {
-    controller = FeederController(fh: fh);
     super.initState();
+    controller = FeederController(fh: fh);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
   
   Widget tableWrap(FeederTable table) {
@@ -42,7 +48,7 @@ class _FeederScreenState extends State<FeederScreen> {
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: const BorderRadius.all(Radius.circular(10))),
-      margin: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(15),
       constraints: const BoxConstraints(
         maxWidth: 400,
         minWidth: 400,
