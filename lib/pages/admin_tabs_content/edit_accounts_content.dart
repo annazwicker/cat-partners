@@ -60,7 +60,7 @@ class EditAccountsContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Add Account',
+                  "Edit User's SU Affiliation",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -102,7 +102,7 @@ class EditAccountsContent extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
                   ),
-                  child: const Text('Add Account'),
+                  child: const Text('Save Changes'),
                 ),
               ],
             ),
