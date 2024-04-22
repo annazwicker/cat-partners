@@ -219,7 +219,7 @@ class FirebaseHelper {
       description: catMap['description'],
       name: catMap['name'],
       photo: catMap['photo'],
-      stationID: _catsRef.doc(catMap['stationID']),
+      stationID: _stationsRef.doc(catMap['stationID']),
     );
 
     return _catsRef.add(cat);

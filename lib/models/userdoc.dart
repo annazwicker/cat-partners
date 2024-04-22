@@ -25,8 +25,8 @@ class UserDoc {
   final String _email;
 
   UserDoc({
-    required first,
-    required last,
+    first,
+    last,
     required born,
     required isAdmin,
     required name,
@@ -91,7 +91,7 @@ class UserDoc {
       email:  email ?? _email);
 
   String getName() {
-    return "$_first $_last";
+    return "$_name";
   }
 
 }
