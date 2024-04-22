@@ -1,3 +1,5 @@
+import 'dart:js_interop_unsafe';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -122,8 +124,8 @@ class FirebaseHelper {
     DocumentReference<Station> station = _stationsRef.doc('1');
 
     return _entriesRef
-    .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
-    // .where("assignedUser", isEqualTo: userRef)
+    // .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
+    .where("assignedUser", isEqualTo: userRef)
 
     // .where("stationID", isEqualTo: station)
     .snapshots();
@@ -170,6 +172,109 @@ class FirebaseHelper {
     //perform update
     return userReference.update(updateForm);
 
+
+  }
+
+//Admin_Page Methods
+
+  //delete account
+    //get string. delete email
+
+  /**
+   * deletes user account given the email address string (currently assuming that email is the doc ID)
+   */
+  Future deleteAccount (String userEmail) async{
+    DocumentReference documentReference = _usersRef.doc(userEmail);
+    
+    return documentReference.delete();
+  }
+
+  /**
+   * gives admin status to user account given the email address string 
+   * (assuming email is the doc ID)
+   */
+  Future addAdmin (String userEmail) async{
+    DocumentReference documentReference = _usersRef.doc(userEmail);
+    
+    return documentReference.update({'isAdmin': true});    
+  }
+
+  /**
+   * removes admin status to user account given the email address string 
+   * (assuming email is the doc ID)
+   */
+  Future removeAdmin (String userEmail) async{
+    DocumentReference documentReference = _usersRef.doc(userEmail);
+    
+    return documentReference.update({'isAdmin': false});    
+  }
+
+  /**
+   * adds cat to Cat collection given a map of the cat's characteristics
+   */
+  Future addCat (Map<String, dynamic> catMap) async{
+    Cat cat = Cat(
+      description: catMap['description'],
+      name: catMap['name'],
+      photo: catMap['photo'],
+      stationID: _catsRef.doc(catMap['stationID']),
+    );
+
+    return _catsRef.add(cat);
+
+  }
+
+
+  /**
+   * deletes cat from Cat collection given a doc reference to that cat
+   */
+  Future deleteCat (DocumentReference catToDelete) async{
+    return catToDelete.delete();
+  }
+
+  /**
+   * adds station to Station collection given a map of the station's characteristics
+   */
+  Future addStation (Map<String, dynamic> stationMap) async{
+    Station station = Station(
+      description: stationMap['description'],
+      fullName: stationMap['fullName'],
+      name: stationMap['name'],
+      photo: stationMap['photo'],
+    );
+
+    return _stationsRef.add(station);
+
+  }
+
+  /**
+   * deletes station from Station collection given a doc reference to that station
+   */
+  Future deleteStation (DocumentReference stationToDelete) async{
+    return stationToDelete.delete();
+  }
+
+/**
+ * given a search string, returns search results for all user's names and emails for a match
+ */
+  Stream<QuerySnapshot> searchUsers(String userSearch){
+        
+
+
+    DateTime now = DateTime.now();
+    DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
+    print(nowNoSeconds);
+    Timestamp time = Timestamp.fromDate(nowNoSeconds);
+    print(time);
+
+    DocumentReference<Station> station = _stationsRef.doc('1');
+
+    return _entriesRef
+    .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
+    // .where("assignedUser", isEqualTo: userRef)
+
+    // .where("stationID", isEqualTo: station)
+    .snapshots();
 
   }
 

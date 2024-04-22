@@ -23,6 +23,7 @@ class _TopNavBarState extends State<TopNavBar> {
     AdminScreen(),
     FeederScreen(),
     const AccountScreen(),
+    const TestScreen(),
   ];
 
   void _onItemTapped(int index) {
