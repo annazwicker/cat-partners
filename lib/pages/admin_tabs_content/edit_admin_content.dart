@@ -114,7 +114,7 @@ class EditAdminContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Delete Admin User',
+                  'Revoke Admin Permissions',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -140,7 +140,7 @@ class EditAdminContent extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
                   ),
-                  child: const Text('Delete Admin User'),
+                  child: const Text('Revoke Permissions'),
                 ),
               ],
             ),
