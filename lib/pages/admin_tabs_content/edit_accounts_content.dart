@@ -12,7 +12,8 @@ class EditAccountsContent extends StatefulWidget {
 
 class _EditAccountsContentState extends State<EditAccountsContent> {
   String? selectedAffiliation;
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController emailControllerEdit = TextEditingController();
+  final TextEditingController emailControllerDelete = TextEditingController();
 
   Widget _buildDropdownField(
     String title,
@@ -45,6 +46,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
               }
               return null;
             },
+             value: selectedAffiliation, // Set initial value of dropdown
           ),
           const SizedBox(height: 10),
         ],
@@ -88,7 +90,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                     ),
                     const SizedBox(height: 10),
                     TextField(
-                      controller: emailController,
+                      controller: emailControllerEdit,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -108,9 +110,12 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
-                    final email = emailController.text;
-                    print('Email: $email, Selected Affiliation: $selectedAffiliation');
-                    
+                    final emailedit = emailControllerEdit.text;
+                    print('Email: $emailedit, Selected Affiliation: $selectedAffiliation');
+                    emailControllerEdit.clear();
+                    setState(() {
+                      selectedAffiliation = null;
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
@@ -153,6 +158,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                     ),
                     const SizedBox(height: 10),
                     TextField(
+                      controller: emailControllerDelete,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -162,7 +168,9 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                 const SizedBox(height:25),
                 ElevatedButton(
                   onPressed: () {
-                    // Add functionality for adding an account
+                    final emaildelete = emailControllerDelete.text;
+                    print('Email: $emaildelete');
+                    emailControllerDelete.clear();
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text

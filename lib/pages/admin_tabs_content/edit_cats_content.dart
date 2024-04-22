@@ -15,7 +15,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
   final TextEditingController nameController = TextEditingController();
 
 
-  Widget _buildDropdownField(
+  Widget _buildDropdownFieldAdd(
   String title,
   List<String> options,
   Function(String?) onChanged,
@@ -49,6 +49,49 @@ class _EditCatsContentState extends State<EditCatsContent> {
             }
             return null;
           },
+          value: selectedfeedingstation,
+        ),
+        const SizedBox(height: 10),
+      ],
+    ),
+  );
+}
+
+ Widget _buildDropdownFieldDelete(
+  String title,
+  List<String> options,
+  Function(String?) onChanged,
+) {
+  // Sort the options alphabetically
+  options.sort();
+
+  return Padding(
+    padding: const EdgeInsets.only(left: 8.0, top: 20.0, bottom: 20.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        DropdownButtonFormField<String>(
+          items: options.map((String option) {
+            return DropdownMenuItem<String>(
+              value: option,
+              child: Text(
+                option,
+                style: const TextStyle(color: Colors.black),
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please select an option';
+            }
+            return null;
+          },
+          value: selectedcat,
         ),
         const SizedBox(height: 10),
       ],
@@ -100,7 +143,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                   ],
                 ),
                 const SizedBox(height: 9),
-                _buildDropdownField(
+                _buildDropdownFieldAdd(
                   'Select Feeding Station',
                   ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
                   (String? value) {
@@ -114,7 +157,10 @@ class _EditCatsContentState extends State<EditCatsContent> {
                   onPressed: () {
                     final catname = nameController.text;
                     print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
-                    
+                    nameController.clear();
+                    setState(() {
+                      selectedfeedingstation = null;
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
@@ -147,7 +193,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                        _buildDropdownField(
+                        _buildDropdownFieldDelete(
                          'Select Cat',
                         ['Gray Mama', 'Gaia', 'Itty Bitty', 'Teddy', 'Patches', 'Ziggy', 'Super Cal', 'Pumpkin', 'Princess'],
                          (String? value) {
@@ -162,7 +208,9 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 ElevatedButton(
                   onPressed: () {
                     print('Selected Cat: $selectedcat');
-                    
+                    setState(() {
+                      selectedcat = null;
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text

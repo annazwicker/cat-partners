@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
-
-class SearchUsersContent extends StatelessWidget {
+class SearchUsersContent extends StatefulWidget {
   final Color textColor;
 
-  SearchUsersContent({Key? key, required this.textColor}) : super(key: key);
+  const SearchUsersContent({Key? key, required this.textColor}) : super(key: key);
+
+  @override
+  _SearchUsersContentState createState() => _SearchUsersContentState();
+}
+
+class _SearchUsersContentState extends State<SearchUsersContent> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
   final ScrollController _searchScroll = new ScrollController();
   
   @override
@@ -29,7 +37,7 @@ class SearchUsersContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -39,12 +47,13 @@ class SearchUsersContent extends StatelessWidget {
                     Text(
                       'First and Last Name:',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold
                         ),
                     ),
                     const SizedBox(height: 10),
-                    const TextField(
+                    TextField(
+                      controller: nameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -53,12 +62,13 @@ class SearchUsersContent extends StatelessWidget {
                     Text(
                       'Email:',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold
                         ),
                     ),
                     const SizedBox(height: 10),
-                    const TextField(
+                    TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -68,6 +78,11 @@ class SearchUsersContent extends StatelessWidget {
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
+                    final name = nameController.text;
+                    final email = emailController.text;
+                    print('Name: $name, Email: $email');
+                    nameController.clear();
+                    emailController.clear();
                     // Add functionality for adding an account
                   },
                   style: ElevatedButton.styleFrom(

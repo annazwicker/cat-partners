@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ExportDataContent extends StatelessWidget {
+class ExportDataContent extends StatefulWidget {
   final Color textColor;
 
   const ExportDataContent({Key? key, required this.textColor}) : super(key: key);
+
+  @override
+  _ExportDataContentState createState() => _ExportDataContentState();
+}
+
+class _ExportDataContentState extends State<ExportDataContent> {
+  String? selectedYear;
 
   Widget _buildDropdownField(
   String title,
@@ -39,6 +46,7 @@ class ExportDataContent extends StatelessWidget {
             }
             return null;
           },
+          value: selectedYear,
         ),
         const SizedBox(height: 10),
       ],
@@ -66,7 +74,7 @@ class ExportDataContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                 ),
                 Column(
@@ -76,6 +84,9 @@ class ExportDataContent extends StatelessWidget {
                     'Select Academic Year',
                     ['2020-2021', '2021-2022', '2022-2023', '2023-2024'],
                       (String? value) {
+                        setState(() {
+                      selectedYear = value;
+                    });
                     },
                 ),
                   ],
@@ -83,6 +94,10 @@ class ExportDataContent extends StatelessWidget {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
+                    print('Selected Year: $selectedYear');
+                    setState(() {
+                      selectedYear = null;
+                    });
                     // Add functionality for exporting data
                   },
                   style: ElevatedButton.styleFrom(

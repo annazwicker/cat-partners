@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
-class EditAdminContent extends StatelessWidget {
+class EditAdminContent extends StatefulWidget {
   final Color textColor;
 
   const EditAdminContent({Key? key, required this.textColor}) : super(key: key);
+
+  @override
+  _EditAdminContentState createState() => _EditAdminContentState();
+}
+
+class _EditAdminContentState extends State<EditAdminContent> {
+  String? selectedAdminUser;
+  final TextEditingController emailController = TextEditingController();
 
   Widget _buildDropdownField(
   String title,
@@ -39,6 +47,7 @@ class EditAdminContent extends StatelessWidget {
             }
             return null;
           },
+          value: selectedAdminUser,
         ),
         const SizedBox(height: 10),
       ],
@@ -66,7 +75,7 @@ class EditAdminContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -76,12 +85,13 @@ class EditAdminContent extends StatelessWidget {
                     Text(
                       'Email:',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold
                         ),
                     ),
                     const SizedBox(height: 10),
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -91,6 +101,9 @@ class EditAdminContent extends StatelessWidget {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
+                    final emailedit = emailController.text;
+                    print('Email: $emailedit');
+                    emailController.clear();
                     // Add functionality for adding an account
                   },
                   style: ElevatedButton.styleFrom(
@@ -105,7 +118,7 @@ class EditAdminContent extends StatelessWidget {
           // which text boxes belong to the add and delete accounts sections
           Container(
             width: 1,
-            color: textColor,
+            color: Colors.black,
             margin: const EdgeInsets.only(left: 20.0, right: 20.0),
           ),
           Expanded(
@@ -118,7 +131,7 @@ class EditAdminContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                 ),
                 Column(
@@ -128,6 +141,9 @@ class EditAdminContent extends StatelessWidget {
                     'Select Admin User',
                     ['Kelly Lessard', 'Jayden Beauchea', 'Daniel Na', 'Anna Wicker', 'Marlon Mata'],
                       (String? value) {
+                        setState(() {
+                          selectedAdminUser = value;
+                      });
                     },
                 ),
                   ],
@@ -135,6 +151,10 @@ class EditAdminContent extends StatelessWidget {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
+                    print('Selected Admin User: $selectedAdminUser');
+                    setState(() {
+                      selectedAdminUser = null;
+                    });
                     // Add functionality for adding an account
                   },
                   style: ElevatedButton.styleFrom(
