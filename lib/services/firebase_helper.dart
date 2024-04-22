@@ -224,8 +224,9 @@ class FirebaseHelper {
   /**
    * deletes cat from Cat collection given a doc reference to that cat
    */
-  Future deleteCat(DocumentReference catToDelete) async {
-    return catToDelete.delete();
+  Future deleteCat(String catToDelete) async {
+    DocumentReference cat = _catsRef.doc(catToDelete);
+    return cat.delete();
   }
 
   /**
@@ -245,8 +246,9 @@ class FirebaseHelper {
   /**
    * deletes station from Station collection given a doc reference to that station
    */
-  Future deleteStation(DocumentReference stationToDelete) async {
-    return stationToDelete.delete();
+  Future deleteStation(String stationToDelete) async {
+    DocumentReference station = _stationsRef.doc(stationToDelete);
+    return station.delete();
   }
 
 /**

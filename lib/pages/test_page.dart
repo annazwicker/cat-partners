@@ -97,6 +97,28 @@ class _TestScreenState extends State<TestScreen> {
                 return ElevatedButton(
                   onPressed: () {
                     // _dbHelper.searchUsers('nay');
+                    //TEST
+                    // Map<String, dynamic> catMap = {
+
+                    //   'description': 'description',
+                    //   'name': 'catName',
+                    //   'photo': 'placeholder',
+                    //   'stationID': '0',
+                    // };
+                    // _dbHelper.addCat(catMap);
+
+                    // _dbHelper.deleteCat('vkk0GJDaqvfd5P5YOtmW');
+
+                    // Map<String, dynamic> stationMap = {
+
+                    //   'description': 'description',
+                    //   'fullName': 'amogus sus',
+                    //   'name': 'amogus',
+                    //   'photo': 'photo!',
+                    // };
+                    // _dbHelper.addStation(stationMap);
+
+                    _dbHelper.deleteStation('alJszq8K6pC1unaWwNc1');
                   }, 
                 child: const Text('Generate!'));
               }
