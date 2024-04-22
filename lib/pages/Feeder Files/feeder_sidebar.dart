@@ -101,6 +101,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
           }
         }
         var notesController = TextEditingController( text: prints['note']);
+       
         return Scaffold( 
           appBar: AppBar(
             title: const Text('Entry'),
@@ -125,25 +126,26 @@ class _FeederSidebarState extends State<FeederSidebar> {
                           context: context, 
                           builder: (context) {
                             return AlertDialog(
-                          title: const Text('Confirm'),
-                          content: const Text('Are you sure you want to unassign yourself from this entry?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              }, 
-                              child: const Text('Cancel')
-                            ), 
-                            TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              widget.controller.unassignCurrent();
-                            }, 
-                            child: const Text('Unassign')
-                            )
-                          ],    
-                        );;
-                          });
+                              title: const Text('Confirm'),
+                              content: const Text('Are you sure you want to unassign yourself from this entry?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }, 
+                                  child: const Text('Cancel')
+                                ), 
+                                TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  widget.controller.unassignCurrent();
+                                }, 
+                                child: const Text('Unassign')
+                                )
+                              ],    
+                            );
+                          }
+                        );
                         // TODO open confirmation dialogue
                         } : null, 
                     child: const Text('Unassign')),
@@ -153,34 +155,39 @@ class _FeederSidebarState extends State<FeederSidebar> {
               Container( // Notes
                 padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                 alignment: Alignment.topLeft,
-                child: Focus(
-                  onFocusChange: (isFocused) {
-                    if(!isFocused){
-                      widget.controller.fh.db.runTransaction(
-                        (transaction) async {
-                          Entry newEntry = currentEntryData.copyWith(note: notesController.text);
-                          transaction.update(currentEntry.reference, newEntry.toJson());
-                        }
-                      );
-                    }
+                child: TextField(
+                  enabled: isUsersEntry,
+                  // readOnly: !isUsersEntry,
+                  maxLines: null,
+                  expands: true,
+                  controller: notesController,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    constraints: BoxConstraints(
+                      minHeight: 5.0,
+                      maxHeight: 150,
+                    ),
+                    hintText: 'Use this field to write anything notable \nyou see while feeding the station.',
+                    hintMaxLines: null,
+                    labelText: 'Notes',),
+                  onChanged: (value) {
+                    // saveButton.
                   },
-                  child: TextField(
-                    enabled: isUsersEntry,
-                    // readOnly: !isUsersEntry,
-                    maxLines: null,
-                    expands: true,
-                    controller: notesController,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      constraints: BoxConstraints(
-                        minHeight: 5.0,
-                        maxHeight: 150,
-                      ),
-                      hintText: 'Use this field to write anything notable \nyou see while feeding the station.',
-                      hintMaxLines: null,
-                      labelText: 'Notes'),
-                  ),
                 ),
+              ),
+              ElevatedButton(
+                statesController: MaterialStatesController(),
+                onPressed: isUsersEntry ? () {
+                  if(notesController.text != prints['note']){
+                    widget.controller.fh.db.runTransaction(
+                      (transaction) async {
+                        Entry newEntry = currentEntryData.copyWith(note: notesController.text);
+                        transaction.update(currentEntry.reference, newEntry.toJson());
+                      }
+                    );
+                  }
+                } : null, 
+                child: const Text('Save notes')
               ),
             ]
         )));
