@@ -37,21 +37,7 @@ class SearchUsersContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'First Name:',
-                      style: TextStyle(
-                        color: textColor,
-                        fontWeight: FontWeight.bold
-                        ),
-                    ),
-                    const SizedBox(height: 10),
-                    const TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height:10),
-                    Text(
-                      'Last Name:',
+                      'First and Last Name:',
                       style: TextStyle(
                         color: textColor,
                         fontWeight: FontWeight.bold
