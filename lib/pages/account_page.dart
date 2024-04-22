@@ -121,8 +121,19 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                 _buildTextField('Name', 'Enter your name', (value) {
                   _name = value;
                 }),
-                _buildTextField('Email', 'Enter your email', (value) {
-                  _email = value;
+                TextFormField(
+                  initialValue: 'value',
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'hintText',
+                    labelStyle: TextStyle(fontWeight: FontWeight.bold), // Bold label
+                  ),
+                ),
+
+                _buildTextField('Email', 'email@gmail.com', (value) {
+                  _email = 'email@gmail.com';
+                  
                 }),
                 _buildTextField('Phone Number', 'Enter your phone number', (value) {
                   _phoneNumber = value;
