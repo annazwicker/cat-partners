@@ -518,7 +518,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text('The Account page is where information about you is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
                     ),
-                    const Text('This information can be changed and updated at any time, by yourself or by admins.', style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                    const Text('Some of this information is based on your Google account and others are based on your input.', style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
                       child: Text('This website keeps the following information about you:', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
@@ -620,6 +620,8 @@ class _NestedTabBarState extends State<NestedTabBar>
               ],
             ),
           )
-        ]));
+        ]
+      )
+    );
   }
 }

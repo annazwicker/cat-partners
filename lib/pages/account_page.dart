@@ -91,7 +91,8 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       ],
       );
   }
-
+  // No longer using to upload image. Relying on user's own pfp from Google
+  /*
   void selectImage() async{
     final ImagePicker imagePicker = ImagePicker();
     Uint8List temp;
@@ -105,7 +106,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       }
       
   }
-
+  */
   Widget accountInfo(double containerWidth){
     return SizedBox(
       width: containerWidth,
@@ -142,7 +143,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                           const SnackBar(content: Text('Processing Data')),
                         );
                         // Process the collected data (you can send it to a server or save it in a database)
-                        print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation');
+                        // print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation');
                       }
                     },
                     child: const Text('Submit'),
@@ -176,13 +177,6 @@ class AccountInfoFormState extends State<AccountInfoForm> {
             width: 10,
             height: 20
           ),
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: SUYellow,
-            ),
-            onPressed: selectImage, 
-            child: const Text("Upload an image", style: TextStyle(fontSize: 12),)
-          )
         ],
       )
     );
