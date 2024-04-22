@@ -1,8 +1,11 @@
 import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
-import 'package:flutter_application_1/const.dart';
+import 'package:flutter_application_1/const.dart'; 
+// ignore: depend_on_referenced_packages
 import 'package:url_launcher/url_launcher.dart';
 
+//comment
+// Done by Marlon Mata 
 class AboutScreen extends StatelessWidget {
   AboutScreen({super.key, Key? keyInstance});
   // stores ScrollControllers with labeled names
@@ -74,14 +77,11 @@ class AboutScreen extends StatelessWidget {
             width: containerWidth,
             color: const Color(0xFF828282)),
         // help position text, Positioned only works within Stack
-        Positioned(
-          // to position text
-          child: SizedBox(
-            //////////////////////////////// Container - to enclose text
-            height: containerHeight - 20,
-            width: containerWidth - 20,
-            child: Column(
-              ///////////////////////////////// Column - help align text
+        Positioned(// to position text
+          child: SizedBox(//////////////////////////////// Container - to enclose everything
+            height: containerHeight-10,
+            width: containerWidth-20,
+            child: Column(///////////////////////////////// Column - help align text
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -99,46 +99,48 @@ class AboutScreen extends StatelessWidget {
                       // location of link
                       text: 'official SU website page',
                       style: const TextStyle(
-                          fontFamily: 'Playfair Display',
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline,
-                          fontSize: 16),
+                        fontFamily: 'Playfair Display',
+                        color: Color.fromARGB(255, 68, 169, 252),
+                        decoration: TextDecoration.underline,
+                        fontSize: 16
+                      ),
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () async {
-                          Uri url = Uri.parse(
-                              "https://www.southwestern.edu/life-at-southwestern/student-organizations/special-interest/cat-partners/");
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url);
-                          } else {
-                            throw 'Could not launch $url';
-                          }
-                        }),
-                  const TextSpan(
-                      text: '.',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Playfair Display',
-                          color: Color.fromARGB(255, 0, 0, 0)))
-                ])),
-                const Text(
-                    '    This site was created during the Spring semester of 2024 as part of a Computer Science Capstone project. Along with input from Cat Partners, Anna Wicker, Jayfen Beauchua, Yunhyeong "Daniel" Na, and Marlon Mata were able to make this site possible',
-                    style: TextStyle(
-                        fontSize: 16, color: Color.fromARGB(255, 0, 0, 0))),
-                Container(
-                    ///////////// used to separate pictures and text
-                    height: 10,
-                    width: 10,
-                    color: const Color(0xFF828282)),
-                Builder(
-                    /////// builder - to add an if-else statement depending on window size
-                    builder: (context) {
-                  /// context -> window stuff
-                  if (screenWidth < 620) {
-                    return _verticalCatPics(containerHeight);
-                  } else {
-                    return _horizontalCatPics(containerWidth);
+                      ..onTap = () async{ 
+                        Uri url = Uri.parse("https://www.southwestern.edu/life-at-southwestern/student-organizations/special-interest/cat-partners/");
+                        if (await canLaunchUrl(url)) {
+                          await launchUrl(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      }
+                    ),
+                    const TextSpan(
+                      text: '.', 
+                      style: TextStyle(fontSize: 16, fontFamily: 'Playfair Display', color: Color.fromARGB(255, 0, 0, 0))
+                    )
+                  ]
+                )
+              ),
+              const Text('    This site was created during the Spring semester of 2024 as part of a Computer Science Capstone project. Along with input from Cat Partners, Anna Wicker, Jayden Beauchea, Yunhyeong "Daniel" Na, and Marlon Mata were able to make this site possible', 
+                style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0))),
+              Container( ///////////// used to separate pictures and text
+                  height: 10,
+                  width: 10,
+                  color: const Color(0xFF828282)
+                ),
+                Builder( /////// builder - to add an if-else statement depending on window size
+                  builder: (context){ /// context -> window stuff
+                    if(screenWidth < 700){
+                      return _verticalCatPics(containerHeight);
+                    } else {
+                      return _horizontalCatPics(containerWidth);
+                    }
                   }
-                })
+                ),
+                const SizedBox(
+                  width: 5,
+                  height: 2,
+                ),
               ],
             ),
           ),
@@ -288,26 +290,25 @@ class _NestedTabBarState extends State<NestedTabBar>
       }
     }
 
-    return Container(
-        // contains the tabs, wont take entire screen
-        height: containerHeight,
-        width: containerWidth,
-        color: const Color(0xFF828282),
-        child: Column(children: [
-          TabBar(
-            // tabs; must match length of TabController(length: 4, vsync: this)
+    return Container( // contains the tabs, wont take entire screen
+      height: containerHeight,
+      width: containerWidth,
+      color: const Color.fromARGB(255, 202, 202, 202),
+      child: Column(
+        children: [
+          TabBar( // tabs; must match length of TabController(length: 4, vsync: this)
             tabAlignment: TabAlignment.center,
             controller: _nestedTabController, // controller that controls tabs
             indicatorColor: Colors.black,
-            labelColor: SUYellow,
+            labelColor: Colors.black,
             unselectedLabelColor: Colors.black54, // change to grey
             isScrollable: true,
-            tabs: const [
-              ///////////////// the tab options, length must match
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Playfair Display"),
+            tabs: const [ ///////////////// the tab options, length must match
               Tab(icon: Icon(Icons.home), text: 'Home'),
-              Tab(icon: Icon(Icons.person), text: 'Admin'),
-              Tab(icon: Icon(Icons.person), text: 'Sign Up To Feed'),
-              Tab(icon: Icon(Icons.person), text: 'Account'),
+              Tab(icon: Icon(Icons.admin_panel_settings), text: 'Admin'),
+              Tab(icon: Icon(Icons.local_dining), text: 'Sign Up To Feed'),
+              Tab(icon: Icon(Icons.account_box), text: 'Account'),
             ],
           ),
           SizedBox(
@@ -317,8 +318,8 @@ class _NestedTabBarState extends State<NestedTabBar>
             child: TabBarView(
               //////////////////////////what is contained in each tab, must match TabBar length
               controller: _nestedTabController, // same controller
-              children: const [
-                Column(
+              children: [
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -329,86 +330,163 @@ class _NestedTabBarState extends State<NestedTabBar>
                           style: TextStyle(fontSize: 18),
                           textAlign: TextAlign.center),
                     ),
-                    Text(
-                        'Here you can view the current time slots filled in for the next few days.',
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center),
-                    Text(
-                        'Along with that, any news will also be viewable here as well.',
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center),
+                    Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+
                   ],
                 ),
-                Column(
-                  ///// Add padding
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                Column( ///// Add padding
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text(
                           'This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________',
                           style: TextStyle(fontSize: 18),
                           textAlign: TextAlign.center),
                     ),
-                    Text(
+                    const Text(
                       '',
                       style: TextStyle(fontSize: 18),
                     ),
-                    Text('On this page, Admins can do the following:',
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center),
+                    const Text('On this page, Admins can do the following:', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Edit the status of an account or delete an account', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'))
+                        ]
+                      )
+                    ),
+                    RichText(
+                      textAlign: TextAlign.left,
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Add new admins and remove old admins', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      textAlign: TextAlign.left,
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Edit cat information, such as station location', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'))
+                        ]
+                      )
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Edit what feeding stations are available', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'))
+                        ]
+                      )
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: '- Export data that shows total amount of volunteer hours and who volunteered', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display'))
+                        ]
+                      )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(text: 'Make sure all the information here is up-to-date and that you press submit to lock in any changes.', 
+                            style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                          ]
+                        )
+                      ),
+                    ),
                   ],
                 ),
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text(
-                          'This page is only available to those that have been granted admin permissions. If you have questions regarding gaining access to this page, please ask ________',
+                          'Feeder',
                           style: TextStyle(fontSize: 18),
                           textAlign: TextAlign.center),
                     ),
-                    Text(''),
-                    Text(
-                      'On this page, Admins can do the following:',
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    Text('Along with that, any news will also be viewable here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+
                   ],
                 ),
                 Column(
                   children: [
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(
-                          'The Account page is where information about you is stored',
-                          style: TextStyle(fontSize: 18),
-                          textAlign: TextAlign.center),
+                      child: Text('The Account page is where information about you is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
                     ),
-                    Text(
-                      'This information can be changed depending on your current status, either by yourself or by the admins(should need be)',
-                      style: TextStyle(fontSize: 18),
-                      textAlign: TextAlign.center,
+                    const Text('This information can be changed and updated at any time, by yourself or by admins.', style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                      child: Text('This website keeps the following information about you:', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
                     ),
-                    Text(
-                      'Here are the following information categories:',
-                      style: TextStyle(fontSize: 18),
-                      textAlign: TextAlign.center,
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Name: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'This is what other people will see on the feeding sign up and home page. Please use your first name or preferred name.', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
                     ),
-                    // Expanded(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Text('Name: This should be the name that the school has and/or your preferred name',style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                    //       Text("Email: How the admins can contact you. It doesn't have to be your school email(especially for alumnai and other individuals)", style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                    //       Text('Phone Number: How admins can contact you', style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                    //       Text('Status: What is your affliation with the school and organization. Can change', style: TextStyle(fontSize: 18), textAlign: TextAlign.left),
-                    //       Text('Notifications: Mark whether or not you want to be notified of time slots or other important things', style: TextStyle(fontSize: 18), textAlign: TextAlign.left)
-                    //     ],
-                    //   ),
-                    // )
+                    RichText(
+                      textAlign: TextAlign.left,
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'Method of contact visible to admins. This is provided by Google Sign On. You do not need an SU email to use this site.', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      textAlign: TextAlign.left,
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Phone Number: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'Another method of contact visible only to admins.', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Status/Rescue Group: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'Your current relation with the school (student, alum, non-student, etc.) and any rescue group afflications.', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(text: 'Profile Picture: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                          TextSpan(text: 'A nice image to identify yourself to others. Must be school-appropriate.', 
+                          style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                        ]
+                      )
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(text: 'Make sure all the information here is up-to-date and that you press submit to lock in any changes.', 
+                            style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                          ]
+                        )
+                      ),
+                    ),
                   ],
                 )
               ],

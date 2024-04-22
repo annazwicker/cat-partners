@@ -16,16 +16,13 @@ class TopNavBar extends StatefulWidget {
 
 class _TopNavBarState extends State<TopNavBar> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  static final List<Widget> _widgetOptions = <Widget>[
-    const HomeScreen(),
+  final List<Widget> _widgetOptions = <Widget>[
+    HomeScreen(),
     AboutScreen(),
-    const AdminScreen(),
-    const FeederScreen(),
+    AdminScreen(),
+    FeederScreen(),
     const AccountScreen(),
-    const TestScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -53,22 +50,22 @@ class _TopNavBarState extends State<TopNavBar> {
                 backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.business),
+                icon: Icon(Icons.info),
                 label: 'About',
                 backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.school),
+                icon: Icon(Icons.admin_panel_settings),
                 label: 'Admin',
                 backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.local_dining),
                 label: 'Sign Up to Feed',
                 backgroundColor: SUYellow,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
+                icon: Icon(Icons.account_box),
                 label: 'Account',
                 backgroundColor: SUYellow,
               ),
@@ -84,7 +81,7 @@ class _TopNavBarState extends State<TopNavBar> {
           ),
         ),
       ),
-      body: Center(
+      body: Center( 
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
     );
