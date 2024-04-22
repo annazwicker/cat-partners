@@ -124,7 +124,14 @@ class CellWrapperState extends State<CellWrapper> {
         widget.controller.toViewState(widget.data, assignedUser);
       }
     } else {
-      // Flash close button on view
+      // This is the viewed cell
+      if(selection == CellSelectStatus.viewing){
+        // Deselect
+        setState(() {
+          selection = CellSelectStatus.inactive;
+        });
+        widget.controller.toEmptyState();
+      }
     }
     
   }
