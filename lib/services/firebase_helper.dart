@@ -192,6 +192,17 @@ class FirebaseHelper {
   }
 
   /**
+   * changes user account's affiliation
+   */
+  Future changeUserAffiliation(String userEmail, String selectedAffiliation) async {
+    DocumentReference documentReference = _usersRef.doc(userEmail);
+    return documentReference.update({'affiliation':selectedAffiliation});
+
+    
+  }
+
+
+  /**
    * gives admin status to user account given the email address string 
    * (assuming email is the doc ID)
    */

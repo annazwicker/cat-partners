@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/firebase_helper.dart';
+
 
 class EditAccountsContent extends StatefulWidget {
   final Color textColor;
@@ -11,6 +13,7 @@ class EditAccountsContent extends StatefulWidget {
 }
 
 class _EditAccountsContentState extends State<EditAccountsContent> {
+  final _dbHelper = FirebaseHelper();
   String? selectedAffiliation;
   final TextEditingController emailControllerEdit = TextEditingController();
   final TextEditingController emailControllerDelete = TextEditingController();
@@ -111,6 +114,9 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                 ElevatedButton(
                   onPressed: () {
                     final emailedit = emailControllerEdit.text;
+
+                    _dbHelper.changeUserAffiliation(emailedit, selectedAffiliation!);
+
                     print('Email: $emailedit, Selected Affiliation: $selectedAffiliation');
                     emailControllerEdit.clear();
                     setState(() {
@@ -169,6 +175,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                 ElevatedButton(
                   onPressed: () {
                     final emaildelete = emailControllerDelete.text;
+                    _dbHelper.deleteAccount(emaildelete);
                     print('Email: $emaildelete');
                     emailControllerDelete.clear();
                   },
