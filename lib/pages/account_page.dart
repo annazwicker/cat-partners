@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_application_1/const.dart'; 
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_application_1/components/user_google.dart';
 
 void main() => runApp(const AccountScreen());
-
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
@@ -80,7 +82,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         accountInfo(containerWidth),
         pfpBox(containerWidth)
       ],
-      );
+    );
   }
   Widget verticalWidgets(double screenWidth){
     return Column(
@@ -89,7 +91,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         accountInfo(screenWidth),
         pfpBox(screenWidth)
       ],
-      );
+    );
   }
   // No longer using to upload image. Relying on user's own pfp from Google
   /*
@@ -164,19 +166,21 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       height: 500,
       child: Column(
         children: [
-          _pfpByte == null ? 
-          const CircleAvatar(
-            radius: 200,
-            backgroundImage: AssetImage('images/defualtPFP.jpg')
-          ) :
-          CircleAvatar(
-            radius: 200,
-            backgroundImage: MemoryImage(_pfpByte!)
-          ),
-          const SizedBox(
-            width: 10,
-            height: 20
-          ),
+          Builder(
+            builder: (context){
+              if(UserGoogle.user != null){
+                return CircleAvatar(
+                  radius: 200,
+                  backgroundImage: NetworkImage(UserGoogle.pfp)
+                );
+              } else {
+                return const CircleAvatar(
+                  radius: 200,
+                  backgroundImage: AssetImage('images/defualtPFP.jpg')
+                );
+              }
+            }
+          )
         ],
       )
     );

@@ -381,12 +381,12 @@ class _NestedTabBarState extends State<NestedTabBar>
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text(
-                          'The Home page is where users will defualt towards when loging in.',
+                          'The Home page is the default page users will be directed to upon logging in.',
                           style: TextStyle(fontSize: 18),
-                          textAlign: TextAlign.center),
+                          textAlign: TextAlign.left),
                     ),
-                    const Text('Here you can view the current time slots filled in for the next few days.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                    const Text('Along with that, 2 other things are visible:.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    const Text("Here users can view the times they've signed up to feed for the next two weeks from the current day.", style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    // const Text('Along with that, 2 other things are visible:.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     const Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -395,8 +395,8 @@ class _NestedTabBarState extends State<NestedTabBar>
                           child: RichText(
                             text: const TextSpan(
                               children: [
-                                TextSpan(text: 'News: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'This is where any important updates that the admins send out will be visible. It can be removed by pressing the "x" button', 
+                                TextSpan(text: 'Notifications: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                TextSpan(text: "In the notifications box, users can see any feeding stations that don't have anyone signed up to feed for the current day and the next day.", 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
                             )
@@ -412,7 +412,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                             text: const TextSpan(
                               children: [
                                 TextSpan(text: 'Achievements: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'This simply keeps track of the number of times you have volutneered to feed the cats. Let this be a good personal motivation to continue feeding them.', 
+                                TextSpan(text: 'This keeps track of the number of times you have volutneered to feed the campus cats.', 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
                             )
@@ -421,7 +421,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                       ],
                     ),
                     const Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                    const Text('Make sure to regularly log in to see if there are any new updates or if there are open slots available.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    const Text('Users should regularly log in to check when they are signed up to feed and see if there are any open slots available.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
                 ),
                 /////////////////////////////////////////////////////////////////// ADMIN PAGE
@@ -431,13 +431,9 @@ class _NestedTabBarState extends State<NestedTabBar>
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text(
-                          'This page is only available to those that have been granted admin permissions. Only Cat Partners officers will be granted this permission and be able to manage various functions related this website.',
+                          'The admin page is only available to those that have been granted admin permissions. This page allows users to modify various aspects of the website and user accounts.',
                           style: TextStyle(fontSize: 18),
                           textAlign: TextAlign.center),
-                    ),
-                    const Text(
-                      '',
-                      style: TextStyle(fontSize: 18),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
@@ -445,7 +441,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                         textAlign: TextAlign.center,
                         text: const TextSpan(
                           children: [
-                            TextSpan(text: 'On this page, Admins can do the following:', 
+                            TextSpan(text: 'On this page, Admins can navigate through the different tabs. Listed below are the different features of these tabs:', 
                             style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                           ]
                         )
@@ -454,45 +450,51 @@ class _NestedTabBarState extends State<NestedTabBar>
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Flexible(child: Text('- Edit the status of an account or delete an account', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
+                        Flexible(child: Text("- Edit/delete user accounts. Admin users can edit a current user's SU affiliation by selecting from the dropdown menu. Current users can be deleted by entering the user's gmail address.", style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
                       ]
                     ),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Flexible(child: Text('- Add new admins and remove old admins based on the current roster of Cat Partners officers', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
+                        Flexible(child: Text("- Add admin users and revoke admin permissions. New admin users can be added by entering a gmail address. Current admin users can have their admin capabilities revoked by selecting from the dropdown menu.", style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
                       ]
                     ),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Flexible(child: Text('- Edit cat and station information, such as what cats are active on campus and where', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
+                        Flexible(child: Text('- Add/delete campus cats. New cats can be added by entering their name and selecting the feeding station they are located at from a dropdown menu. Current campus cats can be deleted by selecting from a dropdwon menu.', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
                       ]
                     ),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Flexible(child: Text('- Add or remove feeding stations based on cat activity', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
+                        Flexible(child: Text('- Add/delete feeding stations. New feeding stations can be added by entering their name. Current feeding stations can be deleted by selecting from a dropdwon menu.', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
                       ]
                     ),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Flexible(child: Text('- Export data that shows total amount of volunteer hours and who volunteered', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
+                        Flexible(child: Text("- Search for a user. Admin users can search for a user by entering their first and last name, and gmail address.", style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
                       ]
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: const TextSpan(
-                          children: [
-                            TextSpan(text: 'With that said, please do not abuse the privilege you have with managing this site.', 
-                            style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                          ]
-                        )
-                      ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(child: Text('- Export data as a CSV file for a given academic year (select the year from a dropdown menu) that shows each volunteer associated with Cat Partners, the number of hours they volunteered, and the total number of volunteer hours from everyone.', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
+                      ]
                     ),
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
+                    //   child: RichText(
+                    //     textAlign: TextAlign.center,
+                    //     text: const TextSpan(
+                    //       children: [
+                    //         TextSpan(text: 'With that said, please do not abuse the privilege you have with managing this site.', 
+                    //         style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                    //       ]
+                    //     )
+                    //   ),
+                    // ),
                   ],
                 ),
                 ///////////////////////////////////////////////////////////// FEEDER PAGE
@@ -502,12 +504,12 @@ class _NestedTabBarState extends State<NestedTabBar>
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Sign up to Feed page is where you can officially volutenteer to feed cats.', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                      child: Text('The Sign up to Feed page is where you can officially sign up to feed the campus cats.', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                     ),
-                    Text('It will display all currently avaiable slots as well as already-filled-in slots.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                    Text('The names of others users will be displayed here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    Text('It will display all currently avaiable slots as well as already-filled-in slots. Any slots already taken will display the name of the user that signed up.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    //Text('The names of others users will be displayed here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                    Text('When signing up for a slot, click on the time slot of your choice. After making sure it is the correct time slot, press submit.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    Text('When signing up to feed, a user can select an empty slot. After making sure it is the desired date, they should press submit to confirm their sign up. Users can only sign up for one slot at a time.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
 
                   ],
                 ),
@@ -516,12 +518,12 @@ class _NestedTabBarState extends State<NestedTabBar>
                   children: [
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Account page is where information about you is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
+                      child: Text('The Account page is where information about the user is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
                     ),
-                    const Text('Some of this information is based on your Google account and others are based on your input.', style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                    const Text("The users first and last name, gmail address, phone number, and profile picture will be automatically provided by their Google account.  All information on this page can be manually changed except for the user's gmail address.", style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                      child: Text('This website keeps the following information about you:', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                      child: Text("Below is a brief description of the user information stored in the website's database.", style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -531,7 +533,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                             text: const TextSpan(
                               children: [
                                 TextSpan(text: 'Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'A method of communication and the way you sign into the website. Due to various reasons, you are not able to change this without creating a new account.', 
+                                TextSpan(text: "This is the gmail account the user will login in with.  Due to various reasons, you are not able to change this without creating a new account. Admin users will be able to see the user's gmail address in case they need to contact them.", 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
                             )
@@ -547,7 +549,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                             text: const TextSpan(
                               children: [
                                 TextSpan(text: 'Name: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'This is what other people will see on the feeding sign up and home page. Please use your first name or preferred name.', 
+                                TextSpan(text: 'This is what other people will see on the feeding sign up. Please use your first name or preferred name.', 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
                             )
@@ -578,8 +580,8 @@ class _NestedTabBarState extends State<NestedTabBar>
                           child: RichText(
                             text: const TextSpan(
                               children: [
-                                TextSpan(text: 'Status: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'Your current relation with the school (student, alumnai, parent of student, etc.). ', 
+                                TextSpan(text: 'SU Affiliation: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                TextSpan(text: "The user's current relation with the school (student, alumnai, parent of student, etc.). ", 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
                             )
@@ -595,7 +597,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                             text: const TextSpan(
                               children: [
                                 TextSpan(text: 'Rescure Group Afflilation: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'If you are part of a rescue group, you can add this to your account.', 
+                                TextSpan(text: 'If the user is part of a rescue group, they can add this to their account.  If not, this field can remain empty.', 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
                             )
@@ -609,7 +611,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                         textAlign: TextAlign.center,
                         text: const TextSpan(
                           children: [
-                            TextSpan(text: 'Make sure all the information here is up-to-date and accurate and that you press submit to lock in any changes.', 
+                            TextSpan(text: 'Users shoudl make sure all the information here is up-to-date and accurate and press submit to save any changes.', 
                             style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                           ]
                         )
