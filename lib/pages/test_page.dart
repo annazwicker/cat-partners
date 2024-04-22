@@ -31,6 +31,10 @@ class _TestScreenState extends State<TestScreen> {
             StreamBuilder(
               stream: _dbHelper.getEntryStream(),
               builder: (context, snapshot) {
+                if(!snapshot.hasData){
+                  // return some placeholder widget
+                }
+                // wrk with snapshot data and do yo thang :)
                 List entries = snapshot.data?.docs ?? [];
                 entries.sort((a, b) {
                   DateTime aE = a.data().date.toDate();
@@ -92,21 +96,7 @@ class _TestScreenState extends State<TestScreen> {
                 }
                 return ElevatedButton(
                   onPressed: () {
-                    for (int i = 1; i <= 30; i++){
-                      DateTime thisDateTime = DateTime(2024, DateTime.april, i);
-                      DateTime nextDateTime = thisDateTime.add(const Duration(days: 1));
-                      Timestamp thisStamp = Timestamp.fromDate(thisDateTime);
-                      Timestamp nextStamp = Timestamp.fromDate(nextDateTime);
-                      Query<Entry> dateQuery = _dbHelper.entriesRef.where('date', isGreaterThanOrEqualTo: thisStamp, isLessThan: nextStamp);
-                      dateQuery.get().then(
-                        (value) {
-                          int numEntries = value.size;
-                          DateFormat format = DateFormat("yyyy-MM-dd");
-                          String fDate = format.format(thisDateTime);
-                          print("Entries for $fDate: $numEntries");
-                        },
-                      );
-                    }
+                    // _dbHelper.searchUsers('nay');
                   }, 
                 child: const Text('Generate!'));
               }

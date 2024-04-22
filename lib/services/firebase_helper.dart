@@ -23,36 +23,40 @@ class FirebaseHelper {
 
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
-  
+
   /// References to collections
   late final CollectionReference<Entry> _entriesRef;
   late final CollectionReference<Station> _stationsRef;
   late final CollectionReference<Cat> _catsRef;
   late final CollectionReference<UserDoc> _usersRef;
 
-  FirebaseHelper(){
+  FirebaseHelper() {
     // Mapping used by all reference initializers
     Map<String, Object?> toFirestore(item, _) => item.toJson();
-    
+
     _entriesRef = _db.collection(entryColRef).withConverter<Entry>(
-      fromFirestore: (snapshots, _) => Entry.fromJson( snapshots.data()!,), 
-      toFirestore: toFirestore
-      );
-    
+        fromFirestore: (snapshots, _) => Entry.fromJson(
+              snapshots.data()!,
+            ),
+        toFirestore: toFirestore);
+
     _stationsRef = _db.collection(stationColRef).withConverter<Station>(
-      fromFirestore: (snapshots, _) => Station.fromJson( snapshots.data()!,), 
-      toFirestore: toFirestore
-      );
-    
+        fromFirestore: (snapshots, _) => Station.fromJson(
+              snapshots.data()!,
+            ),
+        toFirestore: toFirestore);
+
     _catsRef = _db.collection(catColRef).withConverter<Cat>(
-      fromFirestore: (snapshots, _) => Cat.fromJson( snapshots.data()!,), 
-      toFirestore: toFirestore
-      );
-      
+        fromFirestore: (snapshots, _) => Cat.fromJson(
+              snapshots.data()!,
+            ),
+        toFirestore: toFirestore);
+
     _usersRef = _db.collection(userColRef).withConverter<UserDoc>(
-      fromFirestore: (snapshots, _) => UserDoc.fromJson( snapshots.data()!,), 
-      toFirestore: toFirestore
-      );
+        fromFirestore: (snapshots, _) => UserDoc.fromJson(
+              snapshots.data()!,
+            ),
+        toFirestore: toFirestore);
   }
 
   Stream<QuerySnapshot<Entry>> getEntryStream() {
@@ -87,32 +91,30 @@ class FirebaseHelper {
     );
   }
 
-
-
   //home_page methods
-
 
   /**
    * queries all today and tomorrow entries that don't have people assigned to them yet
    */
-    Stream<QuerySnapshot> getUrgentEntries() {
+  Stream<QuerySnapshot> getUrgentEntries() {
     // DocumentReference<Station> stationDocRef = _stationsRef.doc('2');
-    // Timestamp date = Timestamp.fromDate(DateTime(2024, DateTime.april, 7)); 
+    // Timestamp date = Timestamp.fromDate(DateTime(2024, DateTime.april, 7));
     DateTime now = DateTime.now();
     DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
     DateTime tomorrow = nowNoSeconds.add(const Duration(days: 1));
 
-    return _entriesRef.where("date", isGreaterThanOrEqualTo: nowNoSeconds).where("date", isLessThanOrEqualTo: tomorrow).snapshots();
-    
+    return _entriesRef
+        .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
+        .where("date", isLessThanOrEqualTo: tomorrow)
+        .snapshots();
   }
 
 /**
  * queries all of a given user's upcoming entries
  */
-  Stream<QuerySnapshot> getUpcomingUserEntries(DocumentReference userRef){
+  Stream<QuerySnapshot> getUpcomingUserEntries(DocumentReference userRef) {
     print(userRef);
-    
-    
+
     // DateTime now = DateTime.now();
     DateTime now = DateTime.now().add(const Duration(days: -30));
     // DateTime now = DateTime.now();
@@ -124,68 +126,64 @@ class FirebaseHelper {
     DocumentReference<Station> station = _stationsRef.doc('1');
 
     return _entriesRef
-    .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
-    .where("assignedUser", isEqualTo: userRef)
+        .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
+        .where("assignedUser", isEqualTo: userRef)
 
-    // .where("stationID", isEqualTo: station)
-    .snapshots();
-
+        // .where("stationID", isEqualTo: station)
+        .snapshots();
   }
 
-  DocumentReference getCurrentUser(){
-   return _usersRef.doc('nay@southwestern.edu');
-  //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
-    
+  DocumentReference getCurrentUser() {
+    return _usersRef.doc('nay@southwestern.edu');
+    //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
   }
-
 
   //Account Page Methods
-  
-    //Change name
-    //Change phone number
-    //Change affiliation
-    //Change rescue group
 
-    //'Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation'
+  //Change name
+  //Change phone number
+  //Change affiliation
+  //Change rescue group
+
+  //'Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation'
 
   //add security that ensures phone number is valid
-  Future changeProfileFields (DocumentReference userReference, Map<String, dynamic> accountForm) async {
+  Future changeProfileFields(
+      DocumentReference userReference, Map<String, dynamic> accountForm) async {
     Map<String, dynamic> updateForm = {};
     //change name
 
-    if (accountForm['name'] != null){
+    if (accountForm['name'] != null) {
       updateForm['name'] = accountForm['name'];
-      }
+    }
     //change phone number
-    if (accountForm['phone'] != null){
+    if (accountForm['phone'] != null) {
       updateForm['phone'] = accountForm['phone'];
-    }      
+    }
     //change affiliation
-    if (accountForm['affiliation'] != null){
+    if (accountForm['affiliation'] != null) {
       updateForm['affiliation'] = accountForm['affiliation'];
-    }      
+    }
     //change rescue group
-    if (accountForm['rescueGroup'] != null){
+    if (accountForm['rescueGroup'] != null) {
       updateForm['rescueGroup'] = accountForm['rescueGroup'];
-    }      
+    }
 
     //perform update
     return userReference.update(updateForm);
-
-
   }
 
 //Admin_Page Methods
 
   //delete account
-    //get string. delete email
+  //get string. delete email
 
   /**
    * deletes user account given the email address string (currently assuming that email is the doc ID)
    */
-  Future deleteAccount (String userEmail) async{
+  Future deleteAccount(String userEmail) async {
     DocumentReference documentReference = _usersRef.doc(userEmail);
-    
+
     return documentReference.delete();
   }
 
@@ -193,26 +191,26 @@ class FirebaseHelper {
    * gives admin status to user account given the email address string 
    * (assuming email is the doc ID)
    */
-  Future addAdmin (String userEmail) async{
+  Future addAdmin(String userEmail) async {
     DocumentReference documentReference = _usersRef.doc(userEmail);
-    
-    return documentReference.update({'isAdmin': true});    
+
+    return documentReference.update({'isAdmin': true});
   }
 
   /**
    * removes admin status to user account given the email address string 
    * (assuming email is the doc ID)
    */
-  Future removeAdmin (String userEmail) async{
+  Future removeAdmin(String userEmail) async {
     DocumentReference documentReference = _usersRef.doc(userEmail);
-    
-    return documentReference.update({'isAdmin': false});    
+
+    return documentReference.update({'isAdmin': false});
   }
 
   /**
    * adds cat to Cat collection given a map of the cat's characteristics
    */
-  Future addCat (Map<String, dynamic> catMap) async{
+  Future addCat(Map<String, dynamic> catMap) async {
     Cat cat = Cat(
       description: catMap['description'],
       name: catMap['name'],
@@ -221,21 +219,19 @@ class FirebaseHelper {
     );
 
     return _catsRef.add(cat);
-
   }
-
 
   /**
    * deletes cat from Cat collection given a doc reference to that cat
    */
-  Future deleteCat (DocumentReference catToDelete) async{
+  Future deleteCat(DocumentReference catToDelete) async {
     return catToDelete.delete();
   }
 
   /**
    * adds station to Station collection given a map of the station's characteristics
    */
-  Future addStation (Map<String, dynamic> stationMap) async{
+  Future addStation(Map<String, dynamic> stationMap) async {
     Station station = Station(
       description: stationMap['description'],
       fullName: stationMap['fullName'],
@@ -244,55 +240,86 @@ class FirebaseHelper {
     );
 
     return _stationsRef.add(station);
-
   }
 
   /**
    * deletes station from Station collection given a doc reference to that station
    */
-  Future deleteStation (DocumentReference stationToDelete) async{
+  Future deleteStation(DocumentReference stationToDelete) async {
     return stationToDelete.delete();
   }
 
 /**
  * given a search string, returns search results for all user's names and emails for a match
  */
-  Stream<QuerySnapshot> searchUsers(String userSearch){
-        
+  // Future searchUsers(String searchTerm) async {
+  //   //loop through all users to run string.contains method on them
+  //   //convert to workable snapshots
+  //   //loop through entire collection
+  //   //return list
+  //   List users = [];
+  //   //get collection
+  //   _usersRef.get().then(
+  //     (querySnapshot) {
+  //       print("Successfully completed");
+  //       users = querySnapshot.docs;
+  //       for (var docSnapshot in querySnapshot.docs) {
+  //         print('${docSnapshot.id} => ${docSnapshot.data()}');
+  //       }
 
+  //       List<DocumentSnapshot<Map<String, dynamic>>> searchResult = [];
 
-    DateTime now = DateTime.now();
-    DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
-    print(nowNoSeconds);
-    Timestamp time = Timestamp.fromDate(nowNoSeconds);
-    print(time);
+  //       for (final user in users) {
+  //         UserDoc userData = user.data();
+  //         searchResult.add(userData);
+  //         // if ((userData.firstNameString.contains(searchTerm)) ||
+  //         //     (userData.email.contains(searchTerm))) {
+  //         //   searchResult.add(user);
+  //         // }
+  //       }
+  //       print("users: ");
+  //       print(users);
+  //       print("searchResult: ");
+  //       print(searchResult);
 
-    DocumentReference<Station> station = _stationsRef.doc('1');
+  //       return searchResult;
+  //     },
+  //     onError: (e) => print("Error completing: $e"),
+  //   );
 
-    return _entriesRef
-    .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
-    // .where("assignedUser", isEqualTo: userRef)
+  //   //end get collection
 
-    // .where("stationID", isEqualTo: station)
-    .snapshots();
-
-  }
-
+    
+  // }
 
   /// Getters
-  CollectionReference<Entry> get entriesRef { return _entriesRef; }
-  CollectionReference<Station> get stationsRef { return _stationsRef; }
-  CollectionReference<Cat> get catsRef { return _catsRef; }
-  CollectionReference<UserDoc> get usersRef { return _usersRef; }
-  FirebaseFirestore get db { return _db; }
+  CollectionReference<Entry> get entriesRef {
+    return _entriesRef;
+  }
+
+  CollectionReference<Station> get stationsRef {
+    return _stationsRef;
+  }
+
+  CollectionReference<Cat> get catsRef {
+    return _catsRef;
+  }
+
+  CollectionReference<UserDoc> get usersRef {
+    return _usersRef;
+  }
+
+  FirebaseFirestore get db {
+    return _db;
+  }
 
   /// Let 'colRef' be a CollectionReference
   /// Let 'someDocId' be a doc id
-  /// colRef.doc(someDocId) 
+  /// colRef.doc(someDocId)
   ///   | Returns DocumentReference to doc with id 'someDocId'
-  /// colRef.doc() 
+  /// colRef.doc()
   ///   | Returns DocumentReference to newly-created doc with auto-id.
-  /// colRef.doc(someDocId).set(Map<String, dynamic> data) 
+  /// colRef.doc(someDocId).set(Map<String, dynamic> data)
   ///   | Sets/creates document with ID 'someDocId' with data 'data'
   /// colRef.add(someClassData)
   ///   | Creates a document with auto-ID and data 'data'
@@ -300,65 +327,63 @@ class FirebaseHelper {
   void addEntry(Entry entry) async {
     _entriesRef.add(entry);
   }
-  
+
   /// Ensures that entries exist for [date] by adding them if they don't exist.
   void ensureEntries(DateTime date) async {
     // Remove milliseconds
     date = DateTime(date.year, date.month, date.day);
     Timestamp stamp = Timestamp.fromDate(date);
-    _db.runTransaction(
-      (transaction) async {
-        // Get all stations
-        bool isError = false;
-        List<QueryDocumentSnapshot<Station>> stations = [];
-        _stationsRef.get().then(
-          (querySnapshot) {
-            stations = querySnapshot.docs;
-          },
-          onError: (e){ 
-            print(e);
-            isError = true; },
-        );
+    _db.runTransaction((transaction) async {
+      // Get all stations
+      bool isError = false;
+      List<QueryDocumentSnapshot<Station>> stations = [];
+      _stationsRef.get().then(
+        (querySnapshot) {
+          stations = querySnapshot.docs;
+        },
+        onError: (e) {
+          print(e);
+          isError = true;
+        },
+      );
 
-        // Get entries with given date 
-        List<QueryDocumentSnapshot<Entry>> entries = [];
-        entriesOnDateQuery(date).get().then(
-          (querySnapshot) { entries = querySnapshot.docs; },
-          onError: (e) { 
-            print(e); 
-            isError = true;},
-        );
+      // Get entries with given date
+      List<QueryDocumentSnapshot<Entry>> entries = [];
+      entriesOnDateQuery(date).get().then(
+        (querySnapshot) {
+          entries = querySnapshot.docs;
+        },
+        onError: (e) {
+          print(e);
+          isError = true;
+        },
+      );
 
-        // Check if there isn't an error
-        if(!isError) {
-          for (QueryDocumentSnapshot<Station> station in stations){
-            // Query returns entry with station and date
-            List<QueryDocumentSnapshot<Entry>> statEntry = entries.where((element) => element.data().stationID.id == station.id).toList();
-            // Add entry if it doesn't exist
-            if(statEntry.isEmpty){
-              Entry newEntry = 
-                Entry(
-                  assignedUser: null, 
-                  date: stamp, 
-                  note: '', 
-                  stationID: station.reference,
-                  );
-              DocumentReference<Entry> newDocRef = _entriesRef.doc();
-              transaction.set(newDocRef, newEntry);
-            }
+      // Check if there isn't an error
+      if (!isError) {
+        for (QueryDocumentSnapshot<Station> station in stations) {
+          // Query returns entry with station and date
+          List<QueryDocumentSnapshot<Entry>> statEntry = entries
+              .where((element) => element.data().stationID.id == station.id)
+              .toList();
+          // Add entry if it doesn't exist
+          if (statEntry.isEmpty) {
+            Entry newEntry = Entry(
+              assignedUser: null,
+              date: stamp,
+              note: '',
+              stationID: station.reference,
+            );
+            DocumentReference<Entry> newDocRef = _entriesRef.doc();
+            transaction.set(newDocRef, newEntry);
           }
         }
+      }
     });
     // TODO adds entries for the given date, if they don't exist.
   }
 
-
-
-
-
-
-
-  /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and 
+  /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and
   /// milliseconds set to 0.
   Timestamp equalizeTime(Timestamp stamp) {
     DateTime date = stamp.toDate();
@@ -369,11 +394,9 @@ class FirebaseHelper {
   List<QueryDocumentSnapshot<Entry>> getEntries(DateTime date) {
     ensureEntries(date);
     List<QueryDocumentSnapshot<Entry>> entries = [];
-    entriesOnDateQuery(date).get().then(
-      (querySnapshot) {
-        entries = querySnapshot.docs.toList();
-      }
-    );
+    entriesOnDateQuery(date).get().then((querySnapshot) {
+      entries = querySnapshot.docs.toList();
+    });
     return entries;
   }
 
@@ -383,41 +406,41 @@ class FirebaseHelper {
 
     Timestamp stamp = Timestamp.fromDate(date);
     Timestamp nextStamp = Timestamp.fromDate(nextDate);
-    return _entriesRef.where('date', isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
+    return _entriesRef.where('date',
+        isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
   }
 
-  static Future <bool> saveStation({
+  static Future<bool> saveStation({
     // required BuildContext context,
     required int stationID,
     required String name,
     required String description,
     required String photo,
-  }) async{
-    try{
+  }) async {
+    try {
       //either grab or create a document from a collection
 
-        // Create a new user with a first and last name
-        final user = <String, dynamic>{
-          "first": "Ada",
-          "last": "Lovelace",
-          "born": 2009
-        };
+      // Create a new user with a first and last name
+      final user = <String, dynamic>{
+        "first": "Ada",
+        "last": "Lovelace",
+        "born": 2009
+      };
 
-        // Add a new document with a generated ID
-        print(user);
-        print(_db);
-        _db.collection("users").add(user).then((DocumentReference doc) =>
-            print('DocumentSnapshot added with ID: ${doc.id}'));
-
-
+      // Add a new document with a generated ID
+      print(user);
+      print(_db);
+      _db.collection("users").add(user).then((DocumentReference doc) =>
+          print('DocumentSnapshot added with ID: ${doc.id}'));
 
       var stationRef = _db.collection('station').doc("101");
 
       //create hard coded json document example
-      Map <String, dynamic> hardCodedJson = {
-        'name' : 'AMogususs',
-        'description' : 'The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A sing lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start. ding﻿',
-        'photo' : 'placeholder.img',
+      Map<String, dynamic> hardCodedJson = {
+        'name': 'AMogususs',
+        'description':
+            'The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A sing lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start. ding﻿',
+        'photo': 'placeholder.img',
       };
 
       //set document to a specific value
@@ -425,42 +448,32 @@ class FirebaseHelper {
 
       print("set stationRef");
 
-
       //retrieve document and create a Station object
       return true;
-      
-    } catch(e){
+    } catch (e) {
       return false;
     }
   }
-  
 
-  static Future <bool> saveUser({
+  static Future<bool> saveUser({
     required BuildContext context,
     required String email,
     required String password,
   }) async {
     try {
-      final UserCredential credential = 
-        await _auth.createUserWithEmailAndPassword(
-          email: email, 
-          password: password
-        );
+      final UserCredential credential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
-        if(credential.user != null){
-          return true;
-        }
+      if (credential.user != null) {
+        return true;
+      }
 
-        return false;
-    } catch(e){
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        )
-      );
+      return false;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
       return false;
     }
   }
-
-  
 }
