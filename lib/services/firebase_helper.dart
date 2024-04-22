@@ -114,8 +114,8 @@ class FirebaseHelper {
     
     
     // DateTime now = DateTime.now();
-    // DateTime now = DateTime.now().add(const Duration(days: -30));
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.now().add(const Duration(days: -30));
+    // DateTime now = DateTime.now();
     DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
     print(nowNoSeconds);
     Timestamp time = Timestamp.fromDate(nowNoSeconds);
@@ -124,7 +124,7 @@ class FirebaseHelper {
     DocumentReference<Station> station = _stationsRef.doc('1');
 
     return _entriesRef
-    // .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
+    .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
     .where("assignedUser", isEqualTo: userRef)
 
     // .where("stationID", isEqualTo: station)
