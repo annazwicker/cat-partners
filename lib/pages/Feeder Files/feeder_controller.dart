@@ -23,13 +23,12 @@ class FeederController extends ChangeNotifier {
   // late int? currentUserID; // placeholder; should be global variable across app
 
   // Entry select
-  late List<CellWrapperState>? selectedEntries;
+  late List<QueryDocumentSnapshot<Entry>>? selectedEntries;
 
   // Entry view
   late QueryDocumentSnapshot<Entry>? currentEntry;
   late DocumentSnapshot<UserDoc>? currentEntryUser;
   late bool isUsersEntry; // TODO true if user is viewing their own entry
-  late CellWrapperState selectedCell;
 
   FeederController({
     required this.fh
@@ -57,38 +56,37 @@ class FeederController extends ChangeNotifier {
   /// Adds given entry to selection if it's not included,
   /// And removes entry from selection if it is.
   /// Returns whether this entry will be in the selection AFTER this operation.
-  bool toggleSelection(CellWrapperState cellWrapper){
+  bool toggleSelection(QueryDocumentSnapshot<Entry> entry){
     checkThisState(PageState.select);
-    if (selectedEntries!.contains(cellWrapper)){
-      selectedEntries!.remove(cellWrapper);
-      cellWrapper.selection = CellSelectStatus.inactive;
+    if (selectedEntries!.contains(entry)){
+      selectedEntries!.remove(entry);
       notifyListeners();
       if(selectedEntries!.isEmpty) {
         currentState = PageState.empty;
       }
       return false;
     } else {
-      selectedEntries!.add(cellWrapper);
+      selectedEntries!.add(entry);
       notifyListeners();
       return true;
     }
   }
 
-  List<QueryDocumentSnapshot<Entry>> wrappersAsEntries() => selectedEntries!.map((e) => e.widget.data).toList();
+  // List<QueryDocumentSnapshot<Entry>> wrappersAsEntries() => selectedEntries!.map((e) => e.widget.data).toList();
 
   List<QueryDocumentSnapshot<Entry>> getSelection(){
     checkThisState(PageState.select);
-    return wrappersAsEntries();
+    return selectedEntries!;
   }
 
   void commitSelections() async {
     checkThisState(PageState.select);
     DocumentReference currentUserRef = await fds.getCurrentUserTEST();
-    for(QueryDocumentSnapshot<Entry> entry in wrappersAsEntries()){
+    for(QueryDocumentSnapshot<Entry> entry in selectedEntries!){
       fh.db.runTransaction((transaction) async {
         Entry newEntry = entry.data().copyWith(assignedUser: currentUserRef);
         transaction.update(entry.reference, newEntry.toJson());
-      }).then((value) => print('transaction successful!'), onError: (e) => print(e),);
+      });
     }
     toEmptyState();
   }
@@ -97,11 +95,8 @@ class FeederController extends ChangeNotifier {
     checkThisState(PageState.view);
     fh.db.runTransaction(
       (transaction) async {
-      // print('starting');
-      print(currentEntry);
       assert (currentEntry != null);
       Entry newEntry = currentEntry!.data().copyWithUser(null);
-      // print('new Entry: ${newEntry}');
       transaction.update(currentEntry!.reference, newEntry.toJson());
       toEmptyState();
     },);
@@ -121,8 +116,7 @@ class FeederController extends ChangeNotifier {
   /// Changes current page state to View, viewing the given entry.
   void toViewState(
     QueryDocumentSnapshot<Entry> entry, 
-    DocumentSnapshot<UserDoc>? entryUser, 
-    CellWrapperState cell) {
+    DocumentSnapshot<UserDoc>? entryUser) {
     // TODO Once Controller uses user IDs, check
     // given userID against stored and update if they're
     // different.
@@ -130,7 +124,6 @@ class FeederController extends ChangeNotifier {
     currentEntry = entry;
     currentEntryUser = entryUser;
     currentState = PageState.view;
-    selectedCell = cell;
     notifyListeners();
   }
 
@@ -159,12 +152,8 @@ class FeederController extends ChangeNotifier {
       case PageState.empty:
         break;
       case PageState.select:
-        for(CellWrapperState cell in selectedEntries!) {
-          cell.selection = CellSelectStatus.inactive;
-        }
         selectedEntries = null;
       case PageState.view:
-        selectedCell.selection = CellSelectStatus.inactive;
         currentEntry = null;
         currentEntryUser = null;
     }

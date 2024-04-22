@@ -34,7 +34,6 @@ enum CellSelectStatus {
 
 class CellWrapperState extends State<CellWrapper> {
   
-  QueryDocumentSnapshot<Entry>? data;
   DocumentSnapshot<UserDoc>? assignedUser;
 
   // CellWrapperState({this.data});
@@ -47,19 +46,18 @@ class CellWrapperState extends State<CellWrapper> {
 
   @override
   void initState() {
-    setState(() {
-      data = widget.data;
-    });
     widget.controller.addListener(() { 
-      setState(() {
-        if(widget.controller.currentState != PageState.select &&
-            selection == CellSelectStatus.adding){
-          selection = CellSelectStatus.inactive;
-        }
-        if(widget.controller.currentState == PageState.empty){
-          selection = CellSelectStatus.inactive;
-        }
-      });
+      if(widget.controller.currentState != PageState.select &&
+          selection == CellSelectStatus.adding){
+        setState(() {selection = CellSelectStatus.inactive;});
+      }
+      if(widget.controller.currentState != PageState.view &&
+          selection == CellSelectStatus.viewing){
+        setState(() {selection = CellSelectStatus.inactive;});
+      }
+      if(widget.controller.currentState == PageState.empty && selection != CellSelectStatus.inactive){
+        setState(() {selection = CellSelectStatus.inactive;});
+      }
     });
     super.initState();
   }
@@ -73,7 +71,7 @@ class CellWrapperState extends State<CellWrapper> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.controller.fds.getAssignedUser(data!),
+      future: widget.controller.fds.getAssignedUser(widget.data),
       builder: (context, snapshot) {
         if (!snapshot.hasData){
           return commonCellWrapping('Loading...');
@@ -88,6 +86,8 @@ class CellWrapperState extends State<CellWrapper> {
           } else {
             cellText = userData.getName();
           }
+        } else {
+          assignedUser = null;
         }
         
         return GestureDetector(
@@ -108,7 +108,7 @@ class CellWrapperState extends State<CellWrapper> {
       if (!hasUser()){
         setState(() {
           widget.controller.toSelectState();
-          if(widget.controller.toggleSelection(this)){
+          if(widget.controller.toggleSelection(widget.data)){
             selection = CellSelectStatus.adding;
           } else {
             selection = CellSelectStatus.inactive;
@@ -117,8 +117,11 @@ class CellWrapperState extends State<CellWrapper> {
       }
       // Enter view for assigned entries
       else {
-        selection = CellSelectStatus.viewing;
-        widget.controller.toViewState(data!, assignedUser, this);
+        setState(() {
+            selection = CellSelectStatus.viewing;
+          }
+        );
+        widget.controller.toViewState(widget.data, assignedUser);
       }
     } else {
       // Flash close button on view
