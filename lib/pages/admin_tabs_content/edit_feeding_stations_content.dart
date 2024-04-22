@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
-class EditFeedingStationsContent extends StatelessWidget {
+class EditFeedingStationsContent extends StatefulWidget {
   final Color textColor;
 
   const EditFeedingStationsContent({Key? key, required this.textColor}) : super(key: key);
+
+  @override
+  _EditFeedingStationsContentState createState() => _EditFeedingStationsContentState();
+}
+
+class _EditFeedingStationsContentState extends State<EditFeedingStationsContent> {
+  String? selectedFeedingStation;
+  final TextEditingController nameController = TextEditingController();
 
   Widget _buildDropdownField(
   String title,
@@ -39,6 +47,7 @@ class EditFeedingStationsContent extends StatelessWidget {
             }
             return null;
           },
+          value: selectedFeedingStation,
         ),
         const SizedBox(height: 10),
       ],
@@ -66,7 +75,7 @@ class EditFeedingStationsContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -76,12 +85,13 @@ class EditFeedingStationsContent extends StatelessWidget {
                     Text(
                       'Name:',
                       style: TextStyle(
-                        color: textColor,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold
                         ),
                     ),
                     const SizedBox(height: 10),
                     TextField(
+                      controller: nameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -91,6 +101,9 @@ class EditFeedingStationsContent extends StatelessWidget {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
+                     final name = nameController.text;
+                    print('Name: $name');
+                    nameController.clear();
                     // Add functionality for adding an account
                   },
                   style: ElevatedButton.styleFrom(
@@ -105,7 +118,7 @@ class EditFeedingStationsContent extends StatelessWidget {
           // which text boxes belong to the add and delete accounts sections
           Container(
             width: 1,
-            color: textColor,
+            color: Colors.black,
             margin: const EdgeInsets.only(left: 20.0, right: 20.0),
           ),
           Expanded(
@@ -118,7 +131,7 @@ class EditFeedingStationsContent extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: textColor,
+                    color: Colors.black,
                   ),
                 ),
                 Column(
@@ -128,6 +141,9 @@ class EditFeedingStationsContent extends StatelessWidget {
                          'Select Feeding Station',
                         ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
                          (String? value) {
+                          setState(() {
+                            selectedFeedingStation = value;
+                          });
                         },
                 ),
                   ],
@@ -135,6 +151,10 @@ class EditFeedingStationsContent extends StatelessWidget {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
+                    print('Selected Feeding Station: $selectedFeedingStation');
+                    setState(() {
+                      selectedFeedingStation = null;
+                    });
                     // Add functionality for adding an account
                   },
                   style: ElevatedButton.styleFrom(
