@@ -58,6 +58,12 @@ class Entry {
       stationID: stationID ?? this.stationID);
   }
 
+  Entry copyWithUser(DocumentReference? assignedUser) => Entry(
+    assignedUser: assignedUser,
+    date: _date,
+    note: _note,
+    stationID: _stationID);
+
   DocumentReference? getUserID() {
     return _assignedUser;
   }

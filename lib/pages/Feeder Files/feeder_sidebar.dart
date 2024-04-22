@@ -94,11 +94,11 @@ class _FeederSidebarState extends State<FeederSidebar> {
     return FutureBuilder(
       future: isThisUserEntry(),
       builder: (context, snapshot) {
-        String str = 'Verifying...';
         bool isUsersEntry = false;
         if(snapshot.hasData){
-          str = snapshot.data! ? 'your entry!' : 'not your entry!';
           isUsersEntry = snapshot.data!;
+          if(isUsersEntry) {
+          }
         }
         var notesController = TextEditingController( text: prints['note']);
         return Scaffold( 
@@ -113,7 +113,41 @@ class _FeederSidebarState extends State<FeederSidebar> {
               Row( // Name + remove button
                 children: <Widget>[
                   commonCont('Feeder: ${prints['user']}'),
-                  // TODO add button
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 20.0),
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        foregroundColor: Colors.black),
+                      onPressed: isUsersEntry ? () {
+                        showDialog(
+                          context: context, 
+                          builder: (context) {
+                            return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: const Text('Are you sure you want to unassign yourself from this entry?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              widget.controller.unassignCurrent();
+                            }, 
+                            child: const Text('Unassign')
+                            )
+                          ],    
+                        );;
+                          });
+                        // TODO open confirmation dialogue
+                        } : null, 
+                    child: const Text('Unassign')),
+                  )
                 ]
               ),
               Container( // Notes
