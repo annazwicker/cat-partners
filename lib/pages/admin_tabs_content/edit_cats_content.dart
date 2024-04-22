@@ -134,7 +134,7 @@ class EditCatsContent extends StatelessWidget {
                   children: [
                         _buildDropdownField(
                          'Select Cat',
-                        ['Gray Mama', 'Gaia', 'Itty Bitty', 'Teddy', 'Patches', 'Ziggy', 'Super Cal', 'Pumpkin'],
+                        ['Gray Mama', 'Gaia', 'Itty Bitty', 'Teddy', 'Patches', 'Ziggy', 'Super Cal', 'Pumpkin', 'Princess'],
                          (String? value) {
                         },
                 ),
