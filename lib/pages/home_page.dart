@@ -55,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
             // NotificationWidget(dbHelper: _dbHelper),
             //achievement box
             AchievementsBox(dbHelper: _dbHelper),
-            AchievementsBox(dbHelper: _dbHelper),
             
           ]
         )
@@ -164,14 +163,14 @@ class AchievementsBox extends StatelessWidget {
           achievementText = "No cats fed yet! Sign up for an entry and add 1 to the count!";
         }
         else{
-          achievementText = "You have filled in " + entries.length.toString() + " entries!\n Thank you so much!";
+          achievementText = "You have fed the campus cats " + entries.length.toString() + " times!\n Thank you so much!";
         }
         return Align(
-          alignment:Alignment.topLeft,
+          alignment:Alignment.center,
           child: Container(
             // width: MediaQuery.of(context).size.width * 0.3,
             color: SUYellow,
-            margin: const EdgeInsets.all(5),
+            margin: const EdgeInsets.all(15),
             padding: const EdgeInsets.all(20),
             child: Text(achievementText),
           ),

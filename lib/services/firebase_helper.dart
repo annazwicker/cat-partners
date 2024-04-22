@@ -136,6 +136,18 @@ class FirebaseHelper {
     
   }
 
+
+  //Account Page Methods
+  
+    //Change name
+    //Change phone number
+    //Change affiliation
+    //Change rescue group
+
+    //add security that ensures phone number is valid
+    void changeProfileFields (DocumentReference userReference, String)
+
+
   /// Getters
   CollectionReference<Entry> get entriesRef { return _entriesRef; }
   CollectionReference<Station> get stationsRef { return _stationsRef; }
@@ -208,6 +220,12 @@ class FirebaseHelper {
     });
     // TODO adds entries for the given date, if they don't exist.
   }
+
+
+
+
+
+
 
   /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and 
   /// milliseconds set to 0.

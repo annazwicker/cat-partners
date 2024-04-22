@@ -40,7 +40,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
   String? _name;
   String? _email;
   String? _phoneNumber;
-  String? _status;
+  String? _affiliation;
   String? _rescuegroupaffiliation;
   File? _pfp; // unsure if will use
   Uint8List? _pfpByte; // use MemoryImage to make image
@@ -127,8 +127,8 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                 _buildTextField('Phone Number', 'Enter your phone number', (value) {
                   _phoneNumber = value;
                 }),
-                _buildDropdownField('Status', ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student', 'Friend of Cats'], (value) {
-                _status = value;
+                _buildDropdownField('Affiliation', ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student', 'Friend of Cats'], (value) {
+                _affiliation = value;
                 }),
                 _buildTextField('Rescue Group Affiliation', 'Enter your rescue group affiliation', (value) {
                   _rescuegroupaffiliation = value;
@@ -142,7 +142,15 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                           const SnackBar(content: Text('Processing Data')),
                         );
                         // Process the collected data (you can send it to a server or save it in a database)
-                        print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation');
+
+                        Map<String, dynamic> formData = {
+                          'name': _name?.trim(),
+                          'phone' : _phoneNumber?.trim(),
+                          'affiliation': _affiliation?.trim(),
+                          'rescueGroup': _rescuegroupaffiliation?.trim(),
+                          };
+
+                        print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_affiliation, Rescue Group Affiliation: $_rescuegroupaffiliation');
                       }
                     },
                     child: const Text('Submit'),
