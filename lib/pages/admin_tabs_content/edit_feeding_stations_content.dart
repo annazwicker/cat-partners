@@ -101,29 +101,70 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    showDialog(
+                     showDialog(
                       context: context, 
                       builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Confirm'),
-                        content: Text("Are you sure you want to add a feeding station named \"${nameController.text}\"?"),
-                        actions: [
-                        TextButton(
-                          onPressed: () {
-                          Navigator.of(context).pop();
-                          }, 
-                          child: const Text('Cancel')
-                        ), 
-                        TextButton(
-                        onPressed: () {
-                          final name = nameController.text;
-                          print('Name: $name');
-                          nameController.clear();
-                        }, 
-                        child: const Text('Confirm'),
-                        )
-                        ],    
-                      );
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to add a feeding station named \"${nameController.text}\"?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final name = nameController.text;
+                                // Check if the name and feeding station are not empty
+                                if (name.isNotEmpty) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('Feeding station added successfully!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  print('Name: $name');
+                                  nameController.clear();
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please enter a name.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
                       }
                     );
                   },
@@ -175,27 +216,68 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                     showDialog(
                       context: context, 
                       builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Confirm'),
-                        content: Text("Are you sure you want to delete \"${selectedFeedingStation}\" from the list of feeding stations?"),
-                        actions: [
-                        TextButton(
-                          onPressed: () {
-                          Navigator.of(context).pop();
-                          }, 
-                          child: const Text('Cancel')
-                        ), 
-                        TextButton(
-                        onPressed: () {
-                          print('Selected Feeding Station: $selectedFeedingStation');
-                          setState(() {
-                            selectedFeedingStation = null;
-                          });
-                        }, 
-                        child: const Text('Confirm'),
-                        )
-                        ],    
-                      );
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to delete \"${selectedFeedingStation}\" from the list of feeding stations?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                // Check if the name and feeding station are not empty
+                                if (selectedFeedingStation != null) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('Feeding station deleted successfully!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  print('Selected Feeding Station: $selectedFeedingStation');
+                                  setState(() {
+                                    selectedFeedingStation = null;
+                                  });
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please select a feeding station.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
                       }
                     );
                   },

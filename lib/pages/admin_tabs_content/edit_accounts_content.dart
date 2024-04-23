@@ -113,30 +113,70 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                     showDialog(
                       context: context, 
                       builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Confirm'),
-                        content: Text("Are you sure you want to change the SU affiliation for \"${emailControllerEdit.text}\" to \"${selectedAffiliation}\"?"),
-                        actions: [
-                        TextButton(
-                          onPressed: () {
-                          Navigator.of(context).pop();
-                          }, 
-                          child: const Text('Cancel')
-                        ),
-                        TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          final emailedit = emailControllerEdit.text;
-                          print('Email: $emailedit, Selected Affiliation: $selectedAffiliation');
-                          emailControllerEdit.clear();
-                          setState(() {
-                            selectedAffiliation = null;
-                          });
-                        }, 
-                        child: const Text('Confirm'),
-                        )
-                        ],    
-                      );
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to change the SU affiliation for \"${emailControllerEdit.text}\" to \"${selectedAffiliation}\"?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final emailedit = emailControllerEdit.text;
+                                // Check if the name and feeding station are not empty
+                                if (emailedit.isNotEmpty && selectedAffiliation != null) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('SU Affiliation has successfully been changed.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  print('Email: $emailedit, Selected Affiliation: $selectedAffiliation');
+                                  emailControllerEdit.clear();
+                                  setState(() {
+                                    selectedAffiliation = null;
+                                  });
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please enter an email and select an SU affiliation.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
                       }
                     );
                   },
@@ -194,27 +234,68 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                     showDialog(
                       context: context, 
                       builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Confirm'),
-                        content: Text("Are you sure you want to delete the account associated with the email \"${emailControllerEdit.text}\"?"),
-                        actions: [
-                        TextButton(
-                          onPressed: () {
-                          Navigator.of(context).pop();
-                          }, 
-                          child: const Text('Cancel')
-                        ), 
-                        TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          final emaildelete = emailControllerDelete.text;
-                          print('Email: $emaildelete');
-                          emailControllerDelete.clear();
-                          }, 
-                        child: const Text('Confirm'),
-                        )
-                        ],    
-                      );
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to delete the account associated with the email \"${emailControllerDelete.text}\"?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final emaildelete = emailControllerDelete.text;
+                                // Check if the name and feeding station are not empty
+                                if (emaildelete.isNotEmpty) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('User deleted successfully.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  final emaildelete = emailControllerDelete.text;
+                                  print('Email: $emaildelete');
+                                  emailControllerDelete.clear();
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please enter an email.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
                       }
                     );
                   },

@@ -153,34 +153,74 @@ class _EditCatsContentState extends State<EditCatsContent> {
                   },
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
+                ElevatedButton(onPressed: () {
                     showDialog(
                       context: context, 
                       builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Confirm'),
-                        content: Text("Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedfeedingstation}\" feeding station?"),
-                        actions: [
-                        TextButton(
-                          onPressed: () {
-                          Navigator.of(context).pop();
-                          }, 
-                          child: const Text('Cancel')
-                        ), 
-                        TextButton(
-                        onPressed: () {
-                          final catname = nameController.text;
-                          print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
-                          nameController.clear();
-                          setState(() {
-                            selectedfeedingstation = null;
-                          });
-                        }, 
-                        child: const Text('Confirm'),
-                        )
-                        ],    
-                      );
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedfeedingstation}\" feeding station?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final catname = nameController.text;
+                                // Check if the name and feeding station are not empty
+                                if (catname.isNotEmpty && selectedfeedingstation != null) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('Cat added successfully!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
+                                  nameController.clear();
+                                  setState(() {
+                                    selectedfeedingstation = null;
+                                  });
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please enter a name and select a feeding station.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
                       }
                     );
                   },
@@ -232,27 +272,68 @@ class _EditCatsContentState extends State<EditCatsContent> {
                     showDialog(
                       context: context, 
                       builder: (context) {
-                      return AlertDialog(
-                        title: const Text('Confirm'),
-                        content: Text("Are you sure you want to remove \"${selectedcat}\" from the list of cats?"),
-                        actions: [
-                        TextButton(
-                          onPressed: () {
-                          Navigator.of(context).pop();
-                          }, 
-                          child: const Text('Cancel')
-                        ), 
-                        TextButton(
-                        onPressed: () {
-                          print('Selected Cat: $selectedcat');
-                          setState(() {
-                            selectedcat = null;
-                          });
-                        }, 
-                        child: const Text('Confirm'),
-                        )
-                        ],    
-                      );
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to remove \"${selectedcat}\" from the list of cats?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                // Check if the name and feeding station are not empty
+                                if (selectedcat != null) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('Cat deleted successfully!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  print('Selected Cat: $selectedcat');
+                                  setState(() {
+                                    selectedcat = null;
+                                  });
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please select a cat to remove.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
                       }
                     );
                   },
