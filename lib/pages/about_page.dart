@@ -313,6 +313,8 @@ class NestedTabBar extends StatefulWidget {
 class _NestedTabBarState extends State<NestedTabBar>
     with TickerProviderStateMixin {
   late TabController _nestedTabController;
+  final ScrollController _tabVerticalOne = ScrollController();
+  final ScrollController _tabVerticalTwo = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -395,7 +397,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                           child: RichText(
                             text: const TextSpan(
                               children: [
-                                TextSpan(text: 'Notifications: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                TextSpan(text: '\u2022 Notifications: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
                                 TextSpan(text: "In the notifications box, users can see any feeding stations that don't have anyone signed up to feed for the current day and the next day.", 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
@@ -411,7 +413,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                           child: RichText(
                             text: const TextSpan(
                               children: [
-                                TextSpan(text: 'Achievements: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                TextSpan(text: '\u2022 Achievements: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
                                 TextSpan(text: 'This keeps track of the number of times you have volutneered to feed the campus cats.', 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
@@ -425,77 +427,140 @@ class _NestedTabBarState extends State<NestedTabBar>
                   ],
                 ),
                 /////////////////////////////////////////////////////////////////// ADMIN PAGE
-                Column( 
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text(
-                          'The admin page is only available to those that have been granted admin permissions. This page allows users to modify various aspects of the website and user accounts.',
-                          style: TextStyle(fontSize: 18),
-                          textAlign: TextAlign.center),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: const TextSpan(
-                          children: [
-                            TextSpan(text: 'On this page, Admins can navigate through the different tabs. Listed below are the different features of these tabs:', 
-                            style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                          ]
-                        )
+                SingleChildScrollView(
+                  controller: _tabVerticalOne,
+                  child: Column( 
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Text(
+                            'The admin page is only available to those that have been granted admin permissions. This page allows users to modify various aspects of the website and user accounts.',
+                            style: TextStyle(fontSize: 18),
+                            textAlign: TextAlign.center),
                       ),
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(child: Text("- Edit/delete user accounts. Admin users can edit a current user's SU affiliation by selecting from the dropdown menu. Current users can be deleted by entering the user's gmail address.", style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
-                      ]
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(child: Text("- Add admin users and revoke admin permissions. New admin users can be added by entering a gmail address. Current admin users can have their admin capabilities revoked by selecting from the dropdown menu.", style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
-                      ]
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(child: Text('- Add/delete campus cats. New cats can be added by entering their name and selecting the feeding station they are located at from a dropdown menu. Current campus cats can be deleted by selecting from a dropdwon menu.', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
-                      ]
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(child: Text('- Add/delete feeding stations. New feeding stations can be added by entering their name. Current feeding stations can be deleted by selecting from a dropdwon menu.', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
-                      ]
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(child: Text("- Search for a user. Admin users can search for a user by entering their first and last name, and gmail address.", style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
-                      ]
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(child: Text('- Export data as a CSV file for a given academic year (select the year from a dropdown menu) that shows each volunteer associated with Cat Partners, the number of hours they volunteered, and the total number of volunteer hours from everyone.', style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display'), textAlign: TextAlign.left,))
-                      ]
-                    ),
-                    // Padding(
-                    //   padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
-                    //   child: RichText(
-                    //     textAlign: TextAlign.center,
-                    //     text: const TextSpan(
-                    //       children: [
-                    //         TextSpan(text: 'With that said, please do not abuse the privilege you have with managing this site.', 
-                    //         style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                    //       ]
-                    //     )
-                    //   ),
-                    // ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: const TextSpan(
+                            children: [
+                              TextSpan(text: 'On this page, Admins can navigate through the different tabs. Listed below are the different features of these tabs:', 
+                              style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                            ]
+                          )
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Edit/delete user accounts. ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "Admin users can edit a current user's SU affiliation by selecting from the dropdown menu. Current users can be deleted by entering the user's gmail address.", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ]
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Add admin users and revoke admin permissions. ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "New admin users can be added by entering a gmail address. Current admin users can have their admin capabilities revoked by selecting from the dropdown menu.", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ]
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Add/delete campus cats. ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "New cats can be added by entering their name and selecting the feeding station they are located at from a dropdown menu. Current campus cats can be deleted by selecting from a dropdwon menu.", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ]
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Add/delete feeding stations. ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "New feeding stations can be added by entering their name. Current feeding stations can be deleted by selecting from a dropdwon menu.", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ]
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Search for a user. ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "Admin users can search for a user by entering their first and last name, and gmail address.", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ]
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Export data as a CSV file ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "for a given academic year (select the year from a dropdown menu) that shows each volunteer associated with Cat Partners, the number of hours they volunteered, and the total number of volunteer hours from everyone.", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ]
+                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
+                      //   child: RichText(
+                      //     textAlign: TextAlign.center,
+                      //     text: const TextSpan(
+                      //       children: [
+                      //         TextSpan(text: 'With that said, please do not abuse the privilege you have with managing this site.', 
+                      //         style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                      //       ]
+                      //     )
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 ),
                 ///////////////////////////////////////////////////////////// FEEDER PAGE
                 const Column(
@@ -504,120 +569,123 @@ class _NestedTabBarState extends State<NestedTabBar>
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Sign up to Feed page is where you can officially sign up to feed the campus cats.', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                      child: Text('The Sign Up to Feed page is where a user can sign up to feed the campus cats.', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                     ),
-                    Text('It will display all currently avaiable slots as well as already-filled-in slots. Any slots already taken will display the name of the user that signed up.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    Text('The page will display all currently available entries. Any entry already taken by a user will display its assigned user.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     //Text('The names of others users will be displayed here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                    Text('When signing up to feed, a user can select an empty slot. After making sure it is the desired date, they should press submit to confirm their sign up. Users can only sign up for one slot at a time.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    Text("When signing up to feed, a user can select one or more empty entries. Clicking an empty entry will select it, and clicking the same entry will unselect it. When a user has their desired selection, they can press submit to confirm it, assigning themselves to all selected entries.", style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
 
                   ],
                 ),
                 /////////////////////////////////////////////////////////// ACCOUNT PAGE
-                Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Account page is where information about the user is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
-                    ),
-                    const Text("The users first and last name, gmail address, phone number, and profile picture will be automatically provided by their Google account.  All information on this page can be manually changed except for the user's gmail address.", style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                      child: Text("Below is a brief description of the user information stored in the website's database.", style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: RichText(
-                            text: const TextSpan(
-                              children: [
-                                TextSpan(text: 'Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: "This is the gmail account the user will login in with.  Due to various reasons, you are not able to change this without creating a new account. Admin users will be able to see the user's gmail address in case they need to contact them.", 
-                                style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                              ]
-                            )
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: RichText(
-                            text: const TextSpan(
-                              children: [
-                                TextSpan(text: 'Name: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'This is what other people will see on the feeding sign up. Please use your first name or preferred name.', 
-                                style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                              ]
-                            )
-                          ),
-                        ),
-                      ]
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: RichText(
-                            text: const TextSpan(
-                              children: [
-                                TextSpan(text: 'Phone Number: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'Another method of contact visible only to admins.', 
-                                style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                              ]
-                            )
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: RichText(
-                            text: const TextSpan(
-                              children: [
-                                TextSpan(text: 'SU Affiliation: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: "The user's current relation with the school (student, alumnai, parent of student, etc.). ", 
-                                style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                              ]
-                            )
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          child: RichText(
-                            text: const TextSpan(
-                              children: [
-                                TextSpan(text: 'Rescure Group Afflilation: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'If the user is part of a rescue group, they can add this to their account.  If not, this field can remain empty.', 
-                                style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                              ]
-                            )
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: const TextSpan(
-                          children: [
-                            TextSpan(text: 'Users shoudl make sure all the information here is up-to-date and accurate and press submit to save any changes.', 
-                            style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                          ]
-                        )
+                SingleChildScrollView(
+                  controller: _tabVerticalTwo,
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        child: Text('The Account page is where information about the user is stored.', style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center),
                       ),
-                    ),
-                  ],
+                      const Text("The users first and last name, gmail address, phone number, and profile picture will be automatically provided by their Google account.  All information on this page can be manually changed except for the user's gmail address.", style: TextStyle(fontSize: 18,color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                        child: Text("Below is a brief description of the user information stored in the website's database.", style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)), textAlign: TextAlign.center,),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "This is the gmail account the user will login in with.  Due to various reasons, you are not able to change this without creating a new account. Admin users will be able to see the user's gmail address in case they need to contact them.", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Name: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: 'This is what other people will see on the feeding sign up. Please use your first name or preferred name.', 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ]
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Phone Number: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: 'Another method of contact visible only to admins.', 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 SU Affiliation: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "The user's current relation with the school (student, alumnai, parent of student, etc.). ", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Rescure Group Afflilation: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: 'If the user is part of a rescue group, they can add this to their account.  If not, this field can remain empty.', 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 15, 0,0),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: const TextSpan(
+                            children: [
+                              TextSpan(text: 'Users should make sure all the information here is up-to-date and accurate and press submit to save any changes.', 
+                              style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                            ]
+                          )
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

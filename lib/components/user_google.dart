@@ -21,9 +21,6 @@ class UserGoogle {
       credential
     );
 
-    if(user != null){
-      pfp = user!.photoURL.toString();
-    }
     // returns instance of user, which contains user info
     return userCredential.user;
   }

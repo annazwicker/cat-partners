@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_application_1/const.dart'; 
 import 'package:flutter_application_1/components/user_google.dart';
@@ -168,12 +167,12 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         children: [
           Builder(
             builder: (context){
-              if(UserGoogle.user != null){
+              try{
                 return CircleAvatar(
                   radius: 200,
-                  backgroundImage: NetworkImage(UserGoogle.pfp)
+                  backgroundImage: NetworkImage(UserGoogle.user!.photoURL.toString())
                 );
-              } else {
+              } on Exception{
                 return const CircleAvatar(
                   radius: 200,
                   backgroundImage: AssetImage('images/defualtPFP.jpg')
