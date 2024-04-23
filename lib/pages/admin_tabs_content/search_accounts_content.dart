@@ -33,7 +33,7 @@ class _SearchUsersContentState extends State<SearchUsersContent> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Search for a user using first name, last name, and email address',
+                  'Search for a user using first and last name, and email address',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

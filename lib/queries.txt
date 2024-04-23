@@ -1,0 +1,129 @@
+_db.collection(stationColRef)
+
+// Create a reference to the cities collection
+final citiesRef = db.collection("cities");
+
+// Create a query against the collection.
+final query = citiesRef.where("state", isEqualTo: "CA");
+
+final capitalcities =
+    db.collection("cities").where("capital", isEqualTo: true);
+
+
+db.collection("cities").where("capital", isEqualTo: true).get().then(
+  (querySnapshot) {
+    print("Successfully completed");
+    for (var docSnapshot in querySnapshot.docs) {
+      print('${docSnapshot.id} => ${docSnapshot.data()}');
+    }
+  },
+  onError: (e) => print("Error completing: $e"),
+);
+
+
+
+
+final citiesRef = db.collection("cities");
+final stateQuery = citiesRef.where("state", isEqualTo: "CA");
+final populationQuery = citiesRef.where("population", isLessThan: 100000);
+final nameQuery = citiesRef.where("name", isEqualTo: "San Francisco");
+
+
+Home Page
+
+1. retrieve empty feeder slots for today and tomorrow
+
+
+final entryRef = _db.collection("entry");
+final emptySlotsQuery = entryRef.where("date", isGreaterThanOrEqualTo: Today);
+
+2. retrieve number of feeder entries the user has filled out
+
+
+final entryRef = _db.collection("entry");
+final feederCount = entryRef.where("user", isEqualTo: user);
+
+3. retrieve x number of user entries starting today
+
+final entryRef = _db.collection("entry");
+final feederCount = entryRef.where("date", isGreaterThanOrEqualTo: Today).where("user", isEqualTo: user);
+
+
+
+ABOUT Page
+
+1. just the cat pictures -- all cats
+
+final catsRef = _db.collection("cat");
+
+Account Page
+
+1. save and retrieve first name, last name, email, phone number, status, rescue group
+
+final usersRef = _db.collection("users");
+//simply retrieve the entire document, there's no need to make a where query
+final currentUserRef = usersRef.document("userDocumentID"); //.snapshots()
+
+Admin Page
+1. retrieve users from email, delete those users
+
+        //get list of all users
+final usersRef = _db.collection("users");
+String searchTerm = "placeholder";
+    //loop through all users to run string.contains method on them
+s
+        //convert to workable snapshots
+        //loop through entire collection
+        //return list
+List users = snapshot.data?.docs ?? [];
+List searchResult = [];
+for (final user in users){
+    UserDoc userData = user.data();
+    if ((userData.name.contains(searchTerm)) || (user.email.contains(searchTerm))){
+        searchResult.add(user);
+    }
+}
+
+
+2. retrieve admin users
+
+_usersRef.where("isAdmin", isEqualTo: true);
+
+
+
+3. retrieve cat names -- delete cat
+        add new cat
+
+
+async method
+
+_catsRef.add(catObject);
+
+_catsRef.doc("catID").delete().then(
+    onError: (e) => print("Error deleting document);
+);
+
+
+//update
+
+_catsRef.doc("catID").update({"name": "Fluffles"}).then(
+    onError: (e) => print("Error updating name of document);
+);
+
+4. retrieve feeding stations
+        add new station
+
+_catsRef.add(stationObject);
+
+
+5. csv for user entries in given date
+
+???
+
+Feeder Page
+
+1. 3 weeks from current date of entries
+
+
+_entryRef.where("date", isGreaterThanOrEqualTo: today).where("date", isLessThanOrEqualTo: today + threeWeeks);
+

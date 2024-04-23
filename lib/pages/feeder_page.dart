@@ -1,6 +1,8 @@
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart";
 
+import "../services/firebase_helper.dart";
 import "Feeder Files/feeder_sidebar.dart";
 import "Feeder Files/feeder_table.dart";
 
@@ -13,7 +15,20 @@ class FeederScreen extends StatefulWidget {
 
 class _FeederScreenState extends State<FeederScreen> {
 
-  FeederController controller = FeederController();
+  FirebaseHelper fh = FirebaseHelper();
+  late FeederController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = FeederController(fh: fh);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
   
   Widget tableWrap(FeederTable table) {
     return Flexible ( 
@@ -33,7 +48,7 @@ class _FeederScreenState extends State<FeederScreen> {
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: const BorderRadius.all(Radius.circular(10))),
-      margin: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(15),
       constraints: const BoxConstraints(
         maxWidth: 400,
         minWidth: 400,
@@ -44,8 +59,8 @@ class _FeederScreenState extends State<FeederScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FeederTable fTable = FeederTable(controller: controller);
-    FeederSidebar fSidebar = FeederSidebar(controller: controller);
+    FeederTable fTable = FeederTable(controller: controller, fh: fh);
+    FeederSidebar fSidebar = FeederSidebar(controller: controller, fh: fh);
     
     return Scaffold(
       appBar: AppBar(
