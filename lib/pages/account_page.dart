@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_application_1/const.dart'; 
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_application_1/components/user_google.dart';
 
 import '../services/firebase_helper.dart';
 
 void main() => runApp(const AccountScreen());
-
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
@@ -55,7 +56,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth;
-    {// change numbers, min window is 500, max is 1536 for my device, make it change when at ~900
+    {// min window is 500, max is 1536 for my device
       if(screenWidth <= 800){
         containerWidth = screenWidth;
       } else { // screenWidth > 800
@@ -84,7 +85,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         accountInfo(containerWidth),
         pfpBox(containerWidth)
       ],
-      );
+    );
   }
   Widget verticalWidgets(double screenWidth){
     return Column(
@@ -93,9 +94,10 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         accountInfo(screenWidth),
         pfpBox(screenWidth)
       ],
-      );
+    );
   }
-
+  // No longer using to upload image. Relying on user's own pfp from Google
+  /*
   void selectImage() async{
     final ImagePicker imagePicker = ImagePicker();
     Uint8List temp;
@@ -109,7 +111,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       }
       
   }
-
+  */
   Widget accountInfo(double containerWidth){
     return SizedBox(
       width: containerWidth,
@@ -156,8 +158,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
-                        // Process the collected data (you can send it to a server or save it in a database)
-
+                        // Process the collected data (you can send it to a server or save it in a database
                         Map<String, dynamic> formData = {
                           'name': _name?.trim(),
                           'phone' : _phoneNumber?.trim(),
@@ -189,25 +190,20 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       height: 500,
       child: Column(
         children: [
-          _pfpByte == null ? 
-          const CircleAvatar(
-            radius: 200,
-            backgroundImage: AssetImage('images/defualtPFP.jpg')
-          ) :
-          CircleAvatar(
-            radius: 200,
-            backgroundImage: MemoryImage(_pfpByte!)
-          ),
-          const SizedBox(
-            width: 10,
-            height: 20
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: SUYellow,
-            ),
-            onPressed: selectImage, 
-            child: const Text("Upload an image", style: TextStyle(fontSize: 12),)
+          Builder(
+            builder: (context){
+              try{
+                return CircleAvatar(
+                  radius: 200,
+                  backgroundImage: NetworkImage(UserGoogle.user!.photoURL.toString())
+                );
+              } on Exception{
+                return const CircleAvatar(
+                  radius: 200,
+                  backgroundImage: AssetImage('images/defualtPFP.jpg')
+                );
+              }
+            }
           )
         ],
       )
