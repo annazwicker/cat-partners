@@ -144,16 +144,11 @@ class FirebaseHelper {
 
   //Account Page Methods
 
-  //Change name
-  //Change phone number
-  //Change affiliation
-  //Change rescue group
 
-  //'Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation'
 
   //add security that ensures phone number is valid
   Future changeProfileFields(
-      DocumentReference userReference, Map<String, dynamic> accountForm) async {
+      String userID, Map<String, dynamic> accountForm) async {
     Map<String, dynamic> updateForm = {};
     //change name
 
@@ -174,7 +169,7 @@ class FirebaseHelper {
     }
 
     //perform update
-    return userReference.update(updateForm);
+    return _usersRef.doc(userID).update(updateForm);
   }
 
 //Admin_Page Methods

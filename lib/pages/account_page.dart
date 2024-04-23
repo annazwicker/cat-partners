@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart'; 
 import 'package:image_picker/image_picker.dart';
 
+import '../services/firebase_helper.dart';
+
 void main() => runApp(const AccountScreen());
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +38,7 @@ class AccountInfoForm extends StatefulWidget {
 }
 
 class AccountInfoFormState extends State<AccountInfoForm> {
+  final _dbHelper = FirebaseHelper();
   final _formKey = GlobalKey<FormState>();
 
   String? _name;
@@ -162,6 +166,9 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                           };
 
                         print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_affiliation, Rescue Group Affiliation: $_rescuegroupaffiliation');
+
+                        //create map 
+                        _dbHelper.changeProfileFields('5SLi4nS54TigU4XtHzAp', formData);
                       }
                     },
                     child: const Text('Submit'),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/firebase_helper.dart';
+
 class EditAdminContent extends StatefulWidget {
   final Color textColor;
 
@@ -12,6 +14,7 @@ class EditAdminContent extends StatefulWidget {
 class _EditAdminContentState extends State<EditAdminContent> {
   String? selectedAdminUser;
   final TextEditingController emailController = TextEditingController();
+  final _dbHelper = FirebaseHelper();
 
   Widget _buildDropdownField(
   String title,
@@ -102,6 +105,9 @@ class _EditAdminContentState extends State<EditAdminContent> {
                 ElevatedButton(
                   onPressed: () {
                     final emailedit = emailController.text;
+                    //make user admin
+                    _dbHelper.addAdmin(emailedit);
+
                     print('Email: $emailedit');
                     emailController.clear();
                     // Add functionality for adding an account
@@ -139,7 +145,7 @@ class _EditAdminContentState extends State<EditAdminContent> {
                   children: [
                     _buildDropdownField(
                     'Select Admin User',
-                    ['Kelly Lessard', 'Jayden Beauchea', 'Daniel Na', 'Anna Wicker', 'Marlon Mata'],
+                    ['5SLi4nS54TigU4XtHzAp', 'Kelly Lessard', 'Jayden Beauchea', 'Daniel Na', 'Anna Wicker', 'Marlon Mata'],
                       (String? value) {
                         setState(() {
                           selectedAdminUser = value;
@@ -151,6 +157,7 @@ class _EditAdminContentState extends State<EditAdminContent> {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
+                    _dbHelper.removeAdmin(selectedAdminUser!);
                     print('Selected Admin User: $selectedAdminUser');
                     setState(() {
                       selectedAdminUser = null;
