@@ -95,6 +95,16 @@ class FirebaseHelper {
     );
   }
 
+  //get user's name given documentReference
+  Future getUserName(DocumentReference<Object?>? docRef) async {
+    DocumentSnapshot assignedUserSnapshot = await docRef!.get();
+    Map<String, dynamic> userData =
+        assignedUserSnapshot.data() as Map<String, dynamic>;
+
+    String assignedUserName = userData['name'];
+    return assignedUserName;
+  }
+
   //home_page methods
 
   /**
@@ -120,8 +130,8 @@ class FirebaseHelper {
     print(userRef);
 
     // DateTime now = DateTime.now();
-    DateTime now = DateTime.now().add(const Duration(days: -30));
-    // DateTime now = DateTime.now();
+    // DateTime now = DateTime.now().add(const Duration(days: -30));
+    DateTime now = DateTime.now();
     DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
     print(nowNoSeconds);
     Timestamp time = Timestamp.fromDate(nowNoSeconds);
@@ -143,8 +153,6 @@ class FirebaseHelper {
   }
 
   //Account Page Methods
-
-
 
   //add security that ensures phone number is valid
   Future changeProfileFields(
@@ -189,13 +197,11 @@ class FirebaseHelper {
   /**
    * changes user account's affiliation
    */
-  Future changeUserAffiliation(String userEmail, String selectedAffiliation) async {
+  Future changeUserAffiliation(
+      String userEmail, String selectedAffiliation) async {
     DocumentReference documentReference = _usersRef.doc(userEmail);
-    return documentReference.update({'affiliation':selectedAffiliation});
-
-    
+    return documentReference.update({'affiliation': selectedAffiliation});
   }
-
 
   /**
    * gives admin status to user account given the email address string 
@@ -301,7 +307,6 @@ class FirebaseHelper {
 
   //   //end get collection
 
-    
   // }
 
   /// Getters
@@ -460,8 +465,8 @@ class FirebaseHelper {
       return false;
     }
   }
-  
-  static Future <bool> saveUser({
+
+  static Future<bool> saveUser({
     required BuildContext context,
     required String email,
     required String password,
@@ -482,5 +487,14 @@ class FirebaseHelper {
       return false;
     }
   }
-  
+
+//name getters
+
+  Future getStationName(String stationID) async {
+    // Fetch the document referenced by stationID
+    _stationsRef.doc(stationID).get().then((stationSnapshot) {
+      final data = stationSnapshot.data() as Map<String, dynamic>;
+      return data['name'];
+    });
+  }
 }
