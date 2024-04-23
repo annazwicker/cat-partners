@@ -283,11 +283,43 @@ class NotificationWidget extends StatelessWidget {
 
             List<String> todayEntries = [];
             List<String> tmrwEntries = [];
+
             for (var entry in entries) {
               if (entry.data().date.toDate() == today) {
-                todayEntries.add(entry.data().stationID.id);
+                String stationName;
+                switch (entry.data().stationID.id) {
+                  case '0':
+                    stationName = 'Admin';
+                    break;
+                  case '1':
+                    stationName = 'Mabee';
+                    break;
+                  case '2':
+                    stationName = 'Lords';
+                    break;
+                  default:
+                    stationName = 'ERROR!';
+                    break;
+                }
+
+                todayEntries.add(stationName);
               } else {
-                tmrwEntries.add(entry.data().stationID.id);
+                String stationName;
+                switch (entry.data().stationID.id) {
+                  case '0':
+                    stationName = 'Admin';
+                    break;
+                  case '1':
+                    stationName = 'Mabee';
+                    break;
+                  case '2':
+                    stationName = 'Lords';
+                    break;
+                  default:
+                    stationName = 'ERROR!';
+                    break;
+                }
+                tmrwEntries.add(stationName);
               }
             }
             if (todayEntries.length > 0) {
