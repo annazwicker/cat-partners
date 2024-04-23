@@ -6,9 +6,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_application_1/const.dart'; 
 import 'package:flutter_application_1/components/user_google.dart';
 
+import '../services/firebase_helper.dart';
+
 void main() => runApp(const AccountScreen());
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +39,13 @@ class AccountInfoForm extends StatefulWidget {
 }
 
 class AccountInfoFormState extends State<AccountInfoForm> {
+  final _dbHelper = FirebaseHelper();
   final _formKey = GlobalKey<FormState>();
 
   String? _name;
   String? _email;
   String? _phoneNumber;
-  String? _status;
+  String? _affiliation;
   String? _rescuegroupaffiliation;
   File? _pfp; // unsure if will use
   Uint8List? _pfpByte; // use MemoryImage to make image
@@ -123,14 +127,25 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                 _buildTextField('Name', 'Enter your name', (value) {
                   _name = value;
                 }),
-                _buildTextField('Email', 'Enter your email', (value) {
-                  _email = value;
+                TextFormField(
+                  initialValue: 'value',
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'hintText',
+                    labelStyle: TextStyle(fontWeight: FontWeight.bold), // Bold label
+                  ),
+                ),
+
+                _buildTextField('Email', 'email@gmail.com', (value) {
+                  _email = 'email@gmail.com';
+                  
                 }),
                 _buildTextField('Phone Number', 'Enter your phone number', (value) {
                   _phoneNumber = value;
                 }),
-                _buildDropdownField('Status', ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student', 'Friend of Cats'], (value) {
-                _status = value;
+                _buildDropdownField('Affiliation', ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student', 'Friend of Cats'], (value) {
+                _affiliation = value;
                 }),
                 _buildTextField('Rescue Group Affiliation', 'Enter your rescue group affiliation', (value) {
                   _rescuegroupaffiliation = value;
@@ -143,8 +158,18 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
-                        // Process the collected data (you can send it to a server or save it in a database)
-                        // print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_status, Rescue Group Affiliation: $_rescuegroupaffiliation');
+                        // Process the collected data (you can send it to a server or save it in a database
+                        Map<String, dynamic> formData = {
+                          'name': _name?.trim(),
+                          'phone' : _phoneNumber?.trim(),
+                          'affiliation': _affiliation?.trim(),
+                          'rescueGroup': _rescuegroupaffiliation?.trim(),
+                          };
+
+                        print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_affiliation, Rescue Group Affiliation: $_rescuegroupaffiliation');
+
+                        //create map 
+                        _dbHelper.changeProfileFields('5SLi4nS54TigU4XtHzAp', formData);
                       }
                     },
                     child: const Text('Submit'),
