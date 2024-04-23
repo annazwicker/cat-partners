@@ -99,7 +99,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                 ),
                 const SizedBox(height: 20),
                 _buildDropdownField(
-                  'Select Status',
+                  'Select SU Affiliation',
                   ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student'],
                   (String? value) {
                     setState(() {
@@ -110,12 +110,35 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
-                    final emailedit = emailControllerEdit.text;
-                    print('Email: $emailedit, Selected Affiliation: $selectedAffiliation');
-                    emailControllerEdit.clear();
-                    setState(() {
-                      selectedAffiliation = null;
-                    });
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text("Are you sure you want to change the SU affiliation for \"${emailControllerEdit.text}\" to \"${selectedAffiliation}\"?"),
+                        actions: [
+                        TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          }, 
+                          child: const Text('Cancel')
+                        ),
+                        TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          final emailedit = emailControllerEdit.text;
+                          print('Email: $emailedit, Selected Affiliation: $selectedAffiliation');
+                          emailControllerEdit.clear();
+                          setState(() {
+                            selectedAffiliation = null;
+                          });
+                        }, 
+                        child: const Text('Confirm'),
+                        )
+                        ],    
+                      );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
@@ -168,9 +191,32 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                 const SizedBox(height:25),
                 ElevatedButton(
                   onPressed: () {
-                    final emaildelete = emailControllerDelete.text;
-                    print('Email: $emaildelete');
-                    emailControllerDelete.clear();
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text("Are you sure you want to delete the account associated with the email \"${emailControllerEdit.text}\"?"),
+                        actions: [
+                        TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          }, 
+                          child: const Text('Cancel')
+                        ), 
+                        TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          final emaildelete = emailControllerDelete.text;
+                          print('Email: $emaildelete');
+                          emailControllerDelete.clear();
+                          }, 
+                        child: const Text('Confirm'),
+                        )
+                        ],    
+                      );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text

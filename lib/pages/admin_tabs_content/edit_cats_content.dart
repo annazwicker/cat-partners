@@ -155,12 +155,34 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    final catname = nameController.text;
-                    print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
-                    nameController.clear();
-                    setState(() {
-                      selectedfeedingstation = null;
-                    });
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text("Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedfeedingstation}\" feeding station?"),
+                        actions: [
+                        TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          }, 
+                          child: const Text('Cancel')
+                        ), 
+                        TextButton(
+                        onPressed: () {
+                          final catname = nameController.text;
+                          print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
+                          nameController.clear();
+                          setState(() {
+                            selectedfeedingstation = null;
+                          });
+                        }, 
+                        child: const Text('Confirm'),
+                        )
+                        ],    
+                      );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
@@ -207,10 +229,32 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    print('Selected Cat: $selectedcat');
-                    setState(() {
-                      selectedcat = null;
-                    });
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text("Are you sure you want to remove \"${selectedcat}\" from the list of cats?"),
+                        actions: [
+                        TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          }, 
+                          child: const Text('Cancel')
+                        ), 
+                        TextButton(
+                        onPressed: () {
+                          print('Selected Cat: $selectedcat');
+                          setState(() {
+                            selectedcat = null;
+                          });
+                        }, 
+                        child: const Text('Confirm'),
+                        )
+                        ],    
+                      );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text

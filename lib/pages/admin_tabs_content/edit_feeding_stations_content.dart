@@ -101,10 +101,31 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                     final name = nameController.text;
-                    print('Name: $name');
-                    nameController.clear();
-                    // Add functionality for adding an account
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text("Are you sure you want to add a feeding station named \"${nameController.text}\"?"),
+                        actions: [
+                        TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          }, 
+                          child: const Text('Cancel')
+                        ), 
+                        TextButton(
+                        onPressed: () {
+                          final name = nameController.text;
+                          print('Name: $name');
+                          nameController.clear();
+                        }, 
+                        child: const Text('Confirm'),
+                        )
+                        ],    
+                      );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
@@ -151,11 +172,32 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
-                    print('Selected Feeding Station: $selectedFeedingStation');
-                    setState(() {
-                      selectedFeedingStation = null;
-                    });
-                    // Add functionality for adding an account
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text("Are you sure you want to delete \"${selectedFeedingStation}\" from the list of feeding stations?"),
+                        actions: [
+                        TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          }, 
+                          child: const Text('Cancel')
+                        ), 
+                        TextButton(
+                        onPressed: () {
+                          print('Selected Feeding Station: $selectedFeedingStation');
+                          setState(() {
+                            selectedFeedingStation = null;
+                          });
+                        }, 
+                        child: const Text('Confirm'),
+                        )
+                        ],    
+                      );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text

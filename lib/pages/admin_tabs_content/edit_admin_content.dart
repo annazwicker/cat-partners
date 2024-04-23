@@ -101,10 +101,31 @@ class _EditAdminContentState extends State<EditAdminContent> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    final emailedit = emailController.text;
-                    print('Email: $emailedit');
-                    emailController.clear();
-                    // Add functionality for adding an account
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text("Are you sure you want to add \"${emailController.text}\" as an admin user?"),
+                        actions: [
+                        TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          }, 
+                          child: const Text('Cancel')
+                        ), 
+                        TextButton(
+                        onPressed: () {
+                          final emailedit = emailController.text;
+                          print('Email: $emailedit');
+                          emailController.clear();
+                          }, 
+                        child: const Text('Confirm'),
+                        )
+                        ],    
+                      );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
@@ -151,11 +172,32 @@ class _EditAdminContentState extends State<EditAdminContent> {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
-                    print('Selected Admin User: $selectedAdminUser');
-                    setState(() {
-                      selectedAdminUser = null;
-                    });
-                    // Add functionality for adding an account
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Confirm'),
+                        content: Text("Are you sure you want to remove \"${selectedAdminUser}\" as an admin user?"),
+                        actions: [
+                        TextButton(
+                          onPressed: () {
+                          Navigator.of(context).pop();
+                          }, 
+                          child: const Text('Cancel')
+                        ), 
+                        TextButton(
+                        onPressed: () {
+                          print('Selected Admin User: $selectedAdminUser');
+                          setState(() {
+                            selectedAdminUser = null;
+                          });
+                          }, 
+                        child: const Text('Confirm'),
+                        )
+                        ],    
+                      );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
