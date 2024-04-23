@@ -23,6 +23,7 @@ class _TopNavBarState extends State<TopNavBar> {
     AdminScreen(),
     FeederScreen(),
     const AccountScreen(),
+    const TestScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -69,11 +70,11 @@ class _TopNavBarState extends State<TopNavBar> {
                 label: 'Account',
                 backgroundColor: SUYellow,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Testing',
-                backgroundColor: SUYellow,
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.home),
+              //   label: 'Testing',
+              //   backgroundColor: SUYellow,
+              // ),
             ],
             currentIndex: _selectedIndex,
             selectedItemColor: const Color.fromARGB(255, 0, 0, 0),

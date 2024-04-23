@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/firebase_helper.dart';
+
 
 class EditAccountsContent extends StatefulWidget {
   final Color textColor;
@@ -11,6 +13,7 @@ class EditAccountsContent extends StatefulWidget {
 }
 
 class _EditAccountsContentState extends State<EditAccountsContent> {
+  final _dbHelper = FirebaseHelper();
   String? selectedAffiliation;
   final TextEditingController emailControllerEdit = TextEditingController();
   final TextEditingController emailControllerDelete = TextEditingController();
@@ -127,6 +130,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 final emailedit = emailControllerEdit.text;
+                                _dbHelper.changeUserAffiliation(emailedit, selectedAffiliation!);
                                 // Check if the name and feeding station are not empty
                                 if (emailedit.isNotEmpty && selectedAffiliation != null) {
                                   // Add success dialog
@@ -248,6 +252,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                               onPressed: () {
                                 Navigator.of(context).pop();
                                 final emaildelete = emailControllerDelete.text;
+                                _dbHelper.deleteAccount(emaildelete);
                                 // Check if the name and feeding station are not empty
                                 if (emaildelete.isNotEmpty) {
                                   // Add success dialog
@@ -268,7 +273,6 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                                       );
                                     },
                                   );
-                                  final emaildelete = emailControllerDelete.text;
                                   print('Email: $emaildelete');
                                   emailControllerDelete.clear();
                                 } else {

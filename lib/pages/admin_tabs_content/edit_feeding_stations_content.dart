@@ -1,59 +1,66 @@
 import 'package:flutter/material.dart';
 
+import '../../services/firebase_helper.dart';
+
 class EditFeedingStationsContent extends StatefulWidget {
   final Color textColor;
 
-  const EditFeedingStationsContent({Key? key, required this.textColor}) : super(key: key);
+  const EditFeedingStationsContent({Key? key, required this.textColor})
+      : super(key: key);
 
   @override
-  _EditFeedingStationsContentState createState() => _EditFeedingStationsContentState();
+  _EditFeedingStationsContentState createState() =>
+      _EditFeedingStationsContentState();
 }
 
-class _EditFeedingStationsContentState extends State<EditFeedingStationsContent> {
+class _EditFeedingStationsContentState
+    extends State<EditFeedingStationsContent> {
   String? selectedFeedingStation;
   final TextEditingController nameController = TextEditingController();
+  final _dbHelper = FirebaseHelper();
 
   Widget _buildDropdownField(
-  String title,
-  List<String> options,
-  Function(String?) onChanged,
-) {
-  // Sort the options alphabetically
-  options.sort();
+    String title,
+    List<String> options,
+    Function(String?) onChanged,
+  ) {
+    // Sort the options alphabetically
+    options.sort();
 
-  return Padding(
-    padding: const EdgeInsets.only(left: 8.0, top: 20.0, bottom: 20.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        DropdownButtonFormField<String>(
-          items: options.map((String option) {
-            return DropdownMenuItem<String>(
-              value: option,
-              child: Text(
-                option,
-                style: const TextStyle(color: Colors.black),
-              ),
-            );
-          }).toList(),
-          onChanged: onChanged,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please select an option';
-            }
-            return null;
-          },
-          value: selectedFeedingStation,
-        ),
-        const SizedBox(height: 10),
-      ],
-    ),
-  );
-}
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, top: 20.0, bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          DropdownButtonFormField<String>(
+            items: options.map((String option) {
+              return DropdownMenuItem<String>(
+                value: option,
+                child: Text(
+                  option,
+                  style: const TextStyle(color: Colors.black),
+                ),
+              );
+            }).toList(),
+            onChanged: onChanged,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please select an option';
+              }
+              return null;
+            },
+            value: selectedFeedingStation,
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +92,7 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                     Text(
                       'Name:',
                       style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold
-                        ),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
                     TextField(
@@ -117,7 +122,7 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                final name = nameController.text;
+                               final name = nameController.text;
                                 // Check if the name and feeding station are not empty
                                 if (name.isNotEmpty) {
                                   // Add success dialog
@@ -140,6 +145,14 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                                   );
                                   print('Name: $name');
                                   nameController.clear();
+                                  //create map for feeding station
+                                  Map<String, dynamic> stationMap = {
+                                    'description': 'placeholder',
+                                    'fullName': name,
+                                    'name': name,
+                                    'photo': "photo placeholder",
+                                  };
+                                  _dbHelper.addStation(stationMap);
                                 } else {
                                   // Add failure dialog
                                   showDialog(
@@ -169,7 +182,8 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black, // white text
                   ),
                   child: const Text('Add Feeding Station'),
                 ),
@@ -199,15 +213,15 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                        _buildDropdownField(
-                         'Select Feeding Station',
-                        ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
-                         (String? value) {
-                          setState(() {
-                            selectedFeedingStation = value;
-                          });
-                        },
-                ),
+                    _buildDropdownField(
+                      'Select Feeding Station',
+                      ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
+                      (String? value) {
+                        setState(() {
+                          selectedFeedingStation = value;
+                        });
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(height: 9),
@@ -249,6 +263,23 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                                       );
                                     },
                                   );
+                                  var catStation = '';
+                                  switch (selectedFeedingStation) {
+                                    case 'Admissions':
+                                      catStation = 'PRw7fnDb8hAPF6YWL7NL';
+                                      break; // Don't forget to add break statements after each case to prevent fall-through.
+                                    case 'Lord/Dorothy Lord Center':
+                                      catStation = '1';
+                                      break;
+                                    case 'Mabee':
+                                      catStation = '2';
+                                      break;
+                                    default:
+                                      catStation =
+                                          ''; // You might want to handle a default case.
+                                  }
+                                  _dbHelper.deleteStation(catStation);
+
                                   print('Selected Feeding Station: $selectedFeedingStation');
                                   setState(() {
                                     selectedFeedingStation = null;
@@ -282,7 +313,8 @@ class _EditFeedingStationsContentState extends State<EditFeedingStationsContent>
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black, // white text
                   ),
                   child: const Text('Delete Feeding Station'),
                 ),
