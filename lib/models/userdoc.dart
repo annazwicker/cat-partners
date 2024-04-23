@@ -3,9 +3,6 @@ class UserDoc {
   /// in Firebase auth.
 
   /// Field constants
-  static const String firstNameString = 'first';
-  static const String lastNameString = 'last';
-  static const String birthYearString = 'born';
   static const String isAdminString = 'isAdmin';
   static const String nameString = 'name';
   static const String affiliationString = 'affiliation';
@@ -14,9 +11,6 @@ class UserDoc {
   static const String emailString = 'email';
 
   /// Fields
-  final String _first;
-  final String _last;
-  final int _born;
   final bool _isAdmin;
   final String _name;
   final String _affiliation;
@@ -25,9 +19,6 @@ class UserDoc {
   final String _email;
 
   UserDoc({
-    first,
-    last,
-    required born,
     required isAdmin,
     required name,
     required affiliation,
@@ -35,9 +26,6 @@ class UserDoc {
     required phoneNumber,
     required email
   }) :
-    _first = first,
-    _last = last,
-    _born = born,
     _isAdmin = isAdmin,
     _name = name,
     _affiliation = affiliation,
@@ -46,9 +34,6 @@ class UserDoc {
     _email = email;
 
   factory UserDoc.fromJson(Map<String, dynamic> json) => UserDoc(
-    first: json[firstNameString],
-    last: json[lastNameString],
-    born: json[birthYearString],
     isAdmin: json[isAdminString],
     name: json[nameString],
     affiliation: json[affiliationString],
@@ -58,9 +43,6 @@ class UserDoc {
   );
 
   Map<String, dynamic> toJson() => {
-    firstNameString: _first,
-    lastNameString: _last,
-    birthYearString: _born,
     isAdminString: _isAdmin,
     nameString: _name,
     affiliationString: _affiliation,
@@ -70,9 +52,6 @@ class UserDoc {
   };
 
   UserDoc copyWith({
-    String? first,
-    String? last,
-    int? born,
     bool? isAdmin,
     String? name,
     String? affiliation,
@@ -80,9 +59,6 @@ class UserDoc {
     String? phoneNumber,
     String? email,
   }) => UserDoc(
-      born: born ?? _born,
-      first: first ?? _first,
-      last: last ?? _last,
       isAdmin: isAdmin ?? _isAdmin,
       name: name ?? _name,
       affiliation: affiliation ?? _affiliation,
@@ -91,7 +67,7 @@ class UserDoc {
       email:  email ?? _email);
 
   String getName() {
-    return "$_name";
+    return _name;
   }
 
 }

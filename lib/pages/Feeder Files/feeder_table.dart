@@ -53,7 +53,6 @@ class _FeederTableState extends State<FeederTable> {
         return StreamBuilder(
           stream: widget.controller.fds.tableStream,
           builder: (context, snapshot) {
-            print('rebuilding.');
             List<QueryDocumentSnapshot<Entry>> allEntries = snapshot.data?.docs ?? [];
         
             // Groups entries by date

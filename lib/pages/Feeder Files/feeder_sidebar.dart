@@ -71,16 +71,6 @@ class _FeederSidebarState extends State<FeederSidebar> {
       padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       child: Text(string),
     );
-    
-    Widget stationWidget =  FutureBuilder(
-      future: widget.controller.fds.getStation(currentEntryData.stationID), 
-      builder:
-      (context, snapshot) {
-        if(!snapshot.hasData){
-          return commonCont('Loading...');
-        }
-        return commonCont('Station: ${snapshot.data!.name}');
-      },);
   
     IconButton exitButton() => IconButton(
       onPressed: () {
@@ -91,6 +81,28 @@ class _FeederSidebarState extends State<FeederSidebar> {
         child: Icon(Icons.close),
       )); 
     
+    Container fieldNameCont(String text) => 
+      Container(
+        margin: const EdgeInsets.only(top: 8.0, bottom: 4.0, right: 4.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: SUYellow),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(8.0),
+        child: Text(text),
+      );
+
+    Container fieldDataCont(String text) =>
+      Container(
+        margin: const EdgeInsets.only(top: 8.0, bottom: 4.0, right: 4.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          color: Colors.grey[350]),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(8.0),
+        child: Text(text),
+      );
+
     return FutureBuilder(
       future: isThisUserEntry(),
       builder: (context, snapshot) {
@@ -101,89 +113,135 @@ class _FeederSidebarState extends State<FeederSidebar> {
           }
         }
         var notesController = TextEditingController( text: prints['note']);
+       
         return Scaffold( 
           appBar: AppBar(
             title: const Text('Entry'),
             actions: [exitButton()]
             ),
-          body: Center( child: Column(
+          body: Column(
             children: <Widget>[
-              commonCont('Date: ${prints['date']}'), // Date
-              stationWidget, // Station
-              Row( // Name + remove button
-                children: <Widget>[
-                  commonCont('Feeder: ${prints['user']}'),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 20.0),
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                        foregroundColor: Colors.black),
-                      onPressed: isUsersEntry ? () {
-                        showDialog(
-                          context: context, 
-                          builder: (context) {
-                            return AlertDialog(
-                          title: const Text('Confirm'),
-                          content: const Text('Are you sure you want to unassign yourself from this entry?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              }, 
-                              child: const Text('Cancel')
-                            ), 
-                            TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              widget.controller.unassignCurrent();
-                            }, 
-                            child: const Text('Unassign')
-                            )
-                          ],    
-                        );;
-                          });
-                        // TODO open confirmation dialogue
-                        } : null, 
-                    child: const Text('Unassign')),
-                  )
-                ]
-              ),
-              Container( // Notes
-                padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+              Container(
+                padding: const EdgeInsets.all(16.0),
                 alignment: Alignment.topLeft,
-                child: Focus(
-                  onFocusChange: (isFocused) {
-                    if(!isFocused){
-                      widget.controller.fh.db.runTransaction(
-                        (transaction) async {
-                          Entry newEntry = currentEntryData.copyWith(note: notesController.text);
-                          transaction.update(currentEntry.reference, newEntry.toJson());
-                        }
-                      );
-                    }
+                child: Table(
+                  columnWidths: const {
+                    0: IntrinsicColumnWidth(),
+                    1: IntrinsicColumnWidth(),
                   },
-                  child: TextField(
-                    enabled: isUsersEntry,
-                    // readOnly: !isUsersEntry,
-                    maxLines: null,
-                    expands: true,
-                    controller: notesController,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      constraints: BoxConstraints(
-                        minHeight: 5.0,
-                        maxHeight: 150,
-                      ),
-                      hintText: 'Use this field to write anything notable \nyou see while feeding the station.',
-                      hintMaxLines: null,
-                      labelText: 'Notes'),
-                  ),
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  children: [
+                    TableRow(
+                      children: [
+                        fieldNameCont('Date'),
+                        fieldDataCont(prints['date']!),
+                        Container(),
+                      ],
+                    ), 
+                    TableRow(
+                      children: [
+                        fieldNameCont('Station'),
+                        FutureBuilder(
+                          future: widget.controller.fds.getStation(currentEntryData.stationID), 
+                          builder:
+                          (context, snapshot) {
+                            String contents = 'Loading';
+                            if(snapshot.hasData){
+                              contents = snapshot.data!.name;
+                            }
+                            return fieldDataCont(contents);
+                          },
+                        ),
+                        Container(),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        fieldNameCont('Feeder'),
+                        fieldDataCont(prints['user'] ?? ''),
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          alignment: Alignment.center,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange[700],
+                              foregroundColor: Colors.black),
+                            onPressed: isUsersEntry ? () {
+                              showDialog(
+                                context: context, 
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirm'),
+                                    content: const Text('Are you sure you want to unassign yourself from this entry?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        }, 
+                                        child: const Text('Cancel')
+                                      ), 
+                                      TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        widget.controller.unassignCurrent();
+                                      }, 
+                                      child: const Text('Unassign')
+                                      )
+                                    ],    
+                                  );
+                                }
+                              );
+                              } : null, 
+                          child: const Text('Unassign')),
+                        ),
+                      ]
+                    )
+                  ],
                 ),
               ),
+              Container( // Notes
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                alignment: Alignment.topLeft,
+                child: TextField(
+                  enabled: isUsersEntry,
+                  // readOnly: !isUsersEntry,
+                  maxLines: null,
+                  expands: true,
+                  controller: notesController,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    constraints: BoxConstraints(
+                      minHeight: 5.0,
+                      maxHeight: 150,
+                    ),
+                    hintText: 'Use this field to write anything notable \nyou see while feeding the station.',
+                    hintMaxLines: null,
+                    labelText: 'Notes',),
+                  onChanged: (value) {
+                    // saveButton.
+                  },
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: SUYellow,
+                ),
+                statesController: MaterialStatesController(),
+                onPressed: isUsersEntry ? () {
+                  if(notesController.text != prints['note']){
+                    widget.controller.fh.db.runTransaction(
+                      (transaction) async {
+                        Entry newEntry = currentEntryData.copyWith(note: notesController.text);
+                        transaction.update(currentEntry.reference, newEntry.toJson());
+                      }
+                    );
+                  }
+                } : null, 
+                child: const Text('Save notes')
+              ),
             ]
-        )));
+                  ));
       }
     );
   }
