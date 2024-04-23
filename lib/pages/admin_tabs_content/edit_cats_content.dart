@@ -157,45 +157,106 @@ class _EditCatsContentState extends State<EditCatsContent> {
                   },
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    final catname = nameController.text;
-                    //change in future to not be hard coded
-                    var catStation = '';
+                ElevatedButton(onPressed: () {
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedfeedingstation}\" feeding station?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final catname = nameController.text;
+                                // Check if the name and feeding station are not empty
+                                if (catname.isNotEmpty && selectedfeedingstation != null) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('Cat added successfully!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                   //change in future to not be hard coded
+                                  var catStation = '';
 
-                    switch (selectedfeedingstation) {
-                      case 'Admissions':
-                        catStation = '0';
-                        break;
-                      case 'Lord/Dorothy Lord Center':
-                        catStation = '1';
-                        break;
-                      case 'Mabee':
-                        catStation = '2';
-                        break;
-                      default:
-                        catStation =
-                            ''; // You might want to handle a default case.
-                    }
+                                  switch (selectedfeedingstation) {
+                                    case 'Admissions':
+                                      catStation = '0';
+                                      break;
+                                    case 'Lord/Dorothy Lord Center':
+                                      catStation = '1';
+                                      break;
+                                    case 'Mabee':
+                                      catStation = '2';
+                                      break;
+                                    default:
+                                      catStation =
+                                          ''; // You might want to handle a default case.
+                                  }
 
-                    //create Map for adding cat
+                                  //create Map for adding cat
 
-                    Map<String, dynamic> catMap = {
-                      'description': 'placeholder',
-                      'name': catname,
-                      'photo': 'photo placeholder',
-                      'stationID': catStation,
-                    };
+                                  Map<String, dynamic> catMap = {
+                                    'description': 'placeholder',
+                                    'name': catname,
+                                    'photo': 'photo placeholder',
+                                    'stationID': catStation,
+                                  };
 
-                    //call function
-                    _dbHelper.addCat(catMap);
+                                  //call function
+                                  _dbHelper.addCat(catMap);
 
-                    print(
-                        'Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
-                    nameController.clear();
-                    setState(() {
-                      selectedfeedingstation = null;
-                    });
+                                  print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
+                                  nameController.clear();
+                                  setState(() {
+                                    selectedfeedingstation = null;
+                                  });
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please enter a name and select a feeding station.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -253,46 +314,108 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    var catNumber = '';
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to remove \"${selectedcat}\" from the list of cats?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                // Check if the name and feeding station are not empty
+                                if (selectedcat != null) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('Cat deleted successfully!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  var catNumber = '';
             
-                    switch (selectedcat) {
-                      case 'Gray Mama':
-                        catNumber = '2BsT3Qfr3jDpMN9HGJnA';
-                        break;
-                      case 'Gaia':
-                        catNumber = '1';
-                        break;
-                      case 'Itty Bitty':
-                        catNumber = '2';
-                        break;
-                      case 'Teddy':
-                        catNumber = '3';
-                        break;
-                      case 'Patches':
-                        catNumber = '4';
-                        break;
-                      case 'Ziggy':
-                        catNumber = '5';
-                        break;
-                      case 'Super Cal':
-                        catNumber = '6';
-                        break;
-                      case 'Pumpkin':
-                        catNumber = '7';
-                        break;
-                      case 'Princess':
-                        catNumber = '8';
-                        break;
-                      default:
-                        catNumber = ''; // Handle default case if needed
-                    }
+                                  switch (selectedcat) {
+                                    case 'Gray Mama':
+                                      catNumber = '2BsT3Qfr3jDpMN9HGJnA';
+                                      break;
+                                    case 'Gaia':
+                                      catNumber = '1';
+                                      break;
+                                    case 'Itty Bitty':
+                                      catNumber = '2';
+                                      break;
+                                    case 'Teddy':
+                                      catNumber = '3';
+                                      break;
+                                    case 'Patches':
+                                      catNumber = '4';
+                                      break;
+                                    case 'Ziggy':
+                                      catNumber = '5';
+                                      break;
+                                    case 'Super Cal':
+                                      catNumber = '6';
+                                      break;
+                                    case 'Pumpkin':
+                                      catNumber = '7';
+                                      break;
+                                    case 'Princess':
+                                      catNumber = '8';
+                                      break;
+                                    default:
+                                      catNumber = ''; // Handle default case if needed
+                                  }
 
-                    _dbHelper.deleteCat(catNumber);
-
-                    print('Selected Cat: $selectedcat');
-                    setState(() {
-                      selectedcat = null;
-                    });
+                                  _dbHelper.deleteCat(catNumber);
+                                  print('Selected Cat: $selectedcat');
+                                  setState(() {
+                                    selectedcat = null;
+                                  });
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please select a cat to remove.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
