@@ -3,6 +3,7 @@ import 'package:flutter_application_1/services/firebase_helper.dart';
 
 import '../models/entry.dart';
 import '../models/cat.dart';
+import '../models/model.dart';
 import '../models/userdoc.dart';
 import '../models/station.dart';
 
@@ -106,5 +107,30 @@ class Snapshots {
     assert (desired.length == 1);
     return desired[0].data();
   }
+
+  Future<QueryDocumentSnapshot<T>> getDocument<T extends Model>(DocumentReference docRef) async {
+    Future<List<QueryDocumentSnapshot<T>>> query;
+    switch(T.runtimeType){
+      case Station _:
+        query = _stationQuery as Future<List<QueryDocumentSnapshot<T>>>;
+      case Cat _:
+        query = _catQuery as Future<List<QueryDocumentSnapshot<T>>>;
+      case Entry _:
+        query = _entryQuery as Future<List<QueryDocumentSnapshot<T>>>;
+      case UserDoc _:
+        query = _userQuery as Future<List<QueryDocumentSnapshot<T>>>;
+      default:
+        throw FormatException('DocumentReference is not in the right collection: ${docRef.parent.runtimeType}.'
+        ' Please provide a DocumentReference in the Station, Cat, Users or Entry collections.');
+    }
+    List<QueryDocumentSnapshot<T>> docsList = await query;
+
+    // TODO add checks for when docRef's document doesn't exist
+    var desired = docsList.where((element) => element.reference.id == docRef.id).toList();
+    assert (desired.length == 1);
+    return desired[0];
+  }
+
+
 
 }

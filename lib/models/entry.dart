@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'model.dart';
 
-class Entry {
+
+class Entry extends Model {
 
   static const String userRefString = 'assignedUser';
   static const String dateString = 'date';

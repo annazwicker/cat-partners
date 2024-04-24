@@ -1,4 +1,6 @@
-class UserDoc {
+import 'model.dart';
+
+class UserDoc extends Model {
   /// Named 'UserDoc' instead of 'User' because 'User is already a class
   /// in Firebase auth.
 
