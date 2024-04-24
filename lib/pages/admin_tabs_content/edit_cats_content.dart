@@ -118,152 +118,310 @@ class _EditCatsContentState extends State<EditCatsContent> {
           Expanded(
             // The add account section
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  'Add Cat',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 20),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Name:',
+                      'Add Cat',
                       style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Name:',
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 9),
+                    _buildDropdownFieldAdd(
+                      'Select Feeding Station',
+                      ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
+                      (String? value) {
+                        setState(() {
+                          selectedfeedingstation = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(onPressed: () {
+                        showDialog(
+                          context: context, 
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Confirm'),
+                              content: Text("Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedfeedingstation}\" feeding station?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }, 
+                                  child: const Text('Cancel')
+                                ), 
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    final catname = nameController.text;
+                                    // Check if the name and feeding station are not empty
+                                    if (catname.isNotEmpty && selectedfeedingstation != null) {
+                                      // Add success dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Success'),
+                                            content: Text('Cat added successfully!'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                }, 
+                                                child: const Text('OK')
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                       //change in future to not be hard coded
+                                      var catStation = '';
+                
+                                      switch (selectedfeedingstation) {
+                                        case 'Admissions':
+                                          catStation = '0';
+                                          break;
+                                        case 'Lord/Dorothy Lord Center':
+                                          catStation = '1';
+                                          break;
+                                        case 'Mabee':
+                                          catStation = '2';
+                                          break;
+                                        default:
+                                          catStation =
+                                              ''; // You might want to handle a default case.
+                                      }
+                
+                                      //create Map for adding cat
+                
+                                      Map<String, dynamic> catMap = {
+                                        'description': 'placeholder',
+                                        'name': catname,
+                                        'photo': 'photo placeholder',
+                                        'stationID': catStation,
+                                      };
+                
+                                      //call function
+                                      _dbHelper.addCat(catMap);
+                
+                                      print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
+                                      nameController.clear();
+                                      setState(() {
+                                        selectedfeedingstation = null;
+                                      });
+                                    } else {
+                                      // Add failure dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Error'),
+                                            content: Text('Please enter a name and select a feeding station.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                }, 
+                                                child: const Text('OK')
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  }, 
+                                  child: const Text('Confirm'),
+                                )
+                              ],    
+                            );
+                          }
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.black, // white text
+                      ),
+                      child: const Text('Add Cat'),
                     ),
                   ],
                 ),
-                const SizedBox(height: 9),
-                _buildDropdownFieldAdd(
-                  'Select Feeding Station',
-                  ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
-                  (String? value) {
-                    setState(() {
-                      selectedfeedingstation = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(onPressed: () {
-                    showDialog(
-                      context: context, 
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Confirm'),
-                          content: Text("Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedfeedingstation}\" feeding station?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              }, 
-                              child: const Text('Cancel')
-                            ), 
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                final catname = nameController.text;
-                                // Check if the name and feeding station are not empty
-                                if (catname.isNotEmpty && selectedfeedingstation != null) {
-                                  // Add success dialog
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Success'),
-                                        content: Text('Cat added successfully!'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            }, 
-                                            child: const Text('OK')
-                                          ),
-                                        ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Add Cat',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Name:',
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        TextField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 9),
+                    _buildDropdownFieldAdd(
+                      'Select Feeding Station',
+                      ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
+                      (String? value) {
+                        setState(() {
+                          selectedfeedingstation = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(onPressed: () {
+                        showDialog(
+                          context: context, 
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Confirm'),
+                              content: Text("Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedfeedingstation}\" feeding station?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }, 
+                                  child: const Text('Cancel')
+                                ), 
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    final catname = nameController.text;
+                                    // Check if the name and feeding station are not empty
+                                    if (catname.isNotEmpty && selectedfeedingstation != null) {
+                                      // Add success dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Success'),
+                                            content: Text('Cat added successfully!'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                }, 
+                                                child: const Text('OK')
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       );
-                                    },
-                                  );
-                                   //change in future to not be hard coded
-                                  var catStation = '';
-
-                                  switch (selectedfeedingstation) {
-                                    case 'Admissions':
-                                      catStation = '0';
-                                      break;
-                                    case 'Lord/Dorothy Lord Center':
-                                      catStation = '1';
-                                      break;
-                                    case 'Mabee':
-                                      catStation = '2';
-                                      break;
-                                    default:
-                                      catStation =
-                                          ''; // You might want to handle a default case.
-                                  }
-
-                                  //create Map for adding cat
-
-                                  Map<String, dynamic> catMap = {
-                                    'description': 'placeholder',
-                                    'name': catname,
-                                    'photo': 'photo placeholder',
-                                    'stationID': catStation,
-                                  };
-
-                                  //call function
-                                  _dbHelper.addCat(catMap);
-
-                                  print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
-                                  nameController.clear();
-                                  setState(() {
-                                    selectedfeedingstation = null;
-                                  });
-                                } else {
-                                  // Add failure dialog
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Error'),
-                                        content: Text('Please enter a name and select a feeding station.'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            }, 
-                                            child: const Text('OK')
-                                          ),
-                                        ],
+                                       //change in future to not be hard coded
+                                      var catStation = '';
+                
+                                      switch (selectedfeedingstation) {
+                                        case 'Admissions':
+                                          catStation = '0';
+                                          break;
+                                        case 'Lord/Dorothy Lord Center':
+                                          catStation = '1';
+                                          break;
+                                        case 'Mabee':
+                                          catStation = '2';
+                                          break;
+                                        default:
+                                          catStation =
+                                              ''; // You might want to handle a default case.
+                                      }
+                
+                                      //create Map for adding cat
+                
+                                      Map<String, dynamic> catMap = {
+                                        'description': 'placeholder',
+                                        'name': catname,
+                                        'photo': 'photo placeholder',
+                                        'stationID': catStation,
+                                      };
+                
+                                      //call function
+                                      _dbHelper.addCat(catMap);
+                
+                                      print('Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
+                                      nameController.clear();
+                                      setState(() {
+                                        selectedfeedingstation = null;
+                                      });
+                                    } else {
+                                      // Add failure dialog
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Error'),
+                                            content: Text('Please enter a name and select a feeding station.'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                }, 
+                                                child: const Text('OK')
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       );
-                                    },
-                                  );
-                                }
-                              }, 
-                              child: const Text('Confirm'),
-                            )
-                          ],    
+                                    }
+                                  }, 
+                                  child: const Text('Confirm'),
+                                )
+                              ],    
+                            );
+                          }
                         );
-                      }
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black, // white text
-                  ),
-                  child: const Text('Add Cat'),
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.black, // white text
+                      ),
+                      child: const Text('Add Cat'),
+                    ),
+                  ],
                 ),
+                
+                
+              
               ],
             ),
           ),
