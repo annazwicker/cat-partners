@@ -101,13 +101,9 @@ class Snapshots {
 
   // Methods
 
-  Future<Station> getStation(DocumentReference stationRef) async {
-    List<QueryDocumentSnapshot<Station>> stationsList = await _stationQuery;
-    var desired = stationsList.where((element) => element.reference.id == stationRef.id).toList();
-    assert (desired.length == 1);
-    return desired[0].data();
-  }
-
+  /// Returns a QueryDocumentSnapshot with type [T], given a DocumentReference referring
+  /// to a document in the collection modelled by [T]. Throws an exception if T is not
+  /// Station, UserDoc, Entry or Cat.
   Future<QueryDocumentSnapshot<T>> getDocument<T extends Model>(DocumentReference docRef) async {
     Future<List<QueryDocumentSnapshot<T>>> query;
     switch(T.runtimeType){
@@ -131,6 +127,37 @@ class Snapshots {
     return desired[0];
   }
 
+  /// Returns the DocumentSnapshot<UserDoc> of the user document referenced by the
+  /// entry in [entrySnapshot]. The bool in the first part of the tuple
+  /// is true if and only if such a user exists; i.e., if [entrySnapshot] both has
+  /// a non-null assignedUser field and that user exists in the database.
+  Future<(bool, DocumentSnapshot<UserDoc>?)> getAssignedUser(QueryDocumentSnapshot<Entry> entrySnapshot) async {
+    /// A tuple with a bool is used to allow this Future to return a non-null value
+    /// even when the given Entry has no assignedUser. Otherwise, FutureBuilders using
+    /// this function won't be able to differentiate waiting on this function from the
+    /// function returning a null value.
+    DocumentReference? userID = entrySnapshot.data().assignedUser;
+    DocumentSnapshot<UserDoc>? toReturn;
+    bool userExists = false;
+    if(userID != null){
+      var snap = await fh.usersRef.doc(userID.id).get();
+      toReturn = snap;
+      userExists = true;
+    }
+    assert (userExists == (toReturn != null));
+    return (userExists, toReturn);
+  }
 
+  /// TEMPORARY FUNCTION.
+  /// Returns whether there is a user logged in.
+  bool isUserLoggedIn() { return fh.isUserLoggedIn; }
+
+  /// TEMPORARY FUNCTION.
+  /// Returns the DocumentReference of the current HARD-CODED user.
+  Future<DocumentReference> getCurrentUserTEST() async {
+    assert (isUserLoggedIn());
+    String currentUserID = fh.currentUserIDTest!;
+    return await fh.usersRef.doc(currentUserID);
+  }
 
 }
