@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csv/csv.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
 import '../models/entry.dart';
@@ -169,4 +174,20 @@ class Snapshots {
     return await fh.db.runTransaction(transactionHandler, timeout: timeout, maxAttempts: maxAttempts);
   }
 
+  /// Converts the [listOfLists] into a CSV file, which is then saved to the user's computer.
+  static void saveCSV(List<List<dynamic>> listOfLists) async {
+    String csv = const ListToCsvConverter().convert(listOfLists);
+    String fileName = 'FeederScheduleSiteCSV';
+
+    // From https://stackoverflow.com/questions/77030227/how-to-download-generated-csv-file-in-flutter-web
+    Uint8List bytes = Uint8List.fromList(utf8.encode(csv));
+    await FileSaver.instance.saveFile(
+      name: fileName,
+      bytes: bytes,
+      ext: 'csv',
+      mimeType: MimeType.csv,
+    );
+  }
+
 }
+
