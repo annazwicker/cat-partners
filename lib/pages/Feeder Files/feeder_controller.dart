@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/Feeder%20Files/cell_wrapper.dart';
-import 'package:flutter_application_1/pages/Feeder%20Files/feeder_data_source.dart';
+import 'package:intl/intl.dart';
 
+import '../../components/snapshots.dart';
 import '../../models/entry.dart';
 import '../../models/userdoc.dart';
 import '../../services/firebase_helper.dart';
+
+var formatDashes = DateFormat('yyyy-MM-dd');
+var formatAbbr = DateFormat('yMMMd');
 
 enum PageState { 
   empty,  // Default view. Displays basic information.
@@ -15,7 +18,6 @@ enum PageState {
 
 class FeederController extends ChangeNotifier {
   final FirebaseHelper fh;
-  final FeederDataSource fds;
 
   PageState currentState = PageState.empty;
 
@@ -32,7 +34,7 @@ class FeederController extends ChangeNotifier {
 
   FeederController({
     required this.fh
-  }) : fds = FeederDataSource(fh: fh);
+  });
 
   /// Asserts that, for the Controller's current state, certain variables 
   /// are in order.
@@ -81,7 +83,7 @@ class FeederController extends ChangeNotifier {
 
   void commitSelections() async {
     checkThisState(PageState.select);
-    DocumentReference currentUserRef = await fds.getCurrentUserTEST();
+    DocumentReference currentUserRef = await Snapshots.getCurrentUserTEST();
     for(QueryDocumentSnapshot<Entry> entry in selectedEntries!){
       fh.db.runTransaction((transaction) async {
         Entry newEntry = entry.data().copyWith(assignedUser: currentUserRef);

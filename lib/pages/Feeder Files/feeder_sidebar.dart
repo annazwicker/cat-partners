@@ -4,9 +4,9 @@ import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
+import '../../components/snapshots.dart';
 import '../../models/entry.dart';
 import '../../models/station.dart';
-import 'feeder_data_source.dart';
 
 class FeederSidebar extends StatefulWidget {
   const FeederSidebar({
@@ -50,13 +50,9 @@ class _FeederSidebarState extends State<FeederSidebar> {
     QueryDocumentSnapshot<Entry> currentEntry = widget.controller.currentEntry!;
     Entry currentEntryData = currentEntry.data();
     String entryUserName = widget.controller.getCurrentEntryUserName();
-    var e = widget.controller.fds.getCurrentUserTEST();
-    e.then((value) => {
-
-    });
 
     Future<bool> isThisUserEntry() async {
-      var currentUser = await widget.controller.fds.getCurrentUserTEST();
+      var currentUser = await Snapshots.getCurrentUserTEST();
       return currentUser.path == currentEntryData.assignedUser!.path;
     }
     
@@ -142,12 +138,12 @@ class _FeederSidebarState extends State<FeederSidebar> {
                       children: [
                         fieldNameCont('Station'),
                         FutureBuilder(
-                          future: widget.controller.fds.getStation(currentEntryData.stationID), 
+                          future: Snapshots.getDocument<Station>(currentEntryData.stationID), 
                           builder:
                           (context, snapshot) {
                             String contents = 'Loading';
                             if(snapshot.hasData){
-                              contents = snapshot.data!.name;
+                              contents = snapshot.data!.data().name;
                             }
                             return fieldDataCont(contents);
                           },
@@ -309,12 +305,11 @@ class _FeederSidebarState extends State<FeederSidebar> {
     List<TableRow> rows = [];
     for (var entry in widget.controller.getSelection()) {
       Entry data = entry.data();
-      Station station;
-      station = await widget.controller.fds.getStation(data.stationID);
+      QueryDocumentSnapshot<Station> station = await Snapshots.getDocument<Station>(data.stationID);
       rows.add(TableRow(
           children: [
               TableCell(child: Text(formatAbbr.format(data.date.toDate()))),
-              TableCell(child: Text(station.name)),
+              TableCell(child: Text(station.data().name)),
             ],
         ));
     }

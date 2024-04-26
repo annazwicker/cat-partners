@@ -5,6 +5,7 @@ import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dar
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_table.dart';
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
+import '../../components/snapshots.dart';
 import '../../models/userdoc.dart';
 
 /// Wrapper Widget with Cell contents
@@ -71,7 +72,7 @@ class CellWrapperState extends State<CellWrapper> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.controller.fds.getAssignedUser(widget.data),
+      future: Snapshots.getAssignedUser(widget.data),
       builder: (context, snapshot) {
         if (!snapshot.hasData){
           return commonCellWrapping('Loading...');

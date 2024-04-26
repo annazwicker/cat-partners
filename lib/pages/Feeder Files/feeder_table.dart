@@ -1,19 +1,16 @@
-import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
-import 'package:intl/intl.dart';
 
 import '../../models/entry.dart';
 import '../../models/station.dart';
-import '../../models/userdoc.dart';
+import '../../components/snapshots.dart';
 import '../../services/firebase_helper.dart';
 import 'package:collection/collection.dart';
 
 import 'cell_wrapper.dart';
-import 'feeder_data_source.dart';
 
 Widget commonCellWrapping(String text, {Color? color}) {
   return Container(
@@ -44,14 +41,14 @@ class _FeederTableState extends State<FeederTable> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.controller.fds.stations,
+      future: Snapshots.stationQuery,
       builder: (stationContext, stationSnapshot) {
         if (!stationSnapshot.hasData) {
           return const CircularProgressIndicator();
         }
         stations = stationSnapshot.data!;
         return StreamBuilder(
-          stream: widget.controller.fds.tableStream,
+          stream: Snapshots.entryStream,
           builder: (context, snapshot) {
             List<QueryDocumentSnapshot<Entry>> allEntries = snapshot.data?.docs ?? [];
         
