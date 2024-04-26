@@ -27,10 +27,10 @@ class Snapshots {
   static final Stream<QuerySnapshot<UserDoc>> _userStream = fh.getUserStream();
 
   
-  static Future<List<QueryDocumentSnapshot<Station>>> _stationQuery = _initStations();
-  static Future<List<QueryDocumentSnapshot<Entry>>> _entryQuery = _initEntries();
-  static Future<List<QueryDocumentSnapshot<Cat>>> _catQuery = _initCats();
-  static Future<List<QueryDocumentSnapshot<UserDoc>>> _userQuery = _initUsers();
+  static Future<List<QueryDocumentSnapshot<Station>>> _stationQuery = getStationQuery();
+  static Future<List<QueryDocumentSnapshot<Entry>>> _entryQuery = getEntryQuery();
+  static Future<List<QueryDocumentSnapshot<Cat>>> _catQuery = getCatQuery();
+  static Future<List<QueryDocumentSnapshot<UserDoc>>> _userQuery = getUserQuery();
 
   /// A Stream returning all entries. Dynamically updates.
   static Stream<QuerySnapshot<Entry>> get entryStream => _entryStream;
@@ -52,7 +52,7 @@ class Snapshots {
   static Future<List<QueryDocumentSnapshot<UserDoc>>>  get userQuery => _userQuery;
 
   /// Returns all documents in the collection referenced by [ref].
-  static Future<List<QueryDocumentSnapshot<T>>> _initQuery<T>(CollectionReference<T> ref) async {
+  static Future<List<QueryDocumentSnapshot<T>>> _getQuery<T>(CollectionReference<T> ref) async {
     // bool isError = false;
     List<QueryDocumentSnapshot<T>> results = [];
     await ref.get().then(
@@ -68,9 +68,9 @@ class Snapshots {
   }
   
   /// Returns DocumentSnapshots for all Stations in the collection.
-  static Future<List<QueryDocumentSnapshot<Station>>> _initStations() async {
+  static Future<List<QueryDocumentSnapshot<Station>>> getStationQuery() async {
     List<QueryDocumentSnapshot<Station>> listStations = [];
-    await _initQuery(fh.stationsRef).then((value) => listStations = value);
+    await _getQuery(fh.stationsRef).then((value) => listStations = value);
     listStations.sort((a, b) {
       return a.id.compareTo(b.id);
     });
@@ -78,23 +78,23 @@ class Snapshots {
   }
 
   /// Returns DocumentSnapshots for all Users in the collection.
-  static Future<List<QueryDocumentSnapshot<UserDoc>>> _initUsers() async {
+  static Future<List<QueryDocumentSnapshot<UserDoc>>> getUserQuery() async {
     List<QueryDocumentSnapshot<UserDoc>> listUsers = [];
-    await _initQuery(fh.usersRef).then((value) => listUsers = value);
+    await _getQuery(fh.usersRef).then((value) => listUsers = value);
     return listUsers;
   }
 
   /// Returns DocumentSnapshots for all Cats in the collection.
-  static Future<List<QueryDocumentSnapshot<Cat>>> _initCats() async {
+  static Future<List<QueryDocumentSnapshot<Cat>>> getCatQuery() async {
     List<QueryDocumentSnapshot<Cat>> listUsers = [];
-    await _initQuery(fh.catsRef).then((value) => listUsers = value);
+    await _getQuery(fh.catsRef).then((value) => listUsers = value);
     return listUsers;
   }
 
   /// Returns DocumentSnapshots for all Entries in the collection.
-  static Future<List<QueryDocumentSnapshot<Entry>>> _initEntries() async {
+  static Future<List<QueryDocumentSnapshot<Entry>>> getEntryQuery() async {
     List<QueryDocumentSnapshot<Entry>> listUsers = [];
-    await _initQuery(fh.entriesRef).then((value) => listUsers = value);
+    await _getQuery(fh.entriesRef).then((value) => listUsers = value);
     return listUsers;
   }
 
@@ -176,7 +176,7 @@ class Snapshots {
   }
 
   /// Converts [listOfLists] into a CSV file, which is then saved to the user's computer.
-  static void saveCSV(List<List<dynamic>> listOfLists) async {
+  static Future<void> saveCSV(List<List<dynamic>> listOfLists) async {
     String csv = const ListToCsvConverter().convert(listOfLists);
     String fileName = 'FeederScheduleSiteCSV';
 
@@ -192,7 +192,7 @@ class Snapshots {
 
   /// Saves all entries in the database from [startDate] inclusive to [endDate] exclusive
   /// as a CSV, which is then saved to the user's computer.
-  static void saveEntryCSVTimeframe(DateTime startDate, DateTime endDate) async {    
+  static Future<void> saveEntryCSVTimeframe(DateTime startDate, DateTime endDate) async {    
     List<List<dynamic>> listOfLists = [];
     listOfLists.add(
       [ "Date",         // Date of entry
@@ -231,11 +231,10 @@ class Snapshots {
           userName,
           userAffiliation
         ];
-        // print(entryRow);
         listOfLists.add(entryRow);
       }
     } );
-    saveCSV(listOfLists);
+    await saveCSV(listOfLists);
   }
 
 }
