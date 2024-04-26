@@ -7,7 +7,6 @@ import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dar
 import '../../models/entry.dart';
 import '../../models/station.dart';
 import '../../components/snapshots.dart';
-import '../../services/firebase_helper.dart';
 import 'package:collection/collection.dart';
 
 import 'cell_wrapper.dart';
@@ -23,11 +22,9 @@ Widget commonCellWrapping(String text, {Color? color}) {
 
 class FeederTable extends StatefulWidget {
   const FeederTable({super.key,
-  required this.controller,
-  required this.fh});
+  required this.controller});
 
   final FeederController controller;
-  final FirebaseHelper fh;
 
   @override
   State<FeederTable> createState() => _FeederTableState();
@@ -55,7 +52,7 @@ class _FeederTableState extends State<FeederTable> {
             // Groups entries by date
             Map<Timestamp, List<QueryDocumentSnapshot<Entry>>> groupedEntries = groupBy(allEntries, 
               (p0) {
-                return widget.fh.equalizeTime(p0.data().date);
+                return Snapshots.equalizeTime(p0.data().date);
               }
             );
 
@@ -119,7 +116,6 @@ class _FeederTableState extends State<FeederTable> {
       cells.add(buildCell(CellWrapper(
         data: data[i], 
         controller: widget.controller,
-        fh: widget.fh,
       )));
     }
     return TableRow(

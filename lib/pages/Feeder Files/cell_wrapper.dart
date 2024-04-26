@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/entry.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_table.dart';
-import 'package:flutter_application_1/services/firebase_helper.dart';
 
 import '../../components/snapshots.dart';
 import '../../models/userdoc.dart';
@@ -13,12 +12,10 @@ class CellWrapper extends StatefulWidget{
 
   CellWrapper({super.key,
   required this.data,
-  required this.controller,
-  required this.fh});
+  required this.controller});
 
   final QueryDocumentSnapshot<Entry> data;
   final FeederController controller;
-  final FirebaseHelper fh;
 
   @override
   State<CellWrapper> createState() => CellWrapperState();

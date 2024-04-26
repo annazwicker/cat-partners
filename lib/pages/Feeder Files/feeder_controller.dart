@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import '../../components/snapshots.dart';
 import '../../models/entry.dart';
 import '../../models/userdoc.dart';
-import '../../services/firebase_helper.dart';
 
 var formatDashes = DateFormat('yyyy-MM-dd');
 var formatAbbr = DateFormat('yMMMd');
@@ -17,7 +16,6 @@ enum PageState {
   }
 
 class FeederController extends ChangeNotifier {
-  final FirebaseHelper fh;
 
   PageState currentState = PageState.empty;
 
@@ -31,10 +29,6 @@ class FeederController extends ChangeNotifier {
   late QueryDocumentSnapshot<Entry>? currentEntry;
   late DocumentSnapshot<UserDoc>? currentEntryUser;
   late bool isUsersEntry; // TODO true if user is viewing their own entry
-
-  FeederController({
-    required this.fh
-  });
 
   /// Asserts that, for the Controller's current state, certain variables 
   /// are in order.
@@ -85,7 +79,7 @@ class FeederController extends ChangeNotifier {
     checkThisState(PageState.select);
     DocumentReference currentUserRef = await Snapshots.getCurrentUserTEST();
     for(QueryDocumentSnapshot<Entry> entry in selectedEntries!){
-      fh.db.runTransaction((transaction) async {
+      Snapshots.runTransaction((transaction) async {
         Entry newEntry = entry.data().copyWith(assignedUser: currentUserRef);
         transaction.update(entry.reference, newEntry.toJson());
       });
@@ -95,7 +89,7 @@ class FeederController extends ChangeNotifier {
 
   void unassignCurrent() async {
     checkThisState(PageState.view);
-    fh.db.runTransaction(
+    Snapshots.runTransaction(
       (transaction) async {
       assert (currentEntry != null);
       Entry newEntry = currentEntry!.data().copyWithUser(null);

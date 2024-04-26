@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
-import 'package:flutter_application_1/services/firebase_helper.dart';
 
 import '../../components/snapshots.dart';
 import '../../models/entry.dart';
@@ -11,12 +10,10 @@ import '../../models/station.dart';
 class FeederSidebar extends StatefulWidget {
   const FeederSidebar({
     super.key, 
-    required this.controller,
-    required this.fh
+    required this.controller
   }); 
 
   final FeederController controller;
-  final FirebaseHelper fh;
 
   @override
   State<FeederSidebar> createState() => _FeederSidebarState();
@@ -226,7 +223,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
                 statesController: MaterialStatesController(),
                 onPressed: isUsersEntry ? () {
                   if(notesController.text != prints['note']){
-                    widget.controller.fh.db.runTransaction(
+                    Snapshots.runTransaction(
                       (transaction) async {
                         Entry newEntry = currentEntryData.copyWith(note: notesController.text);
                         transaction.update(currentEntry.reference, newEntry.toJson());
