@@ -203,6 +203,15 @@ class FirebaseHelper {
     return documentReference.update({'affiliation': selectedAffiliation});
   }
 
+
+  /**
+   * returns snapshots of all users with admin permission
+   */
+  Stream<QuerySnapshot<UserDoc>> getAdminUsers(){
+    return _usersRef.where('isAdmin', isEqualTo: true).snapshots();
+    // return _usersRef.snapshots();
+  }
+
   /**
    * gives admin status to user account given the email address string 
    * (assuming email is the doc ID)

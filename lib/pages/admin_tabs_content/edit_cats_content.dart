@@ -113,8 +113,8 @@ class _EditCatsContentState extends State<EditCatsContent> {
           return StreamBuilder(
               stream: _dbHelper.getStationStream(),
               builder: (context, stationSnapshot) {
-                List stationEntries = stationSnapshot.data?.docs ?? [];
-                stationEntries.sort((a, b) {
+                List stationSnapshots = stationSnapshot.data?.docs ?? [];
+                stationSnapshots.sort((a, b) {
                   String aDT = a.data().name;
                   String bDT = b.data().name;
                   int comp = aDT.compareTo(bDT);
@@ -126,8 +126,8 @@ class _EditCatsContentState extends State<EditCatsContent> {
                   return comp;
                 });
 
-                List catEntries = catSnapshot.data?.docs ?? [];
-                catEntries.sort((a, b) {
+                List catSnapshots = catSnapshot.data?.docs ?? [];
+                catSnapshots.sort((a, b) {
                   String aDT = a.data().name;
                   String bDT = b.data().name;
                   int comp = aDT.compareTo(bDT);
@@ -142,7 +142,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 //map of cat docID and names
                 Map<String, dynamic> catMap = {};
                 // Iterate over each document snapshot in the list
-                catEntries.forEach((doc) {
+                catSnapshots.forEach((doc) {
                   String docId = doc.id;
                   String name = doc['name']; 
                   catMap[name] = docId;
@@ -153,7 +153,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 //map of station docID and names
                 Map<String, dynamic> stationMap = {};
                 // Iterate over each document snapshot in the list
-                stationEntries.forEach((doc) {
+                stationSnapshots.forEach((doc) {
                   // Get the document ID
                   String docId = doc.id;
                   // Get the name from the document data
