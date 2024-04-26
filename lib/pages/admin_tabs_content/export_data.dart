@@ -80,6 +80,7 @@ class _ExportDataContentState extends State<ExportDataContent> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // NOTE: Kelly wants the data from July 1 - June 30
                     _buildDropdownField(
                     'Select Academic Year',
                     ['2020-2021', '2021-2022', '2022-2023', '2023-2024'],
