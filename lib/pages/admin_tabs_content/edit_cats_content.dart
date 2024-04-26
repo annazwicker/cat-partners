@@ -13,7 +13,7 @@ class EditCatsContent extends StatefulWidget {
 
 class _EditCatsContentState extends State<EditCatsContent> {
   String? selectedfeedingstation;
-  String? selectedcat;
+  String? selectedCat;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final _dbHelper = FirebaseHelper();
@@ -96,7 +96,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
               }
               return null;
             },
-            value: selectedcat,
+            value: selectedCat,
           ),
           const SizedBox(height: 10),
         ],
@@ -154,8 +154,8 @@ class _EditCatsContentState extends State<EditCatsContent> {
                   catMap[name] = docId;
                 });
                 List<String> catDropDown = catMap.keys.toList();
-                print("catDropDown:");
-                print(catDropDown);
+                // print("catDropDown:");
+                // print(catDropDown);
                 
 
                 //map of station docID and names
@@ -372,7 +372,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                                   catDropDown,                                  
                                   (String? value) {
                                     setState(() {
-                                      selectedcat = value;
+                                      selectedCat = value;
                                     });
                                   },
                                 ),
@@ -381,24 +381,33 @@ class _EditCatsContentState extends State<EditCatsContent> {
                             const SizedBox(height: 20),
                             ElevatedButton(
                               onPressed: () {
+                                print(selectedCat);
+                                print(catMap[selectedCat]);
                                 showDialog(
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
                                         title: const Text('Confirm'),
                                         content: Text(
-                                            "Are you sure you want to remove \"${selectedcat}\" from the list of cats?"),
+                                            "Are you sure you want to remove \"${selectedCat}\" from the list of cats?"),
                                         actions: [
                                           TextButton(
-                                              onPressed: () {
+                                              onPressed: () {//cancel button
+                                                print("is this the confirm button?");
                                                 Navigator.of(context).pop();
                                               },
                                               child: const Text('Cancel')),
                                           TextButton(
-                                            onPressed: () {
+                                            onPressed: () {//confirm button
                                               Navigator.of(context).pop();
                                               // Check if the name and feeding station are not empty
-                                              if (selectedcat != null) {
+                                              if (selectedCat != null) {
+                                                //delete cat here after confirmation from user
+                                                print("delete cat name, id:" + selectedCat! + catMap[selectedCat]);
+                                                _dbHelper.deleteCat(catMap[selectedCat]);
+
+
+
                                                 // Add success dialog
                                                 showDialog(
                                                   context: context,
@@ -422,9 +431,9 @@ class _EditCatsContentState extends State<EditCatsContent> {
                                                   },
                                                 );
                                                 print(
-                                                    'Selected Cat: $selectedcat');
+                                                    'Selected Cat: $selectedCat');
                                                 setState(() {
-                                                  selectedcat = null;
+                                                  selectedCat = null;
                                                 });
                                               } else {
                                                 // Add failure dialog
@@ -472,4 +481,8 @@ class _EditCatsContentState extends State<EditCatsContent> {
               });
         });
   }
+
+
+
+
 }
