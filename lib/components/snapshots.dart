@@ -153,4 +153,20 @@ class Snapshots {
     return await fh.usersRef.doc(currentUserID);
   }
 
+  /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and
+  /// milliseconds set to 0.
+  static Timestamp equalizeTime(Timestamp stamp) {
+    DateTime date = stamp.toDate();
+    date = DateTime(date.year, date.month, date.day);
+    return Timestamp.fromDate(date);
+  }
+
+  static Future<T> runTransaction<T>(
+    Future<T> Function(Transaction) transactionHandler, 
+    {Duration timeout = const Duration(seconds: 30),
+    int maxAttempts = 5}
+    ) async {
+    return await fh.db.runTransaction(transactionHandler, timeout: timeout, maxAttempts: maxAttempts);
+  }
+
 }
