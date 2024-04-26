@@ -12,7 +12,7 @@ class EditCatsContent extends StatefulWidget {
 }
 
 class _EditCatsContentState extends State<EditCatsContent> {
-  String? selectedfeedingstation;
+  String? selectedFeedingStation;
   String? selectedCat;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -53,7 +53,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
               }
               return null;
             },
-            value: selectedfeedingstation,
+            value: selectedFeedingStation,
           ),
           const SizedBox(height: 10),
         ],
@@ -222,7 +222,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                               stationDropDown,
                               (String? value) {
                                 setState(() {
-                                  selectedfeedingstation = value;
+                                  selectedFeedingStation = value;
                                 });
                               },
                             ),
@@ -235,7 +235,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                                       return AlertDialog(
                                         title: const Text('Confirm'),
                                         content: Text(
-                                            "Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedfeedingstation}\" feeding station?"),
+                                            "Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedFeedingStation}\" feeding station?"),
                                         actions: [
                                           TextButton(
                                               onPressed: () {
@@ -252,13 +252,13 @@ class _EditCatsContentState extends State<EditCatsContent> {
                                               // Check if the name and feeding station are not empty
                                               if (catname.isNotEmpty &&
                                                   catDescription.isNotEmpty &&
-                                                  selectedfeedingstation !=
+                                                  selectedFeedingStation !=
                                                       null) {
                                                 Map<String, dynamic> catMap = {
                                                   'description': catDescription,
                                                   'name': catname,
                                                   'photo': 'placeholder.img',
-                                                  'stationID': '0',
+                                                  'stationID': stationMap[selectedFeedingStation],
                                                 };
                                                 _dbHelper.addCat(catMap);
                                                 // Add success dialog
@@ -284,11 +284,11 @@ class _EditCatsContentState extends State<EditCatsContent> {
                                                   },
                                                 );
                                                 print(
-                                                    'Cat Name: $catname, Selected Feeding Station: $selectedfeedingstation');
+                                                    'Cat Name: $catname, Selected Feeding Station: $selectedFeedingStation');
                                                 nameController.clear();
                                                 descriptionController.clear();
                                                 setState(() {
-                                                  selectedfeedingstation = null;
+                                                  selectedFeedingStation = null;
                                                 });
                                               } else {
                                                 // Add failure dialog
