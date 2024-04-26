@@ -1,4 +1,6 @@
-class UserDoc {
+import 'model.dart';
+
+class UserDoc extends Model {
   /// Named 'UserDoc' instead of 'User' because 'User is already a class
   /// in Firebase auth.
 
@@ -32,6 +34,11 @@ class UserDoc {
     _rescueGroup = rescueGroup,
     _phoneNumber = phoneNumber,
     _email = email;
+
+  
+  String get affiliation {return _affiliation; }
+  String get rescueGroup {return _rescueGroup; }
+  String get phoneNumber {return _phoneNumber; }
 
   factory UserDoc.fromJson(Map<String, dynamic> json) => UserDoc(
     isAdmin: json[isAdminString],
@@ -68,6 +75,10 @@ class UserDoc {
 
   String getName() {
     return _name;
+  }
+
+  String getEmail() {
+    return _email;
   }
 
 }
