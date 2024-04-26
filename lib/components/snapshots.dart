@@ -27,10 +27,10 @@ class Snapshots {
   static final Stream<QuerySnapshot<UserDoc>> _userStream = fh.getUserStream();
 
   
-  static Future<List<QueryDocumentSnapshot<Station>>> _stationQuery = getStationQuery();
-  static Future<List<QueryDocumentSnapshot<Entry>>> _entryQuery = getEntryQuery();
-  static Future<List<QueryDocumentSnapshot<Cat>>> _catQuery = getCatQuery();
-  static Future<List<QueryDocumentSnapshot<UserDoc>>> _userQuery = getUserQuery();
+  static final Future<List<QueryDocumentSnapshot<Station>>> _stationQuery = getStationQuery();
+  static final Future<List<QueryDocumentSnapshot<Entry>>> _entryQuery = getEntryQuery();
+  static final Future<List<QueryDocumentSnapshot<Cat>>> _catQuery = getCatQuery();
+  static final Future<List<QueryDocumentSnapshot<UserDoc>>> _userQuery = getUserQuery();
 
   /// A Stream returning all entries. Dynamically updates.
   static Stream<QuerySnapshot<Entry>> get entryStream => _entryStream;
@@ -235,6 +235,15 @@ class Snapshots {
       }
     } );
     await saveCSV(listOfLists);
+  }
+
+  /// Returns the starting and ending dates of the academic year starting at [yearOne].
+  /// startDate will be the first day of the academic year (inclusive), with 0 time, and endDate
+  /// will be the first day of the following academic year (exclusive), with 0 time.
+  static (DateTime startDate, DateTime endDate) academicYear(int yearOne) {
+    DateTime startDate = DateTime(yearOne, DateTime.july, 1);
+    DateTime endDate = DateTime(yearOne + 1, DateTime.july, 1);
+    return (startDate, endDate);
   }
 
 }
