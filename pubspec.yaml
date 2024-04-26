@@ -43,7 +43,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   # gcloud: ^0.8.12
   # googleapis_auth: ^1.5.1
-  file_picker: ^3.0.3
   image_picker: ^1.0.7
   mime: ^1.0.5
   # firebase_auth: ^4.7.3

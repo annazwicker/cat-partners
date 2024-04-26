@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
 import '../models/entry.dart';
@@ -174,7 +175,7 @@ class Snapshots {
     return await fh.db.runTransaction(transactionHandler, timeout: timeout, maxAttempts: maxAttempts);
   }
 
-  /// Converts the [listOfLists] into a CSV file, which is then saved to the user's computer.
+  /// Converts [listOfLists] into a CSV file, which is then saved to the user's computer.
   static void saveCSV(List<List<dynamic>> listOfLists) async {
     String csv = const ListToCsvConverter().convert(listOfLists);
     String fileName = 'FeederScheduleSiteCSV';
@@ -187,6 +188,54 @@ class Snapshots {
       ext: 'csv',
       mimeType: MimeType.csv,
     );
+  }
+
+  /// Saves all entries in the database from [startDate] inclusive to [endDate] exclusive
+  /// as a CSV, which is then saved to the user's computer.
+  static void saveEntryCSVTimeframe(DateTime startDate, DateTime endDate) async {    
+    List<List<dynamic>> listOfLists = [];
+    listOfLists.add(
+      [ "Date",         // Date of entry
+        "Station",      // Station of entry
+        "User",         // User assigned to entry. NULL for no user.
+        "Affiliation",  // Affiliation of user. NULL for no user.
+        ]
+    );
+    var entryQuery = fh.entriesRef
+      .where(Entry.dateString, isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+      .where(Entry.dateString, isLessThan: Timestamp.fromDate(endDate));
+    await entryQuery.get().then( (querySnapshot) async {
+      List<QueryDocumentSnapshot<Entry>> entrySnapshots = querySnapshot.docs;
+      for (QueryDocumentSnapshot<Entry> entrySnapshot in entrySnapshots){
+        
+        Entry entry = entrySnapshot.data();
+
+        // Check existence of user
+        var assignedUser = await getAssignedUser(entrySnapshot);
+        String userName;
+        String userAffiliation;
+        if(assignedUser.$1 && assignedUser.$2!.exists){ // assigned user exists
+          var user = assignedUser.$2!.data()!;
+          userName = user.getName();
+          userAffiliation = user.affiliation == '' ? 'Not given' : user.affiliation ;
+        } else { // no user assigned
+          userName = "NULLUSER";
+          userAffiliation = "N/A";
+        }
+
+        // entry
+        // TODO what format should the date be in?
+        List<dynamic> entryRow = [
+          formatDashes.format(entry.date.toDate()),
+          (await getDocument<Station>(entry.stationID)).data().name,
+          userName,
+          userAffiliation
+        ];
+        // print(entryRow);
+        listOfLists.add(entryRow);
+      }
+    } );
+    saveCSV(listOfLists);
   }
 
 }
