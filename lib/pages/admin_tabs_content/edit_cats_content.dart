@@ -108,7 +108,6 @@ class _EditCatsContentState extends State<EditCatsContent> {
   Widget build(BuildContext context) {
     //try adding streambuilder here
     return StreamBuilder(
-        // stream: _dbHelper.getUpcomingUserEntries(_dbHelper.getCurrentUser()),
         stream: _dbHelper.getCatStream(), //get station stream
         builder: (context, catSnapshot) {
           return StreamBuilder(
@@ -144,19 +143,12 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 Map<String, dynamic> catMap = {};
                 // Iterate over each document snapshot in the list
                 catEntries.forEach((doc) {
-                  // Get the document ID
                   String docId = doc.id;
-
-                  // Get the name from the document data
-                  String name = doc['name']; // Assuming 'name' is the field name in the Firestore document
-
-                  // Add the document ID - name pair to the map
+                  String name = doc['name']; 
                   catMap[name] = docId;
                 });
+                //drop down list: cats
                 List<String> catDropDown = catMap.keys.toList();
-                // print("catDropDown:");
-                // print(catDropDown);
-                
 
                 //map of station docID and names
                 Map<String, dynamic> stationMap = {};
@@ -164,15 +156,13 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 stationEntries.forEach((doc) {
                   // Get the document ID
                   String docId = doc.id;
-
                   // Get the name from the document data
-                  String name = doc[
-                      'name']; // Assuming 'name' is the field name in the Firestore document
-
-                  // Add the document ID - name pair to the map
+                  String name = doc['name']; 
+                  // Add the document name-id pair to the map
                   stationMap[name] = docId;
                 });
-                List<dynamic> stationNameList = stationMap.values.toList();
+                //drop down list: stations
+                List<String> stationDropDown = stationMap.keys.toList();
                 return Padding(
                   padding: const EdgeInsets.all(20.0),
                   // make the whole page a giant 'row' with columns within the row
@@ -229,11 +219,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                             const SizedBox(height: 9),
                             _buildDropdownFieldAdd(
                               'Select Feeding Station',
-                              [
-                                'Admissions',
-                                'Lord/Dorothy Lord Center',
-                                'Mabee'
-                              ],
+                              stationDropDown,
                               (String? value) {
                                 setState(() {
                                   selectedfeedingstation = value;
@@ -369,7 +355,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                               children: [
                                 _buildDropdownFieldDelete(
                                   'Select Cat',
-                                  catDropDown,                                  
+                                  catDropDown,
                                   (String? value) {
                                     setState(() {
                                       selectedCat = value;
@@ -392,21 +378,25 @@ class _EditCatsContentState extends State<EditCatsContent> {
                                             "Are you sure you want to remove \"${selectedCat}\" from the list of cats?"),
                                         actions: [
                                           TextButton(
-                                              onPressed: () {//cancel button
-                                                print("is this the confirm button?");
+                                              onPressed: () {
+                                                //cancel button
+                                                print(
+                                                    "is this the confirm button?");
                                                 Navigator.of(context).pop();
                                               },
                                               child: const Text('Cancel')),
                                           TextButton(
-                                            onPressed: () {//confirm button
+                                            onPressed: () {
+                                              //confirm button
                                               Navigator.of(context).pop();
                                               // Check if the name and feeding station are not empty
                                               if (selectedCat != null) {
                                                 //delete cat here after confirmation from user
-                                                print("delete cat name, id:" + selectedCat! + catMap[selectedCat]);
-                                                _dbHelper.deleteCat(catMap[selectedCat]);
-
-
+                                                print("delete cat name, id:" +
+                                                    selectedCat! +
+                                                    catMap[selectedCat]);
+                                                _dbHelper.deleteCat(
+                                                    catMap[selectedCat]);
 
                                                 // Add success dialog
                                                 showDialog(
@@ -481,8 +471,4 @@ class _EditCatsContentState extends State<EditCatsContent> {
               });
         });
   }
-
-
-
-
 }
