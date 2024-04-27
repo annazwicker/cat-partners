@@ -276,7 +276,7 @@ class _EditAdminContentState extends State<EditAdminContent> {
                                               return AlertDialog(
                                                 title: const Text('Success'),
                                                 content: Text(
-                                                    'Admin user added successfully!'),
+                                                    'Admin status revoked successfully!'),
                                                 actions: [
                                                   TextButton(
                                                       onPressed: () {
