@@ -208,20 +208,50 @@ class _EditFeedingStationsContentState
                     color: Colors.black,
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDropdownField(
-                      'Select Feeding Station',
-                      ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
-                      (String? value) {
-                        setState(() {
-                          selectedFeedingStation = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
+                StreamBuilder(
+                    stream: _dbHelper.getStationStream(),
+                    builder: (context, snapshot) {
+                      List stationSnapshots = snapshot.data?.docs ?? [];
+                      stationSnapshots.sort((a, b) {
+                        String aDT = a.data().name;
+                        String bDT = b.data().name;
+                        int comp = aDT.compareTo(bDT);
+                        if (comp == 0) {
+                          String aS = a.id;
+                          String bS = b.id;
+                          return aS.compareTo(bS);
+                        }
+                        return comp;
+                      });
+                      //map of station docID and names
+                      Map<String, dynamic> stationMap = {};
+                      // Iterate over each document snapshot in the list
+                      stationSnapshots.forEach((doc) {
+                        // Get the document ID
+                        String docId = doc.id;
+                        // Get the name from the document data
+                        String name = doc['name'];
+                        // Add the document name-id pair to the map
+                        stationMap[name] = docId;
+                      });
+                      //drop down list: stations
+                      List<String> stationDropDown = stationMap.keys.toList();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDropdownField(
+                            'Select Feeding Station',
+                            stationDropDown,
+                            (String? value) {
+                              setState(() {
+                                selectedFeedingStation = value;
+                              });
+                            },
+                          ),
+                        ],
+                      );
+                    }),
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
