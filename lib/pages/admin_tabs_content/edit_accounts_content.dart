@@ -277,7 +277,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                                         Navigator.of(context).pop();
                                         final emaildelete =
                                             emailControllerDelete.text;
-                                        _dbHelper.deleteAccount(emaildelete);
+                                        _dbHelper.deleteAccount(userMap[emaildelete]!);
                                         // Check if the name and feeding station are not empty
                                         if (emaildelete.isNotEmpty) {
                                           // Add success dialog
