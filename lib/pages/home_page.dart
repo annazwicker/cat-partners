@@ -61,12 +61,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           AchievementsBox(dbHelper: _dbHelper),
 
                           // userEntries(dbHelper: _dbHelper),
-                          Text("Your Upcoming Feeding Entries",
-                              style: TextStyle(
-                                fontSize: 20,
-                                // fontWeight: FontWeight.bold,
-                              )),
-                          UpcomingEntries(dbHelper: _dbHelper, stationSnapshot: stationSnapshot,),
+                          Container(
+                            margin:EdgeInsets.only(bottom:15),
+                            child: Text("Your Upcoming Feeding Entries",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                  // fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          UpcomingEntries(
+                            dbHelper: _dbHelper,
+                            stationSnapshot: stationSnapshot,
+                          ),
 
                           //start test
 
@@ -80,13 +87,12 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class UpcomingEntries extends StatelessWidget {
-  const UpcomingEntries({
-    super.key,
-    required FirebaseHelper dbHelper,
-        required AsyncSnapshot<QuerySnapshot<Station>> stationSnapshot
-
-  }) : _dbHelper = dbHelper,
-          _stationSnapshot = stationSnapshot;
+  const UpcomingEntries(
+      {super.key,
+      required FirebaseHelper dbHelper,
+      required AsyncSnapshot<QuerySnapshot<Station>> stationSnapshot})
+      : _dbHelper = dbHelper,
+        _stationSnapshot = stationSnapshot;
 
   final FirebaseHelper _dbHelper;
   final AsyncSnapshot<QuerySnapshot<Station>> _stationSnapshot;
@@ -97,7 +103,6 @@ class UpcomingEntries extends StatelessWidget {
     return StreamBuilder(
         stream: _dbHelper.getUpcomingUserEntries(_dbHelper.getCurrentUser()),
         builder: (context, snapshot) {
-
           //create list, map for stations
           List stationList = _stationSnapshot.data?.docs ?? [];
           _dbHelper.sortStationList(stationList);
@@ -105,11 +110,9 @@ class UpcomingEntries extends StatelessWidget {
           Map<String, String> stationDic = {};
           for (var station in stationList) {
             String documentID = station.id;
-            String name = station.data().name ??
-                ''; // Adjust this based on your data structure
+            String name = station.data().name ?? '';
             stationDic[documentID] = name;
           }
-
 
           List entries = snapshot.data?.docs ?? [];
           entries.sort((a, b) {
@@ -126,6 +129,9 @@ class UpcomingEntries extends StatelessWidget {
             return comp;
           });
 
+          //reorganize list as a list of lists so there's one entry per date (Date, Stations)
+          List listedEntries = [];
+
           if (entries.isEmpty) {
             return Center(child: Text('No entries found.'));
           }
@@ -135,24 +141,39 @@ class UpcomingEntries extends StatelessWidget {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
+                border: TableBorder.all(width: 1),
                 dividerThickness: 1.0,
                 columns: [
                   DataColumn(
                     label: Container(
-                      child: Center(child: Text('Date')),
+                      child: Center(
+                          child: Text(
+                        'Date',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
                     ),
                   ),
                   DataColumn(
                     label: Container(
-                      child: Center(child: Text('Note')),
+                      width: 150,
+                      child: Center(
+                          child: Text(
+                        'Note',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
                     ),
                   ),
                   DataColumn(
                     label: Container(
-                      child: Center(child: Text('Station Name')),
+                      child: Center(
+                          child: Text(
+                        'Station Name',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
                     ),
                   ),
                 ],
+                // rows: entries.map<DataRow>((entry) {
                 rows: entries.map<DataRow>((entry) {
                   Entry entryData = entry.data();
 
@@ -160,24 +181,7 @@ class UpcomingEntries extends StatelessWidget {
 
                   //temp switch case for station names
 
-
                   String stationName = stationDic[entry.data().stationID.id]!;
-
-                  // `switch (entryData.stationID.id) {
-                  //   case '0':
-                  //     stationName = 'Admin';
-                  //     break;
-                  //   case '1':
-                  //     stationName = 'Mabee';
-                  //     break;
-                  //   case '2':
-                  //     stationName = 'Lords';
-                  //     break;
-                  //   default:
-                  //     stationName = 'ERROR!';
-                  //     break;
-                  // }
-
                   return DataRow(
                     cells: [
                       DataCell(Center(
