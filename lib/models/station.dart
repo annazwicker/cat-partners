@@ -1,4 +1,6 @@
-class Station {
+import 'model.dart';
+
+class Station extends Model{
   final String description;
   final String fullName;
   final String name;
