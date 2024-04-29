@@ -92,14 +92,14 @@ class AboutScreen extends StatelessWidget {
                       children: [
                         const TextSpan(
                           text:
-                              '    This site is the official Cat Partners Feeding website. This site is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the community cats on campus. To learn more about them and how to support them, go to their ',
+                              '    This site is the official Cat Partners Feeding website. It is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the feral cat colonies on campus. To learn more about CPSU and how to support them, please visit the ',
                           style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Playfair Display',
                               color: Color.fromARGB(255, 0, 0, 0))),
                         TextSpan(
                           // location of link
-                          text: 'official SU website page',
+                          text: 'official Cat Partners page on the SU website',
                           style: const TextStyle(
                             fontFamily: 'Playfair Display',
                             color: Color.fromARGB(255, 19, 147, 252),
@@ -121,7 +121,7 @@ class AboutScreen extends StatelessWidget {
                           style: TextStyle(fontSize: 16, fontFamily: 'Playfair Display', color: Color.fromARGB(255, 0, 0, 0))
                         ),
                         const TextSpan(
-                          text: '    This site was created during the Spring semester of 2024 as part of a Computer Science Capstone project. Along with input from Cat Partners, Anna Wicker, Jayden Beauchea, Yunhyeong "Daniel" Na, and Marlon Mata were able to make this site possible.',
+                          text: '    This site was created during the spring 2024 semester as part of a Computer Science Capstone project. Along with input from Cat Partners, Anna Wicker, Jayden Beauchea, Yunhyeong "Daniel" Na, and Marlon Mata were able to make this site possible.',
                           style: TextStyle(fontSize: 16, fontFamily: 'Playfair Display', color: Color.fromARGB(255, 0, 0, 0)),
                         )
                       ]
@@ -388,7 +388,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                           style: TextStyle(fontSize: 18),
                           textAlign: TextAlign.left),
                     ),
-                    const Text("Here users can view the times they've signed up to feed for the next two weeks from the current day.", style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    const Text("Here, users can view the times they've signed up to feed for the next two weeks from the current day.", style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     // const Text('Along with that, 2 other things are visible:.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     const Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     Row(
@@ -399,7 +399,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                             text: const TextSpan(
                               children: [
                                 TextSpan(text: '\u2022 Notifications: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: "In the notifications box, users can see any feeding stations that don't have anyone signed up to feed for the current day and the next day.", 
+                                TextSpan(text: "The notification box displays the stations for the current day and following day that don't have anyone signed up to feed.", 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
                             )
@@ -415,7 +415,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                             text: const TextSpan(
                               children: [
                                 TextSpan(text: '\u2022 Achievements: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                TextSpan(text: 'This keeps track of the number of times you have volutneered to feed the campus cats.', 
+                                TextSpan(text: 'The achievements box displays the total number of times the user has fed the campus cats.', 
                                 style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                               ]
                             )
@@ -424,7 +424,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                       ],
                     ),
                     const Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                    const Text('Users should regularly log in to check when they are signed up to feed and see if there are any open slots available.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    const Text('Users should regularly log in to check when they are signed up to feed and see if there are any open slots available.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),textAlign: TextAlign.center),
                   ],
                 ),
                 /////////////////////////////////////////////////////////////////// ADMIN PAGE
@@ -446,7 +446,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                           textAlign: TextAlign.center,
                           text: const TextSpan(
                             children: [
-                              TextSpan(text: 'On this page, Admins can navigate through the different tabs. Listed below are the different features of these tabs:', 
+                              TextSpan(text: 'On this page, admins users can navigate through the different tabs. Listed below are the different features available:', 
                               style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                             ]
                           )
@@ -460,7 +460,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                               text: const TextSpan(
                                 children: [
                                   TextSpan(text: '\u2022 Edit/delete user accounts. ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                  TextSpan(text: "Admin users can edit a current user's SU affiliation by selecting from the dropdown menu. Current users can be deleted by entering the user's gmail address.", 
+                                  TextSpan(text: "Admin users can edit a current user's SU affiliation by entering their gmail and selecting from the dropdown menu. Current users can be deleted by entering the user's gmail address.", 
                                   style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                                 ]
                               )
@@ -492,7 +492,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                               text: const TextSpan(
                                 children: [
                                   TextSpan(text: '\u2022 Add/delete campus cats. ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                  TextSpan(text: "New cats can be added by entering their name and selecting the feeding station they are located at from a dropdown menu. Current campus cats can be deleted by selecting from a dropdwon menu.", 
+                                  TextSpan(text: "New cats can be added by entering their name, a brief description, and selecting the feeding station they are located at from a dropdown menu. Current campus cats can be deleted by selecting from a dropdwon menu.", 
                                   style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                                 ]
                               )
@@ -524,7 +524,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                               text: const TextSpan(
                                 children: [
                                   TextSpan(text: '\u2022 Search for a user. ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                  TextSpan(text: "Admin users can search for a user by entering their first and last name, and gmail address.", 
+                                  TextSpan(text: "Admin users can search for a user by entering their gmail address.", 
                                   style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                                 ]
                               )
@@ -539,8 +539,8 @@ class _NestedTabBarState extends State<NestedTabBar>
                             child: RichText(
                               text: const TextSpan(
                                 children: [
-                                  TextSpan(text: '\u2022 Export data as a CSV file ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                  TextSpan(text: "for a given academic year (select the year from a dropdown menu) that shows each volunteer associated with Cat Partners, the number of hours they volunteered, and the total number of volunteer hours from everyone.", 
+                                  TextSpan(text: '\u2022 Export data as a CSV file.', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "Select the desired academic year from a dropdown box and then click the button that says 'Export Data'. The CSV file will show each volunteer associated with Cat Partners, the number of hours they volunteered, and the total number of volunteer hours from everyone.", 
                                   style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                                 ]
                               )
@@ -570,13 +570,12 @@ class _NestedTabBarState extends State<NestedTabBar>
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: Text('The Sign Up to Feed page is where a user can sign up to feed the campus cats.', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                      child: Text("The sign up to feed page contains the feeding schedule where users can sign up to feed the cats. The table displays entries in the past and present by date and station, as well as the name of the user signed up for a given entry, if there is one. Users can view and interact with entries by clicking them on the table, which displays the entry's information on a sidebar to the right. The information displayed includes the entry's date, station, notes and assigned user.", style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                     ),
-                    Text('The page will display all currently available entries. Any entry already taken by a user will display its assigned user.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
+                    //Text('The page will display all currently available entries. Any entry already taken by a user will display its assigned user.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     //Text('The names of others users will be displayed here as well.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-                    Text("When signing up to feed, a user can select one or more empty entries. Clicking an empty entry will select it, and clicking the same entry will unselect it. When a user has their desired selection, they can press submit to confirm it, assigning themselves to all selected entries.", style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
-
+                    Text("Users can add entries by selecting multiple at a time. The entries they select will be displayed on the sidebar with the date and station. Clicking the confirm button will lock in the user's selection. Users can edit the notes of their own entries, but not those of other users. A user may also only unassign themselves from entries, and cannot unassign others unless they're an admin..", style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
                 ),
                 /////////////////////////////////////////////////////////// ACCOUNT PAGE
@@ -601,7 +600,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                               text: const TextSpan(
                                 children: [
                                   TextSpan(text: '\u2022 Name: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                  TextSpan(text: 'This is what other people will see on the feeding sign up. Please use your first name or preferred name.', 
+                                  TextSpan(text: 'This is what other people will see on the feeding sign up. Users should use their preferred name.', 
                                   style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                                 ]
                               )
@@ -617,7 +616,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                               text: const TextSpan(
                                 children: [
                                   TextSpan(text: '\u2022 Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                  TextSpan(text: "This is the gmail account the user will login in with. Admin users will be able to see the user's gmail address in case they need to contact them. If it is changed, future log in attempts should be made with that new email to avoid creating a new account.", 
+                                  TextSpan(text: "This is the gmail account the user will login in with.  If a user changes their email it will subsequently change their login for the future.  Admin users will be able to see the user's gmail address in case they need to contact them.", 
                                   style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
                                 ]
                               )
@@ -680,7 +679,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                           text: const TextSpan(
                             children: [
                               TextSpan(text: 'Users should make sure all the information here is up-to-date and accurate and press submit to save any changes.', 
-                              style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
                             ]
                           )
                         ),
