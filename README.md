@@ -71,4 +71,4 @@ The account page stores basic information about every user including first and l
 A screenshot of the account page can be found [here](https://drive.google.com/file/d/1H_mTCkjJ2S8qaDd7g_gTVacoel3pGrGq/view?usp=sharing).
 
 
-
+***The most up-to-date code is on the 'restored-commit' branch.***
