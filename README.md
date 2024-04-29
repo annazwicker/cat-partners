@@ -45,7 +45,7 @@ A demo video of the about page can be found [here](https://drive.google.com/file
 ### Admin Page
 The admin page is specifically for users who have admin permissions.  It allows for the website to be flexible to any changes that the campus cats/feeding stations may undergo, as well as other capabilities admin users might need.  Below is a list of all of those features:
 
-- Edit a user's SU affiliation (with the options being student, staff, faculty, alumni, and parent of student) by entering the desired user's email and selecting the new status from a dropdown box.
+- Edit a user's SU affiliation (with the options being student, staff, faculty, alumni, parent of student, and friend of cats) by entering the desired user's email and selecting the new status from a dropdown box.
 - Delete a user's account by entering their email.
 - Grant admin permissions to a user by entering their email.
 - Revoke admin permissions by selecting an existing user from a dropdown box.
@@ -66,7 +66,7 @@ Users can add entries by selecting multiple at a time.  The entries they select 
 A demo video of the sign up to feed page can be found [here](https://drive.google.com/file/d/1vHcPDvv1DWjwpt9RHrnMLyubZWwqWtqb/view?usp=sharing).
 
 ### Account Page
-The account page stores basic information about every user including first and last name, email, phone number, affiliation with SU, and rescue group affiliation.  This information is collected in case admin users need to reach a user regarding CPSU.  All information on this page is able to be changed by the user, but if the user changes their email, their login will also change since user accounts are tied to gmail accounts.  When the user clicks the save button at the bottom of the list of information, a pop up box will provide a warning that changing the email field will change will result in their login changing.  User's are also able to sign out of the website by clicking the sign out button at the bottom of the page.
+The account page stores basic information about every user including first and last name, email, phone number, affiliation with SU (student, staff, faculty, alumni, parent of student, and friend of cats), and rescue group affiliation.  This information is collected in case admin users need to reach a user regarding CPSU.  All information on this page is able to be changed by the user.  If the user changes their email, their login will also change since user accounts are tied to gmail accounts.  When the user clicks the save button at the bottom of the list of information, a pop up box will provide a warning that changing the email field will change will result in their login changing.  User's are also able to sign out of the website by clicking the sign out button at the bottom of the page.
 
 A screenshot of the account page can be found [here](https://drive.google.com/file/d/1H_mTCkjJ2S8qaDd7g_gTVacoel3pGrGq/view?usp=sharing).
 
