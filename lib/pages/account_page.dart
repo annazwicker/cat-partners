@@ -1,5 +1,8 @@
 //import 'dart:io';
 //import 'dart:typed_data';
+import 'dart:js_interop';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -180,7 +183,20 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         if(_email != UserGoogle.getUser().email){
                           UserGoogle().reLogin(_email!, _name, _phoneNumber, _affiliation, _rescuegroupaffiliation);
                         } else {
-                          //await UserGoogle().db.collection('accountLink').where('firebaseID': UserGoogle().auth);
+
+                          var id = UserGoogle().auth.currentUser?.uid.toString();
+                          var docID;
+                          await UserGoogle().db.collection('accountLink').get().then(
+                            (QuerySnapshot querySnapshot) => {
+                                querySnapshot.docs.forEach((doc) {
+                                  if(doc['firebaseUID'] == id){
+                                    docID = doc['firebaseUID'];
+                                  }
+                                }
+                              )
+                            }
+                          );
+                          UserGoogle().db.doc(docID).update({'affiliation':_affiliation, 'name': _name, 'phoneNumber':_phoneNumber, 'rescueGroupAffiliation':_rescuegroupaffiliation});
                         }
                       }
                     },
