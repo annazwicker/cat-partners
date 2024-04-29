@@ -79,6 +79,15 @@ class FirebaseHelper {
     return _usersRef.snapshots();
   }
 
+  void sortStationList(List stationList) {
+    stationList.sort((a, b) {
+      String aE = a.data().name;
+      String bE = b.data().name;
+      int comp = aE.compareTo(bE);
+      return comp;
+    });
+  }
+
   void testing() {
     Query<Entry> emptyNoteQuery = _entriesRef.where('note', isEqualTo: '');
     // emptyNoteQuery.
@@ -120,6 +129,7 @@ class FirebaseHelper {
     return _entriesRef
         .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
         .where("date", isLessThanOrEqualTo: tomorrow)
+        .where("assignedUser", isNull: true)
         .snapshots();
   }
 
@@ -201,6 +211,14 @@ class FirebaseHelper {
       String userEmail, String selectedAffiliation) async {
     DocumentReference documentReference = _usersRef.doc(userEmail);
     return documentReference.update({'affiliation': selectedAffiliation});
+  }
+
+  /**
+   * returns snapshots of all users with admin permission
+   */
+  Stream<QuerySnapshot<UserDoc>> getAdminUsers() {
+    return _usersRef.where('isAdmin', isEqualTo: true).snapshots();
+    // return _usersRef.snapshots();
   }
 
   /**
