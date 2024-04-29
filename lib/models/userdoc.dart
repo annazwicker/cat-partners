@@ -33,6 +33,11 @@ class UserDoc {
     _phoneNumber = phoneNumber,
     _email = email;
 
+  
+  String get affiliation {return _affiliation; }
+  String get rescueGroup {return _rescueGroup; }
+  String get phoneNumber {return _phoneNumber; }
+
   factory UserDoc.fromJson(Map<String, dynamic> json) => UserDoc(
     isAdmin: json[isAdminString],
     name: json[nameString],
@@ -68,6 +73,10 @@ class UserDoc {
 
   String getName() {
     return _name;
+  }
+
+  String getEmail() {
+    return _email;
   }
 
 }

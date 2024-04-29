@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/firebase_helper.dart';
+
 class EditAdminContent extends StatefulWidget {
   final Color textColor;
 
@@ -12,6 +14,7 @@ class EditAdminContent extends StatefulWidget {
 class _EditAdminContentState extends State<EditAdminContent> {
   String? selectedAdminUser;
   final TextEditingController emailController = TextEditingController();
+  final _dbHelper = FirebaseHelper();
 
   Widget _buildDropdownField(
   String title,
@@ -101,10 +104,74 @@ class _EditAdminContentState extends State<EditAdminContent> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    final emailedit = emailController.text;
-                    print('Email: $emailedit');
-                    emailController.clear();
-                    // Add functionality for adding an account
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to add \"${emailController.text}\" as an admin user?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                final emailedit = emailController.text;
+                                //make user admin
+                                _dbHelper.addAdmin(emailedit);
+                                // Check if the name and feeding station are not empty
+                                if (emailedit.isNotEmpty) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('Admin user added successfully!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  print('Email: $emailedit');
+                                  emailController.clear();
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please enter an email.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
@@ -139,7 +206,7 @@ class _EditAdminContentState extends State<EditAdminContent> {
                   children: [
                     _buildDropdownField(
                     'Select Admin User',
-                    ['Kelly Lessard', 'Jayden Beauchea', 'Daniel Na', 'Anna Wicker', 'Marlon Mata'],
+                    ['5SLi4nS54TigU4XtHzAp', 'Kelly Lessard', 'Jayden Beauchea', 'Daniel Na', 'Anna Wicker', 'Marlon Mata'],
                       (String? value) {
                         setState(() {
                           selectedAdminUser = value;
@@ -151,11 +218,74 @@ class _EditAdminContentState extends State<EditAdminContent> {
                 const SizedBox(height: 9),
                 ElevatedButton(
                   onPressed: () {
-                    print('Selected Admin User: $selectedAdminUser');
-                    setState(() {
-                      selectedAdminUser = null;
-                    });
-                    // Add functionality for adding an account
+                    showDialog(
+                      context: context, 
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Confirm'),
+                          content: Text("Are you sure you want to remove \"${selectedAdminUser}\" as an admin user?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }, 
+                              child: const Text('Cancel')
+                            ), 
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                // Check if the name and feeding station are not empty
+                                if (selectedAdminUser != null) {
+                                  // Add success dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Success'),
+                                        content: Text('Admin user added successfully!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  _dbHelper.removeAdmin(selectedAdminUser!);
+                                  print('Selected Admin User: $selectedAdminUser');
+                                  setState(() {
+                                    selectedAdminUser = null;
+                                  });
+                                } else {
+                                  // Add failure dialog
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text('Please select an admin user.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }, 
+                                            child: const Text('OK')
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              }, 
+                              child: const Text('Confirm'),
+                            )
+                          ],    
+                        );
+                      }
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
