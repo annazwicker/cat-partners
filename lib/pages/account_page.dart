@@ -180,7 +180,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         if(_email != UserGoogle.getUser().email){
                           UserGoogle().reLogin(_email!, _name, _phoneNumber, _affiliation, _rescuegroupaffiliation);
                         } else {
-                          await UserGoogle().db.collection('users').doc(UserGoogle.getUser().uid).update(formData);
+                          //await UserGoogle().db.collection('accountLink').where('firebaseID': UserGoogle().auth);
                         }
                       }
                     },
