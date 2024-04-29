@@ -319,7 +319,7 @@ class _NestedTabBarState extends State<NestedTabBar>
   void initState() {
     super.initState();
     _nestedTabController =
-        TabController(length: 5, vsync: this); // length: 4 = 4 tabs
+        TabController(length: 4, vsync: this); // length: 4 = 4 tabs
   }
 
   @override
@@ -426,9 +426,6 @@ class _NestedTabBarState extends State<NestedTabBar>
                     const Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     const Text('Users should regularly log in to check when they are signed up to feed and see if there are any open slots available.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
-                ),
-                const SizedBox(
-                  child: Text('hi')
                 ),
                 /////////////////////////////////////////////////////////////////// ADMIN PAGE
                 SingleChildScrollView(

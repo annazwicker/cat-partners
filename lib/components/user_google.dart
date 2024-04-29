@@ -30,6 +30,7 @@ class UserGoogle {
         String userNumber = user!.phoneNumber.toString();
 
         var data = await db.collection('users').doc(userID).get();
+        // if user doesnt exist, make new user doc(docid not based on anything), then create accountLink doc with reference to user doc
         if(!data.exists){
           final userInstance = <String, dynamic>{
             "affiliation":'Friend of Cats',
@@ -78,6 +79,9 @@ class UserGoogle {
   }
 
   Future<void> reLogin(String newEmail, String? name, String? number, String? affiliation, String? rescueGroup) async{
+    // get document of user
+    // get firebase ID of new user
+    // change firebaseID from accountLink to new user
     var oldID = auth.currentUser!.uid.toString();
     var reference = "users/$oldID"; // reference of current user
     // var catData = await db.collection('entry').where('assignUser', arrayContains: db.doc(reference)).get();
