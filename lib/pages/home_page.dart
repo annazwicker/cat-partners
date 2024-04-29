@@ -36,6 +36,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _dbHelper = FirebaseHelper();
+  final ScrollController _vertical = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,35 +44,38 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text('Home Page'),
         ),
-        body: Center(
-            child: StreamBuilder(
-                stream: _dbHelper.getStationStream(),
-                builder: (context, stationSnapshot) {
-                  return Column(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        //notification box
-                        NotificationWidget(
-                            dbHelper: _dbHelper,
-                            stationSnapshot: stationSnapshot),
-                        //achievement box
-                        AchievementsBox(dbHelper: _dbHelper),
+        body: SingleChildScrollView(
+          controller: _vertical,
+          child: Center(
+              child: StreamBuilder(
+                  stream: _dbHelper.getStationStream(),
+                  builder: (context, stationSnapshot) {
+                    return Column(
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          //notification box
+                          NotificationWidget(
+                              dbHelper: _dbHelper,
+                              stationSnapshot: stationSnapshot),
+                          //achievement box
+                          AchievementsBox(dbHelper: _dbHelper),
 
-                        // userEntries(dbHelper: _dbHelper),
-                        Text("Your Upcoming Feeding Entries",
-                            style: TextStyle(
-                              fontSize: 20,
-                              // fontWeight: FontWeight.bold,
-                            )),
-                        UpcomingEntries(dbHelper: _dbHelper),
+                          // userEntries(dbHelper: _dbHelper),
+                          Text("Your Upcoming Feeding Entries",
+                              style: TextStyle(
+                                fontSize: 20,
+                                // fontWeight: FontWeight.bold,
+                              )),
+                          UpcomingEntries(dbHelper: _dbHelper, stationSnapshot: stationSnapshot,),
 
-                        //start test
+                          //start test
 
-                        // testStream(dbHelper: _dbHelper),
+                          // testStream(dbHelper: _dbHelper),
 
-                        //end test
-                      ]);
-                })));
+                          //end test
+                        ]);
+                  })),
+        ));
   }
 }
 
@@ -79,15 +83,34 @@ class UpcomingEntries extends StatelessWidget {
   const UpcomingEntries({
     super.key,
     required FirebaseHelper dbHelper,
-  }) : _dbHelper = dbHelper;
+        required AsyncSnapshot<QuerySnapshot<Station>> stationSnapshot
+
+  }) : _dbHelper = dbHelper,
+          _stationSnapshot = stationSnapshot;
 
   final FirebaseHelper _dbHelper;
+  final AsyncSnapshot<QuerySnapshot<Station>> _stationSnapshot;
 
   @override
   Widget build(BuildContext context) {
+    //get list of upcoming user entries -- organized by date (column1 date, column2 station)
     return StreamBuilder(
         stream: _dbHelper.getUpcomingUserEntries(_dbHelper.getCurrentUser()),
         builder: (context, snapshot) {
+
+          //create list, map for stations
+          List stationList = _stationSnapshot.data?.docs ?? [];
+          _dbHelper.sortStationList(stationList);
+          stationList.forEach((station) => print(station.data().name));
+          Map<String, String> stationDic = {};
+          for (var station in stationList) {
+            String documentID = station.id;
+            String name = station.data().name ??
+                ''; // Adjust this based on your data structure
+            stationDic[documentID] = name;
+          }
+
+
           List entries = snapshot.data?.docs ?? [];
           entries.sort((a, b) {
             DateTime aE = a.data().date.toDate();
@@ -119,12 +142,6 @@ class UpcomingEntries extends StatelessWidget {
                       child: Center(child: Text('Date')),
                     ),
                   ),
-                  // DataColumn(
-                  //   label: Container(
-                  //     color: Colors.yellow, // Color the top row yellow
-                  //     child: Text('Assigned User'),
-                  //   ),
-                  // ),
                   DataColumn(
                     label: Container(
                       child: Center(child: Text('Note')),
@@ -132,7 +149,7 @@ class UpcomingEntries extends StatelessWidget {
                   ),
                   DataColumn(
                     label: Container(
-                      child: Center(child: Text('Station ID')),
+                      child: Center(child: Text('Station Name')),
                     ),
                   ),
                 ],
@@ -143,21 +160,23 @@ class UpcomingEntries extends StatelessWidget {
 
                   //temp switch case for station names
 
-                  String stationName;
-                  switch (entryData.stationID.id) {
-                    case '0':
-                      stationName = 'Admin';
-                      break;
-                    case '1':
-                      stationName = 'Mabee';
-                      break;
-                    case '2':
-                      stationName = 'Lords';
-                      break;
-                    default:
-                      stationName = 'ERROR!';
-                      break;
-                  }
+
+                  String stationName = stationDic[entry.data().stationID.id]!;
+
+                  // `switch (entryData.stationID.id) {
+                  //   case '0':
+                  //     stationName = 'Admin';
+                  //     break;
+                  //   case '1':
+                  //     stationName = 'Mabee';
+                  //     break;
+                  //   case '2':
+                  //     stationName = 'Lords';
+                  //     break;
+                  //   default:
+                  //     stationName = 'ERROR!';
+                  //     break;
+                  // }
 
                   return DataRow(
                     cells: [
@@ -324,13 +343,15 @@ class NotificationWidget extends StatelessWidget {
             print(todayEntries);
             print(tmrwEntries);
             if (todayEntries.isNotEmpty) {
-              notificationMessage += "Today's ${todayEntries.join(', ')} entries are empty\n";
+              notificationMessage +=
+                  "Today's ${todayEntries.join(', ')} entries are empty\n";
             } else {
               "There are no empty entries today!";
             }
 
             if (tmrwEntries.isNotEmpty) {
-              notificationMessage += "Tomorrow's ${tmrwEntries.join(', ')} entries are empty";
+              notificationMessage +=
+                  "Tomorrow's ${tmrwEntries.join(', ')} entries are empty";
               print(notificationMessage);
               // print("line331");
             } else {
