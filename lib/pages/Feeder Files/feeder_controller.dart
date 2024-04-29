@@ -28,6 +28,7 @@ class FeederController extends ChangeNotifier {
   // Entry view
   late QueryDocumentSnapshot<Entry>? currentEntry;
   late DocumentSnapshot<UserDoc>? currentEntryUser;
+  late ValueNotifier? currentCellNotifier;
   late bool isUsersEntry; // TODO true if user is viewing their own entry
 
   /// Asserts that, for the Controller's current state, certain variables 
@@ -43,6 +44,7 @@ class FeederController extends ChangeNotifier {
     switch (state){
       case PageState.view:
         assert (currentEntry != null);
+        assert (currentCellNotifier != null);
       case PageState.select:
         assert (selectedEntries != null);
       default:
@@ -150,8 +152,10 @@ class FeederController extends ChangeNotifier {
       case PageState.select:
         selectedEntries = null;
       case PageState.view:
+        currentCellNotifier!.notifyListeners();
         currentEntry = null;
         currentEntryUser = null;
+        currentCellNotifier = null;
     }
   }
   

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/models/entry.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_table.dart';
@@ -33,7 +34,6 @@ enum CellSelectStatus {
 class CellWrapperState extends State<CellWrapper> {
   
   DocumentSnapshot<UserDoc>? assignedUser;
-
   // CellWrapperState({this.data});
 
   /// Selection status of this cell.
@@ -41,6 +41,7 @@ class CellWrapperState extends State<CellWrapper> {
   /// Adding: Cell is empty, and being selected for assignment by user.
   /// Viewing: Cell's information is being viewed by user.
   CellSelectStatus selection = CellSelectStatus.inactive;
+  ValueNotifier? cellController;
 
   @override
   void initState() {
@@ -100,12 +101,22 @@ class CellWrapperState extends State<CellWrapper> {
     return assignedUser != null; 
     }
 
+  /// Un-views or un-selects this cell, removing its highlight.
+  void unSelect() {
+    if(selection != CellSelectStatus.inactive){
+      setState(() {
+        selection = CellSelectStatus.inactive;
+      });
+      widget.controller.toEmptyState();
+    }
+  }
+
   void doOnTap() {
     if(widget.controller.currentState != PageState.view) {
-      // Enter view for unassigned entries
+      // Enter selection mode for unassigned entries
       if (!hasUser()){
+        widget.controller.toSelectState();
         setState(() {
-          widget.controller.toSelectState();
           if(widget.controller.toggleSelection(widget.data)){
             selection = CellSelectStatus.adding;
           } else {
@@ -116,6 +127,10 @@ class CellWrapperState extends State<CellWrapper> {
       // Enter view for assigned entries
       else {
         setState(() {
+            // if(cellController != null) { cellController!.dispose(); }
+            cellController = ValueNotifier(CellSelectStatus.viewing);
+            cellController!.addListener(unSelect);
+            widget.controller.currentCellNotifier = cellController!;
             selection = CellSelectStatus.viewing;
           }
         );
@@ -125,10 +140,7 @@ class CellWrapperState extends State<CellWrapper> {
       // This is the viewed cell
       if(selection == CellSelectStatus.viewing){
         // Deselect
-        setState(() {
-          selection = CellSelectStatus.inactive;
-        });
-        widget.controller.toEmptyState();
+        unSelect();
       }
     }
     
