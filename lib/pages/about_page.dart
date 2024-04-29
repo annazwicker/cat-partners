@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
-import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/const.dart'; 
+// import 'package:flutter_application_1/const.dart'; 
 // ignore: depend_on_referenced_packages
 import 'package:url_launcher/url_launcher.dart';
 
@@ -230,7 +228,7 @@ class AboutScreen extends StatelessWidget {
           scrollDirection: Axis.vertical,
           controller: _ScrollCat,
           children: const [
-            // put images in componenets
+            // following puts images of cats in a scroll box
             Row(
               mainAxisAlignment: MainAxisAlignment.center, 
               children: [
@@ -312,14 +310,16 @@ class NestedTabBar extends StatefulWidget {
 
 class _NestedTabBarState extends State<NestedTabBar>
     with TickerProviderStateMixin {
+  // controls tabs
   late TabController _nestedTabController;
+  // controls scrolling
   final ScrollController _tabVerticalOne = ScrollController();
   final ScrollController _tabVerticalTwo = ScrollController();
   @override
   void initState() {
     super.initState();
     _nestedTabController =
-        TabController(length: 4, vsync: this); // length: 4 = 4 tabs
+        TabController(length: 5, vsync: this); // length: 4 = 4 tabs
   }
 
   @override
@@ -363,6 +363,7 @@ class _NestedTabBarState extends State<NestedTabBar>
             labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Playfair Display"),
             tabs: const [ ///////////////// the tab options, length must match
               Tab(icon: Icon(Icons.home), text: 'Home'),
+              Tab(icon: Icon(Icons.info), text: 'About'),
               Tab(icon: Icon(Icons.admin_panel_settings), text: 'Admin'),
               Tab(icon: Icon(Icons.local_dining), text: 'Sign Up To Feed'),
               Tab(icon: Icon(Icons.account_box), text: 'Account'),
@@ -425,6 +426,9 @@ class _NestedTabBarState extends State<NestedTabBar>
                     const Text('', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                     const Text('Users should regularly log in to check when they are signed up to feed and see if there are any open slots available.', style: TextStyle(fontSize: 18),textAlign: TextAlign.center),
                   ],
+                ),
+                const SizedBox(
+                  child: Text('hi')
                 ),
                 /////////////////////////////////////////////////////////////////// ADMIN PAGE
                 SingleChildScrollView(
@@ -599,22 +603,6 @@ class _NestedTabBarState extends State<NestedTabBar>
                             child: RichText(
                               text: const TextSpan(
                                 children: [
-                                  TextSpan(text: '\u2022 Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
-                                  TextSpan(text: "This is the gmail account the user will login in with.  Due to various reasons, you are not able to change this without creating a new account. Admin users will be able to see the user's gmail address in case they need to contact them.", 
-                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
-                                ]
-                              )
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: RichText(
-                              text: const TextSpan(
-                                children: [
                                   TextSpan(text: '\u2022 Name: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
                                   TextSpan(text: 'This is what other people will see on the feeding sign up. Please use your first name or preferred name.', 
                                   style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
@@ -623,6 +611,22 @@ class _NestedTabBarState extends State<NestedTabBar>
                             ),
                           ),
                         ]
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(text: '\u2022 Email: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Playfair Display')),
+                                  TextSpan(text: "This is the gmail account the user will login in with. Admin users will be able to see the user's gmail address in case they need to contact them. If it is changed, future log in attempts should be made with that new email to avoid creating a new account.", 
+                                  style: TextStyle(fontSize: 18, fontFamily: 'Playfair Display')),
+                                ]
+                              )
+                            ),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
