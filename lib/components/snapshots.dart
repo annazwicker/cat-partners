@@ -246,5 +246,76 @@ class Snapshots {
     return (startDate, endDate);
   }
 
+  /// Adds [entry] to the database.
+  static void addEntry(Entry entry) async {
+    // TODO perform uniqueness checks (date + stationID)
+    fh.entriesRef.add(entry);
+  }
+
+  /// Ensures that entries exist for [date] for each station by adding them if they don't exist.
+  static void ensureEntries(DateTime date) async {
+    // Remove milliseconds
+    date = DateTime(date.year, date.month, date.day);
+    Timestamp stamp = Timestamp.fromDate(date);
+    runTransaction((transaction) async {
+      // Get all stations
+      bool isError = false;
+      List<QueryDocumentSnapshot<Station>> stations = await getStationQuery();
+
+      // Get entries with given date
+      List<QueryDocumentSnapshot<Entry>> entries = [];
+      entriesOnDateQuery(date).get().then(
+        (querySnapshot) {
+          entries = querySnapshot.docs;
+        },
+        onError: (e) {
+          print(e);
+          isError = true;
+        },
+      );
+
+      // Check if there isn't an error
+      if (!isError) {
+        for (QueryDocumentSnapshot<Station> station in stations) {
+          // Query returns entry with station and date
+          List<QueryDocumentSnapshot<Entry>> statEntry = entries
+              .where((element) => element.data().stationID.id == station.id)
+              .toList();
+          // Add entry if it doesn't exist
+          if (statEntry.isEmpty) {
+            Entry newEntry = Entry(
+              assignedUser: null,
+              date: stamp,
+              note: '',
+              stationID: station.reference,
+            );
+            DocumentReference<Entry> newDocRef = fh.entriesRef.doc();
+            transaction.set(newDocRef, newEntry);
+          }
+        }
+      }
+    });
+  }
+
+  /// Returns the results of querying the database for all entries on [date].
+  static Future<List<QueryDocumentSnapshot<Entry>>> getEntries(DateTime date) async {
+    ensureEntries(date);
+    List<QueryDocumentSnapshot<Entry>> entries = [];
+    await entriesOnDateQuery(date).get().then((querySnapshot) {
+      entries = querySnapshot.docs.toList();
+    });
+    return entries;
+  }
+
+  /// Returns a query that queries the database for all entries on the given [date].
+  static Query<Entry> entriesOnDateQuery(DateTime date) {
+    DateTime nextDate = date.add(const Duration(days: 1));
+
+    Timestamp stamp = Timestamp.fromDate(date);
+    Timestamp nextStamp = Timestamp.fromDate(nextDate);
+    return fh.entriesRef.where('date',
+        isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
+  }
+
 }
 
