@@ -37,6 +37,8 @@ class _FeederTableState extends State<FeederTable> {
 
   @override
   Widget build(BuildContext context) {
+    // Ensures entries exist for at least 2 weeks past current date
+    Snapshots.ensureEntriesPast();
     return FutureBuilder(
       future: Snapshots.stationQuery,
       builder: (stationContext, stationSnapshot) {
@@ -66,7 +68,7 @@ class _FeederTableState extends State<FeederTable> {
               controller: ScrollController(),
               child: Table(
                   columnWidths: const {
-                    0: FixedColumnWidth(100),
+                    0: IntrinsicColumnWidth(),
                   },
                   border: TableBorder.all(),
                   children: [headerRow()] + rows)

@@ -167,6 +167,12 @@ class Snapshots {
     return Timestamp.fromDate(date);
   }
 
+  /// Returns a timestamp with the same date as [datetime], with hours, minutes, seconds and
+  /// milliseconds set to 0.
+  static DateTime equalizeDate(DateTime datetime) {
+    return DateTime(datetime.year, datetime.month, datetime.day);
+  }
+
   static Future<T> runTransaction<T>(
     Future<T> Function(Transaction) transactionHandler, 
     {Duration timeout = const Duration(seconds: 30),
@@ -252,6 +258,30 @@ class Snapshots {
     fh.entriesRef.add(entry);
   }
 
+  /// Ensure entries exist for at least [numDays] days after the current date.
+  static Future<void> ensureEntriesPast({int numDays = 14}) async {
+    DateTime dateNow = equalizeDate(DateTime.now());
+    DateTime dateThen = dateNow.add(const Duration(days: 14));
+
+    // Obtain the date of the latest set of entries
+    var allEntries = await getEntryQuery();
+    allEntries.sort(
+      (a, b) {
+        return a.data().date.compareTo(b.data().date);
+      });
+    DateTime latestDate = equalizeTime(allEntries.last.data().date).toDate();
+
+    // Ensure entries exist starting from that date up until dateNow + numDays
+    int i = 1;
+    DateTime nextDate = latestDate.add(Duration(days: i));
+    var stations = await getStationQuery();
+    while(!nextDate.isAfter(dateThen)){
+      addEntriesFor(stations, Timestamp.fromDate(nextDate));
+      i++;
+      nextDate = latestDate.add(Duration(days: i));
+    }
+  }
+
   /// Ensures that entries exist for [date] for each station by adding them if they don't exist.
   static void ensureEntries(DateTime date) async {
     // Remove milliseconds
@@ -295,6 +325,24 @@ class Snapshots {
         }
       }
     });
+  }
+
+  /// Adds a new entry for each station in [stations], all with Timestamp [stamp].
+  static Future<void> addEntriesFor(List<QueryDocumentSnapshot<Station>> stations, Timestamp stamp) async {
+    await runTransaction(
+      (transaction) async {
+        for(var station in stations){
+          Entry newEntry = Entry(
+          assignedUser: null,
+            date: stamp,
+            note: '',
+            stationID: station.reference,
+          );
+          DocumentReference<Entry> newDocRef = fh.entriesRef.doc();
+          transaction.set(newDocRef, newEntry);
+        }
+      }
+    );
   }
 
   /// Returns the results of querying the database for all entries on [date].
