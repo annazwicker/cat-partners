@@ -38,7 +38,9 @@ The home page is the default page users will be directed to upon logging in.  As
 A demo video of the home page can be found [here](https://drive.google.com/file/d/1Vrchu2FBnlDcOtnVIyn3liiXb1Lvodsm/view?usp=sharing).
 
 ### About Page
-The about page provides an overview of the website and a user's manual at the bottom of the page.  At the top, users can see a brief overview explaining what CPSU is, a link to the CPSU page on the official SU website, the creators and contributers to the website, and a small photo gallery of the cats.  The user's manual at the bottom of the page contains a set of nested tabs, with a tab for each page in the website.  Each tab contains information for that page, specifically defining the features available and how to make use of those features.  A demo video of the about page can be found [here](https://drive.google.com/file/d/1NEbtWCFAfSJkU7IY6m7DZAmby0SNmmLn/view?usp=sharing).
+The about page provides an overview of the website and a user's manual at the bottom of the page.  At the top, users can see a brief overview explaining what CPSU is, a link to the CPSU page on the official SU website, the creators and contributers to the website, and a small photo gallery of the cats.  The user's manual at the bottom of the page contains a set of nested tabs, with a tab for each page in the website.  Each tab contains information for that page, specifically defining the features available and how to make use of those features.  
+
+A demo video of the about page can be found [here](https://drive.google.com/file/d/1NEbtWCFAfSJkU7IY6m7DZAmby0SNmmLn/view?usp=sharing).
 
 ### Admin Page
 The admin page is specifically for users who have admin permissions.  It allows for the website to be flexible to any changes that the campus cats/feeding stations may undergo, as well as other capabilities admin users might need.  Below is a list of all of those features:
@@ -66,7 +68,7 @@ A demo video of the sign up to feed page can be found [here](https://drive.googl
 ### Account Page
 The account page stores basic information about every user including first and last name, email, phone number, affiliation with SU, and rescue group affiliation.  This information is collected in case admin users need to reach a user regarding CPSU.  All information on this page is able to be changed by the user, but if the user changes their email, their login will also change since user accounts are tied to gmail accounts.  When the user clicks the save button at the bottom of the list of information, a pop up box will provide a warning that changing the email field will change will result in their login changing.  User's are also able to sign out of the website by clicking the sign out button at the bottom of the page.
 
-A screenshot of the account page can be found [here]().
+A screenshot of the account page can be found [here](https://drive.google.com/file/d/1H_mTCkjJ2S8qaDd7g_gTVacoel3pGrGq/view?usp=sharing).
 
 
 
