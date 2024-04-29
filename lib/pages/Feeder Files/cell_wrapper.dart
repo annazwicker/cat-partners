@@ -19,7 +19,7 @@ class CellWrapper extends StatefulWidget{
   final FeederController controller;
 
   @override
-  State<CellWrapper> createState() => CellWrapperState();
+  State<CellWrapper> createState() => _CellWrapperState();
 }
 
 enum CellSelectStatus {
@@ -31,7 +31,7 @@ enum CellSelectStatus {
   const CellSelectStatus({required this.color});
   }
 
-class CellWrapperState extends State<CellWrapper> {
+class _CellWrapperState extends State<CellWrapper> {
   
   DocumentSnapshot<UserDoc>? assignedUser;
   // CellWrapperState({this.data});
@@ -40,24 +40,11 @@ class CellWrapperState extends State<CellWrapper> {
   /// Inactive: cell is not being selected
   /// Adding: Cell is empty, and being selected for assignment by user.
   /// Viewing: Cell's information is being viewed by user.
-  CellSelectStatus selection = CellSelectStatus.inactive;
-  ValueNotifier? cellController;
+  ValueNotifier<CellSelectStatus> cellController = ValueNotifier(CellSelectStatus.inactive);
 
   @override
   void initState() {
-    widget.controller.addListener(() { 
-      if(widget.controller.currentState != PageState.select &&
-          selection == CellSelectStatus.adding){
-        setState(() {selection = CellSelectStatus.inactive;});
-      }
-      if(widget.controller.currentState != PageState.view &&
-          selection == CellSelectStatus.viewing){
-        setState(() {selection = CellSelectStatus.inactive;});
-      }
-      if(widget.controller.currentState == PageState.empty && selection != CellSelectStatus.inactive){
-        setState(() {selection = CellSelectStatus.inactive;});
-      }
-    });
+    cellController.addListener(() { setState(() {}); });
     super.initState();
   }
 
@@ -91,7 +78,7 @@ class CellWrapperState extends State<CellWrapper> {
         
         return GestureDetector(
           onTap: doOnTap,
-          child: commonCellWrapping(cellText, color: selection.color)
+          child: commonCellWrapping(cellText, color: cellController.value.color)
         );
       }
     ); 
@@ -101,49 +88,21 @@ class CellWrapperState extends State<CellWrapper> {
     return assignedUser != null; 
     }
 
-  /// Un-views or un-selects this cell, removing its highlight.
-  void unSelect() {
-    if(selection != CellSelectStatus.inactive){
-      setState(() {
-        selection = CellSelectStatus.inactive;
-      });
-      widget.controller.toEmptyState();
-    }
-  }
-
   void doOnTap() {
-    if(widget.controller.currentState != PageState.view) {
-      // Enter selection mode for unassigned entries
-      if (!hasUser()){
-        widget.controller.toSelectState();
-        setState(() {
-          if(widget.controller.toggleSelection(widget.data)){
-            selection = CellSelectStatus.adding;
-          } else {
-            selection = CellSelectStatus.inactive;
-          }
-        });
-      }
-      // Enter view for assigned entries
-      else {
-        setState(() {
-            // if(cellController != null) { cellController!.dispose(); }
-            cellController = ValueNotifier(CellSelectStatus.viewing);
-            cellController!.addListener(unSelect);
-            widget.controller.currentCellNotifier = cellController!;
-            selection = CellSelectStatus.viewing;
-          }
-        );
-        widget.controller.toViewState(widget.data, assignedUser);
-      }
+    if (!hasUser()){ 
+      // Empty entry
+      // Toggle selection mode when empty entry is clicked
+      widget.controller.toSelectState();
+      widget.controller.toggleSelection(widget.data, cellController);
+    } else if (cellController.value == CellSelectStatus.viewing) {
+      // Currently viewed entry
+      // Exit view mode
+      widget.controller.toEmptyState();
     } else {
-      // This is the viewed cell
-      if(selection == CellSelectStatus.viewing){
-        // Deselect
-        unSelect();
-      }
-    }
-    
+      // Not currently viewed entry
+      // Enter view mode
+      widget.controller.toViewState(widget.data, assignedUser, cellController);
+    }    
   }
 
 }
