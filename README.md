@@ -21,8 +21,21 @@ Our project made use of the following software:
 - Firestore for storing information in a NoSQL document-based database.
 - GitHub for version control.
 - Figma to create initial designs for our website.
-## Features and pages on the website
-### Google Sign-in 
+## Features and Pages on the Website
+### Signing Into the Website
+Users must sign in with a Google Account, though this does not have to be an SU gmail account.  Clicking on the sign-in button initiates Firebase Authorization and awaits for Google sign-in.  After the sign-in information is authorized, the user will be redirected to the home page.
+### Home Page
+The home page is the default page users will be directed to upon logging in.  As of May 2024, this page contains three main features:
+- A notification box displaying the stations for the current day and following day that don't have anyone signed up to feed.
+- A box displaying the total number of times the user has signed up to feed the cats.  We hope that this box will give users a sense of accomplishment and will encourage them to continue to volunteer.
+- A calendar that displays the next two weeks of entries the user has signed up for.
+A demo video of the home page can be found [here](https://drive.google.com/file/d/1Vrchu2FBnlDcOtnVIyn3liiXb1Lvodsm/view?usp=drive_link)
+### About Page
+The about page provides an overview of the website and a user's manual at the bottom of the page.  At the top, users can see a brief overview explaining what CPSU is, the creators and contributers to the website, and a small photo gallery of the cats.
+### Admin Page
+### Sign Up to Feed Page
+### Account Page
+
 
 
 
