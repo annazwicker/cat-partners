@@ -247,29 +247,6 @@ class FirebaseHelper {
     return cat.delete();
   }
 
-  /**
-   * adds station to Station collection given a map of the station's characteristics
-   */
-  Future addStation(Map<String, dynamic> stationMap) async {
-    Station station = Station(
-      description: stationMap['description'],
-      fullName: stationMap['fullName'],
-      name: stationMap['name'],
-      photo: stationMap['photo'],
-      dateCreated: stationMap['dateCreated'],
-    );
-
-    return _stationsRef.add(station);
-  }
-
-  /**
-   * deletes station from Station collection given a doc reference to that station
-   */
-  Future deleteStation(String stationToDelete) async {
-    DocumentReference station = _stationsRef.doc(stationToDelete);
-    return station.delete();
-  }
-
 /**
  * given a search string, returns search results for all user's names and emails for a match
  */

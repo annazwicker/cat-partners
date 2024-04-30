@@ -365,5 +365,25 @@ class Snapshots {
         isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
   }
 
+  // Modifying stations
+
+  /// adds station to Station collection given a map of the station's characteristics
+  static Future addStation(Station station) async {
+    // TODO add entries for new station
+    return fh.stationsRef.add(station);
+  }
+
+  
+  /// deletes station from Station collection given a doc reference to that station
+  static Future deleteStation(String stationToDelete) async {
+    // TODO remove future entries for new station
+    return runTransaction(
+      (transaction) async {
+        DocumentReference stationRef = fh.stationsRef.doc(stationToDelete);
+        // Deletion is done by setting the 'date deleted' param
+        transaction.update(stationRef, {Station.dateDeletedString: Timestamp.now()});
+      });
+  }
+
 }
 

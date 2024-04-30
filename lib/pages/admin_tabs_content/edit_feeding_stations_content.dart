@@ -2,16 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/snapshots.dart';
+import '../../models/station.dart';
 import '../../services/firebase_helper.dart';
 
 class EditFeedingStationsContent extends StatefulWidget {
   final Color textColor;
 
-  const EditFeedingStationsContent({Key? key, required this.textColor})
-      : super(key: key);
+  const EditFeedingStationsContent({super.key, required this.textColor});
 
   @override
-  _EditFeedingStationsContentState createState() =>
+  State<EditFeedingStationsContent> createState() =>
       _EditFeedingStationsContentState();
 }
 
@@ -79,7 +79,7 @@ class _EditFeedingStationsContentState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
+                const Text(
                   'Add Feeding Station',
                   style: TextStyle(
                     fontSize: 20,
@@ -91,7 +91,7 @@ class _EditFeedingStationsContentState
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Name:',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
@@ -99,7 +99,7 @@ class _EditFeedingStationsContentState
                     const SizedBox(height: 10),
                     TextField(
                       controller: nameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -148,14 +148,13 @@ class _EditFeedingStationsContentState
                                   print('Name: $name');
                                   nameController.clear();
                                   //create map for feeding station
-                                  Map<String, dynamic> stationMap = {
-                                    'description': 'placeholder',
-                                    'fullName': name,
-                                    'name': name,
-                                    'photo': "photo placeholder",
-                                    'dateCreated': Timestamp.fromDate(Snapshots.equalizeDate(DateTime.now())) 
-                                  };
-                                  _dbHelper.addStation(stationMap);
+                                  Station station = Station(
+                                    description: 'placeholder', 
+                                    fullName: name, 
+                                    name: name, 
+                                    photo: 'photo placeholder', 
+                                    dateCreated: Timestamp.now());
+                                  Snapshots.addStation(station);
                                 } else {
                                   // Add failure dialog
                                   showDialog(
@@ -233,7 +232,7 @@ class _EditFeedingStationsContentState
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
+                      const Text(
                         'Delete Feeding Station',
                         style: TextStyle(
                           fontSize: 20,
@@ -276,7 +275,7 @@ class _EditFeedingStationsContentState
                                     TextButton(
                                       onPressed: () {
                                         print("line275");
-                                        _dbHelper.deleteStation(
+                                        Snapshots.deleteStation(
                                             stationMap[selectedFeedingStation]);
                                         Navigator.of(context).pop();
                                         // Check if the name and feeding station are not empty
@@ -287,7 +286,7 @@ class _EditFeedingStationsContentState
                                             builder: (context) {
                                               return AlertDialog(
                                                 title: const Text('Success'),
-                                                content: Text(
+                                                content: const Text(
                                                     'Feeding station deleted successfully!'),
                                                 actions: [
                                                   TextButton(
@@ -300,10 +299,6 @@ class _EditFeedingStationsContentState
                                               );
                                             },
                                           );
-                                          var catStation = '';
-
-                                          // _dbHelper.deleteStation(stationMap[catStation]);
-
                                           print(
                                               'Selected Feeding Station: $selectedFeedingStation');
                                           setState(() {
@@ -316,7 +311,7 @@ class _EditFeedingStationsContentState
                                             builder: (context) {
                                               return AlertDialog(
                                                 title: const Text('Error'),
-                                                content: Text(
+                                                content: const Text(
                                                     'Please select a feeding station.'),
                                                 actions: [
                                                   TextButton(
