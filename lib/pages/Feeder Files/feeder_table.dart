@@ -100,49 +100,44 @@ class _FeederTableState extends State<FeederTable> {
   List<TableRow> buildAllRows(Map<Timestamp, List<QueryDocumentSnapshot<Entry>>> groupedEntries) {
     List<TableRow> rows = [];
     groupedEntries.forEach((stamp, snapshots) { 
-      DateTime date = stamp.toDate();
-      // Ensure data for this row is valid (iterate through stations)
-      bool rowIsValid = true;
-      if(snapshots.length == stations.length) {
-        // There must exist an entry for each station
-        for (QueryDocumentSnapshot<Station> station in stations) {
-          // Find entries with this stationID
-          if(!snapshots.any((element) => element.data().stationID.id == station.id)){
-            // print('couldn\'t find an entry for station ${station.id} on date ${formatDashes.format(date)}');
-            rowIsValid = false;
-            break;
-          }
-        }
-      } else 
-      { 
-        // print('Unexpected number of entries for date ${formatDashes.format(date)}.'
-        // ' Expected ${stations.length}, got ${snapshots.length}');
-        rowIsValid = false; 
-      }
-
-      if(rowIsValid) {
-        rows.add(buildRow(stamp, snapshots));
-      } 
-      else { // debug
-        print('Row invalid: $date');
-      }
-
+      rows.add(buildRow(stamp, snapshots));
     });
-    // TODO sort rows...
     return rows; // TODO
   }
   
   TableRow buildRow(Timestamp date, List<QueryDocumentSnapshot<Entry>> data){
     List<TableCell> cells = [];
-    // Add date first
+
+    // 'Indexes' entries by stationID
+    var dataMap = groupBy(data, (p0) => p0.data().stationID.id);
+
+    // Add date cell first
     String formattedDate = formatAbbr.format(date.toDate());
     cells.add(buildCell(commonCellWrapping(formattedDate)));
-    for (int i = 0; i < data.length; i++) {
-      // CellWrapper holds all cell data
-      cells.add(buildCell(CellWrapper(
-        data: data[i], 
-        controller: widget.controller,
-      )));
+    
+    // Add cells for each station
+    for (var station in stations) {
+      // Entry exists for this station
+      if(dataMap.containsKey(station.id)){ 
+        // CellWrapper holds all cell data
+        cells.add(buildCell(CellWrapper(
+          data: dataMap[station.id]![0], 
+          controller: widget.controller,
+        )));
+      } 
+      // Entry does not exist for this station
+      else {
+        // Display null cell
+        cells.add(buildCell(
+          Container(
+            alignment: Alignment.center,
+            color: Colors.black,
+            padding: const EdgeInsets.all(8.0),
+            child: const Text('N/A', 
+              style: TextStyle(color: Colors.white),)
+          )
+        ));
+      }
     }
     return TableRow(
       children: cells
