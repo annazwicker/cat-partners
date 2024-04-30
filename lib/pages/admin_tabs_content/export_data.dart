@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../components/snapshots.dart';
+
 class ExportDataContent extends StatefulWidget {
   final Color textColor;
 
@@ -10,15 +12,15 @@ class ExportDataContent extends StatefulWidget {
 }
 
 class _ExportDataContentState extends State<ExportDataContent> {
-  String? selectedYear;
+  int? selectedYear;
 
-  Widget _buildDropdownField(
+  Widget buildDropdownField(
   String title,
-  List<String> options,
-  Function(String?) onChanged,
+  List<(int, String)> options,
+  void Function(int?) onChanged,
 ) {
-  // Sort the options alphabetically
-  options.sort();
+  // Sorting the options by the number year
+  options.sort((a, b) { return a.$1.compareTo(b.$1); });
 
   return Padding(
     padding: const EdgeInsets.only(left: 8.0, top: 20.0, bottom: 20.0),
@@ -29,19 +31,19 @@ class _ExportDataContentState extends State<ExportDataContent> {
           title,
           style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
-        DropdownButtonFormField<String>(
-          items: options.map((String option) {
-            return DropdownMenuItem<String>(
-              value: option,
+        DropdownButtonFormField<int>(
+          items: options.map(((int, String) option) {
+            return DropdownMenuItem<int>(
+              value: option.$1, // Return starting year
               child: Text(
-                option,
+                option.$2, // Display string
                 style: const TextStyle(color: Colors.black),
               ),
             );
           }).toList(),
           onChanged: onChanged,
           validator: (value) {
-            if (value == null || value.isEmpty) {
+            if (value == null) {
               return 'Please select an option';
             }
             return null;
@@ -69,7 +71,7 @@ class _ExportDataContentState extends State<ExportDataContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
+                const Text(
                   'Export Data as a CSV file',
                   style: TextStyle(
                     fontSize: 20,
@@ -80,14 +82,14 @@ class _ExportDataContentState extends State<ExportDataContent> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // NOTE: Kelly wants the data from July 1 - June 30
-                    _buildDropdownField(
-                    'Select Academic Year',
-                    ['2020-2021', '2021-2022', '2022-2023', '2023-2024'],
-                      (String? value) {
-                        setState(() {
-                      selectedYear = value;
-                    });
+                    // Tuples used to couple starting year with display
+                    buildDropdownField(
+                    'Select Academic Year (Starting July 1st).',
+                    [(2020, '2020-2021'), (2021, '2021-2022'), (2022, '2022-2023'), (2023, '2023-2024')],
+                    (int? value) {
+                      setState(() {
+                        selectedYear = value;
+                      });
                     },
                 ),
                   ],
@@ -96,10 +98,18 @@ class _ExportDataContentState extends State<ExportDataContent> {
                 ElevatedButton(
                   onPressed: () {
                     print('Selected Year: $selectedYear');
+                    if(selectedYear == null){
+                      // TODO show user some error message before returning
+                      print('Please select a year');
+                      return;
+                    }
+                    // TODO show user download process; tell them when DL is done
+                    // TODO show user error if something goes wrong
+                    var (startDate, endDate) = Snapshots.academicYear(selectedYear!);
+                    Snapshots.saveEntryCSVTimeframe(startDate, endDate);
                     setState(() {
                       selectedYear = null;
                     });
-                    // Add functionality for exporting data
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white, backgroundColor: Colors.black, // white text
