@@ -390,7 +390,7 @@ class AchievementsBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _dbHelper.getUpcomingUserEntries(_dbHelper.getCurrentUser()),
+        stream: _dbHelper.getAllUserEntries(_dbHelper.getCurrentUser()),
         builder: (context, snapshot) {
           List entries = snapshot.data?.docs ?? [];
 

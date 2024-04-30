@@ -156,6 +156,25 @@ class FirebaseHelper {
         // .where("stationID", isEqualTo: station)
         .snapshots();
   }
+  Stream<QuerySnapshot> getAllUserEntries(DocumentReference userRef) {
+    print(userRef);
+
+    // DateTime now = DateTime.now();
+    // DateTime now = DateTime.now().add(const Duration(days: -30));
+    DateTime now = DateTime.now();
+    DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
+    print(nowNoSeconds);
+    Timestamp time = Timestamp.fromDate(nowNoSeconds);
+    print(time);
+
+    DocumentReference<Station> station = _stationsRef.doc('1');
+
+    return _entriesRef
+        .where("assignedUser", isEqualTo: userRef)
+
+        // .where("stationID", isEqualTo: station)
+        .snapshots();
+  }
 
   DocumentReference getCurrentUser() {
     return _usersRef.doc('nay@southwestern.edu');
