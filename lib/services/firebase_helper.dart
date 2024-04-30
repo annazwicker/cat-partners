@@ -85,8 +85,9 @@ class FirebaseHelper {
       String bE = b.data().name;
       int comp = aE.compareTo(bE);
       return comp;
-  }
     });
+  }
+  
   //get user's name given documentReference
   Future getUserName(DocumentReference<Object?>? docRef) async {
     DocumentSnapshot assignedUserSnapshot = await docRef!.get();
