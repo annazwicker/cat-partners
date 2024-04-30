@@ -202,127 +202,150 @@ class _EditFeedingStationsContentState
           ),
           Expanded(
             // the delete account portion
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Delete Feeding Station',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDropdownField(
-                      'Select Feeding Station',
-                      ['Admissions', 'Lord/Dorothy Lord Center', 'Mabee'],
-                      (String? value) {
-                        setState(() {
-                          selectedFeedingStation = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 9),
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context, 
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Confirm'),
-                          content: Text("Are you sure you want to delete \"${selectedFeedingStation}\" from the list of feeding stations?"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              }, 
-                              child: const Text('Cancel')
-                            ), 
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                // Check if the name and feeding station are not empty
-                                if (selectedFeedingStation != null) {
-                                  // Add success dialog
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Success'),
-                                        content: Text('Feeding station deleted successfully!'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            }, 
-                                            child: const Text('OK')
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                  var catStation = '';
-                                  switch (selectedFeedingStation) {
-                                    case 'Admissions':
-                                      catStation = 'PRw7fnDb8hAPF6YWL7NL';
-                                      break; // Don't forget to add break statements after each case to prevent fall-through.
-                                    case 'Lord/Dorothy Lord Center':
-                                      catStation = '1';
-                                      break;
-                                    case 'Mabee':
-                                      catStation = '2';
-                                      break;
-                                    default:
-                                      catStation =
-                                          ''; // You might want to handle a default case.
-                                  }
-                                  _dbHelper.deleteStation(catStation);
+            child: StreamBuilder(
+                stream: _dbHelper.getStationStream(),
+                builder: (context, snapshot) {
+                  List stationSnapshots = snapshot.data?.docs ?? [];
+                  stationSnapshots.sort((a, b) {
+                    String aDT = a.data().name;
+                    String bDT = b.data().name;
+                    int comp = aDT.compareTo(bDT);
+                    if (comp == 0) {
+                      String aS = a.id;
+                      String bS = b.id;
+                      return aS.compareTo(bS);
+                    }
+                    return comp;
+                  });
+                  //map of station docID and names
+                  Map<String, dynamic> stationMap = {};
+                  // Iterate over each document snapshot in the list
+                  stationSnapshots.forEach((doc) {
+                    // Get the document ID
+                    String docId = doc.id;
+                    // Get the name from the document data
+                    String name = doc['name'];
+                    // Add the document name-id pair to the map
+                    stationMap[name] = docId;
+                  });
+                  //drop down list: stations
+                  List<String> stationDropDown = stationMap.keys.toList();
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Delete Feeding Station',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDropdownField(
+                            'Select Feeding Station',
+                            stationDropDown,
+                            (String? value) {
+                              setState(() {
+                                selectedFeedingStation = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 9),
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Confirm'),
+                                  content: Text(
+                                      "Are you sure you want to delete \"${selectedFeedingStation}\" from the list of feeding stations?"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          //confirm press?
+                                          print("line267");
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Cancel')),
+                                    TextButton(
+                                      onPressed: () {
+                                        print("line275");
+                                        _dbHelper.deleteStation(
+                                            stationMap[selectedFeedingStation]);
+                                        Navigator.of(context).pop();
+                                        // Check if the name and feeding station are not empty
+                                        if (selectedFeedingStation != null) {
+                                          // Add success dialog
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text('Success'),
+                                                content: Text(
+                                                    'Feeding station deleted successfully!'),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: const Text('OK')),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                          var catStation = '';
 
-                                  print('Selected Feeding Station: $selectedFeedingStation');
-                                  setState(() {
-                                    selectedFeedingStation = null;
-                                  });
-                                } else {
-                                  // Add failure dialog
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Error'),
-                                        content: Text('Please select a feeding station.'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            }, 
-                                            child: const Text('OK')
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              }, 
-                              child: const Text('Confirm'),
-                            )
-                          ],    
-                        );
-                      }
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black, // white text
-                  ),
-                  child: const Text('Delete Feeding Station'),
-                ),
-              ],
-            ),
+                                          // _dbHelper.deleteStation(stationMap[catStation]);
+
+                                          print(
+                                              'Selected Feeding Station: $selectedFeedingStation');
+                                          setState(() {
+                                            selectedFeedingStation = null;
+                                          });
+                                        } else {
+                                          // Add failure dialog
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text('Error'),
+                                                content: Text(
+                                                    'Please select a feeding station.'),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: const Text('OK')),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      },
+                                      child: const Text('Confirm'),
+                                    )
+                                  ],
+                                );
+                              });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.black, // white text
+                        ),
+                        child: const Text('Delete Feeding Station'),
+                      ),
+                    ],
+                  );
+                }),
           ),
         ],
       ),
