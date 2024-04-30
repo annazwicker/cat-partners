@@ -260,6 +260,7 @@ class Snapshots {
 
   /// Ensure entries exist for at least [numDays] days after the current date.
   static Future<void> ensureEntriesPast({int numDays = 14}) async {
+    // TODO account for added/deleted stations
     DateTime dateNow = equalizeDate(DateTime.now());
     DateTime dateThen = dateNow.add(const Duration(days: 14));
 
@@ -276,7 +277,7 @@ class Snapshots {
     DateTime nextDate = latestDate.add(Duration(days: i));
     var stations = await getStationQuery();
     while(!nextDate.isAfter(dateThen)){
-      addEntriesFor(stations, Timestamp.fromDate(nextDate));
+      addEntriesForAll(stations, Timestamp.fromDate(nextDate));
       i++;
       nextDate = latestDate.add(Duration(days: i));
     }
@@ -328,7 +329,7 @@ class Snapshots {
   }
 
   /// Adds a new entry for each station in [stations], all with Timestamp [stamp].
-  static Future<void> addEntriesFor(List<QueryDocumentSnapshot<Station>> stations, Timestamp stamp) async {
+  static Future<void> addEntriesForAll(List<QueryDocumentSnapshot<Station>> stations, Timestamp stamp) async {
     await runTransaction(
       (transaction) async {
         for(var station in stations){
@@ -344,6 +345,8 @@ class Snapshots {
       }
     );
   }
+
+
 
   /// Returns the results of querying the database for all entries on [date].
   static Future<List<QueryDocumentSnapshot<Entry>>> getEntries(DateTime date) async {
@@ -369,8 +372,17 @@ class Snapshots {
 
   /// adds station to Station collection given a map of the station's characteristics
   static Future addStation(Station station) async {
-    // TODO add entries for new station
-    return fh.stationsRef.add(station);
+    // Add station document
+    DocumentReference<Station> newStationRef = await fh.stationsRef.add(station);
+    // Add entries for the new station for the next two weeks
+    DateTime now = equalizeDate(DateTime.now());
+    for(int i = 0; i <= 14; i++){
+      addEntry(Entry(
+        assignedUser: null, 
+        date: Timestamp.fromDate(now.add(Duration(days: i))), 
+        note: '', 
+        stationID: newStationRef));
+    }
   }
 
   
