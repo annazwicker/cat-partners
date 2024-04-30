@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/components/user_google.dart';
 
+import '../models/userdoc.dart';
 import '../services/firebase_helper.dart';
 
 void main() => runApp(const AccountScreen());
@@ -138,6 +139,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
           final TextEditingController nameController = TextEditingController(text: userInfo['name']);
           final TextEditingController phoneNumberController = TextEditingController(text: userInfo['phone']);
           final TextEditingController rescueController = TextEditingController(text: userInfo['rescue']);
+          // final TextEditingController rescueController = TextEditingController(text:'help');
           final TextEditingController emailController = TextEditingController(text: userInfo['email']);
 
 
@@ -158,7 +160,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         _buildTextField('Email', 'email@gmail.com', (value) {
                           _email = 'email@gmail.com';
                         }, emailController),
-                        _buildTextField(
+                        _buildOptionalTextField(
                             'Phone Number', 'Enter your phone number', (value) {
                           _phoneNumber = value;
                         }, phoneNumberController),
@@ -172,7 +174,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         ], (value) {
                           _affiliation = value;
                         }, userInfo['affiliation']!),
-                        _buildTextField('Rescue Group Affiliation',
+                        _buildOptionalTextField('Rescue Group Affiliation',
                             'Enter your rescue group affiliation', (value) {
                           _rescuegroupaffiliation = value;
                         }, rescueController),
@@ -200,7 +202,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
 
                                 //create map
                                 _dbHelper.changeProfileFields(
-                                    '5SLi4nS54TigU4XtHzAp', formData);
+                                    userToken, formData);
                               }
                             },
                             child: const Text('Submit'),
@@ -266,7 +268,33 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       ],
     );
   }
+
+
+    Widget _buildOptionalTextField(
+      String title, String hintText, Function(String?) onChanged, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: controller,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            hintText: hintText,
+          ),
+          maxLines: null,
+        ),
+        const SizedBox(height: 15), // Add some spacing between fields
+      ],
+    );
+  }
 }
+
+
+
 
 //TextEditingController controller
 Widget _buildDropdownField(

@@ -201,7 +201,7 @@ class FirebaseHelper {
     }
     //change phone number
     if (accountForm['phone'] != null) {
-      updateForm['phone'] = accountForm['phone'];
+      updateForm['phoneNumber'] = accountForm['phone'];
     }
     //change affiliation
     if (accountForm['affiliation'] != null) {
@@ -209,7 +209,7 @@ class FirebaseHelper {
     }
     //change rescue group
     if (accountForm['rescueGroup'] != null) {
-      updateForm['rescueGroup'] = accountForm['rescueGroup'];
+      updateForm['rescueGroupAffiliaton'] = accountForm['rescueGroup'];
     }
 
     //perform update
