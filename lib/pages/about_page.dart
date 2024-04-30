@@ -48,6 +48,7 @@ class AboutScreen extends StatelessWidget {
         )));
   }
 
+  /// Returns a widget that contains text and images that is meant to introduce users to the website
   Widget _buildIntro(BuildContext context) {
     // checks the size of the window
     double screenWidth = MediaQuery.of(context).size.width;
@@ -154,6 +155,7 @@ class AboutScreen extends StatelessWidget {
     );
   }
 
+  /// Returns a horizontally scrollable Widget of cat images when window size is large
   Widget _horizontalCatPics(double currentWidth) {
     return SizedBox(
       ////////////////////////// to have all cat pictures
@@ -213,7 +215,7 @@ class AboutScreen extends StatelessWidget {
       )
     );
   }
-
+  /// Returns a vertically scrollable Widget of cat images when window size is small
   Widget _verticalCatPics(double currentHeight) {
     return SizedBox(
       ////////////////////////// to have all cat pictures

@@ -89,7 +89,10 @@ class AccountInfoFormState extends State<AccountInfoForm> {
             pfpBox(containerWidth)
           ],
         ),
-        signOutButton()
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0,0,0,30),
+          child: signOutButton(),
+        )
       ],
     );
   }
@@ -100,7 +103,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         accountInfo(screenWidth),
         pfpBox(screenWidth),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0,0,0,20),
+          padding: const EdgeInsets.fromLTRB(0,0,0,30),
           child: signOutButton(),
         )
       ],
@@ -133,20 +136,11 @@ class AccountInfoFormState extends State<AccountInfoForm> {
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              // text fields for users to change their information
               children: [
                 _buildTextField('Name', 'Enter your name', (value) {
                   _name = value;
                 }),
-                // TextFormField(
-                //   initialValue: 'value',
-                //   readOnly: true,
-                //   decoration: InputDecoration(
-                //     labelText: 'Email',
-                //     hintText: 'hintText',
-                //     labelStyle: TextStyle(fontWeight: FontWeight.bold), // Bold label
-                //   ),
-                // ),
-
                 _buildTextField('Email', 'email@gmail.com', (value) {
                   _email = 'email@gmail.com';
                   
@@ -169,17 +163,16 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                           const SnackBar(content: Text('Processing Data')),
                         );
                         // Process the collected data (you can send it to a server or save it in a database
-                        Map<String, dynamic> formData = {
-                          'name': _name?.trim(),
-                          'email': _email?.trim(),
-                          'phone' : _phoneNumber?.trim(),
-                          'affiliation': _affiliation?.trim(),
-                          'rescueGroup': _rescuegroupaffiliation?.trim(),
-                          };
-
-                        //print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_affiliation, Rescue Group Affiliation: $_rescuegroupaffiliation');
+                        // Map<String, dynamic> formData = {
+                        //   'name': _name?.trim(),
+                        //   'email': _email?.trim(),
+                        //   'phone' : _phoneNumber?.trim(),
+                        //   'affiliation': _affiliation?.trim(),
+                        //   'rescueGroup': _rescuegroupaffiliation?.trim(),
+                        //   };
                         //create map 
                         //_dbHelper.changeProfileFields('5SLi4nS54TigU4XtHzAp', formData);
+                        // checks if email has changed, thus requiring a change in the database to account for it(new email gets new FirebaseID)
                         if(_email != UserGoogle.getUser().email){
                           UserGoogle().reLogin(_email!, _name, _phoneNumber, _affiliation, _rescuegroupaffiliation);
                         } else {
@@ -195,7 +188,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                               )
                             }
                           );
-                          UserGoogle().db.doc(docID).update({'affiliation':_affiliation, 'name': _name, 'phoneNumber':_phoneNumber, 'rescueGroupAffiliation':_rescuegroupaffiliation});
+                          UserGoogle().db.doc(docID).update({'affiliation':_affiliation, 'name': _name, 'phoneNumber':_phoneNumber, 'rescueGroupAffiliaton':_rescuegroupaffiliation});
                         }
                       }
                     },

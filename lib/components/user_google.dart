@@ -10,7 +10,7 @@ class UserGoogle {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore db = FirebaseFirestore.instance;
   static User? user;
-
+  /// Returns a user that was logged in through Google and authorized by Firebase. This user is also present in the Firestore database
   Future<User?> loginWithGoogle({reLogin = false, path}) async{
     final googleAccount = await GoogleSignIn().signIn(); // asks for sign in
 
@@ -32,9 +32,7 @@ class UserGoogle {
         String userNumber = user!.phoneNumber.toString();
 
         if(reLogin == true){
-          print("1");
           await db.doc(path).update({'firebaseUID': userID});
-          print("2");
         } else {
           QuerySnapshot<Map<String,dynamic>> data = await db.collection('accountLink').get();
           final documents = data.docs.map((userdoc) => <String,dynamic> {'id': userdoc.id, 'firebaseUID': userdoc['firebaseUID'], 'userdocID': userdoc['userdocID']}).toList();
@@ -53,7 +51,7 @@ class UserGoogle {
               "isAdmin": false,
               "name": userName,
               "phoneNumber": userNumber,
-              "rescueGroupAffiliation":'N/A'
+              "rescueGroupAffiliaton":'N/A'
               
             };// add new user
 
@@ -80,7 +78,7 @@ class UserGoogle {
     return user;
   }
 
-  // meant to retrieve user data from outside this class
+  /// Returns a user instance 
   static getUser(){
     if(user != null){
       return user!;
@@ -90,7 +88,7 @@ class UserGoogle {
     
   }
 
-  // allows for signing out
+  /// Makes a user of the current Firebase instance and current logged in Google user sign out
   static Future<void> signOut({bool reLogin = false}) async{
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().disconnect();
@@ -102,28 +100,17 @@ class UserGoogle {
       );
     }
   }
-
+  /// Allows for information associated with one user to be transfer to a different email while also authorizing said new email
   Future<void> reLogin(String newEmail, String? name, String? number, String? affiliation, String? rescueGroup) async{
     // get document of user
     // get firebase ID of new user
     // change firebaseID from accountLink to new user
-    var id = auth.currentUser?.uid.toString();
-    var docID = await UserGoogle().db.collection('accountLink').where('firebaseUID', isEqualTo:  id).get(); // reference of current user
+    var id = auth.currentUser?.uid.toString(); // gets FirebaseID
+    var docID = await UserGoogle().db.collection('accountLink').where('firebaseUID', isEqualTo:  id).get(); // gets accountLink document based on FirebaseID
     var document = docID.docs.first;
-    // var catData = await db.collection('entry').where('assignUser', arrayContains: db.doc(reference)).get();
-    await signOut(reLogin:true);
-    await loginWithGoogle(reLogin:true,path: document.reference.path);
-    await db.doc(document.get('userdocID').path).update({'email': auth.currentUser!.email, 'name': name, 'phoneNumber': number, 'affiliation': affiliation, 'rescueGroupAffiliation':rescueGroup});
-
-    
-    // var newReference = db.collection('users').doc(auth.currentUser!.uid.toString());
-    // for(DocumentSnapshot doc in catData.docs){
-    //   await doc.reference.update({'assignedUser': newReference});
-    // }
-    
-    
-
-    // await db.collection('users').doc(auth.currentUser!.uid).update({'affiliation':affiliation, 'name': name, 'phoneNumber':number, 'rescueGroupAffiliation':rescueGroup});
-    //await db.collection('users').doc(oldID).delete();
+    await signOut(reLogin:true); // sign out
+    await loginWithGoogle(reLogin:true,path: document.reference.path); // log in with new email
+    // using reference from accountLink document, change user document
+    await db.doc(document.get('userdocID').path).update({'email': auth.currentUser!.email, 'name': name, 'phoneNumber': number, 'affiliation': affiliation, 'rescueGroupAffiliaton':rescueGroup});
   }
 }
