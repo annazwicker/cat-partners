@@ -183,7 +183,6 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         if(_email != UserGoogle.getUser().email){
                           UserGoogle().reLogin(_email!, _name, _phoneNumber, _affiliation, _rescuegroupaffiliation);
                         } else {
-
                           var id = UserGoogle().auth.currentUser?.uid.toString();
                           var docID;
                           await UserGoogle().db.collection('accountLink').get().then(

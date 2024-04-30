@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/components/login_page.dart';
@@ -9,7 +11,7 @@ class UserGoogle {
   FirebaseFirestore db = FirebaseFirestore.instance;
   static User? user;
 
-  Future<User?> loginWithGoogle() async{
+  Future<User?> loginWithGoogle({reLogin = false, path}) async{
     final googleAccount = await GoogleSignIn().signIn(); // asks for sign in
 
     // the rest will attempt to authenticate and retrieve values
@@ -29,20 +31,43 @@ class UserGoogle {
         String userEmail = user!.email.toString();
         String userNumber = user!.phoneNumber.toString();
 
-        var data = await db.collection('users').doc(userID).get();
-        // if user doesnt exist, make new user doc(docid not based on anything), then create accountLink doc with reference to user doc
-        if(!data.exists){
-          final userInstance = <String, dynamic>{
-            "affiliation":'Friend of Cats',
-            "email": userEmail,
-            "isAdmin": false,
-            "name": userName,
-            "phoneNumber": userNumber,
-            "rescueGroupAffiliaton":'N/A'
-            
-          };// add new user
+        if(reLogin == true){
+          print("1");
+          await db.doc(path).update({'firebaseUID': userID});
+          print("2");
+        } else {
+          QuerySnapshot<Map<String,dynamic>> data = await db.collection('accountLink').get();
+          final documents = data.docs.map((userdoc) => <String,dynamic> {'id': userdoc.id, 'firebaseUID': userdoc['firebaseUID'], 'userdocID': userdoc['userdocID']}).toList();
+          bool foundDoc = false;
+          for(int i = 0; i < documents.length; i++){
+            if(documents[i]['firebaseUID'] == userID){
+              foundDoc = true;
+              break;
+            }
+          }
+          // if user doesnt exist, make new user doc(docid not based on anything), then create accountLink doc with reference to user doc
+          if(!foundDoc){
+            final userInstance = <String, dynamic>{
+              "affiliation":'Friend of Cats',
+              "email": userEmail,
+              "isAdmin": false,
+              "name": userName,
+              "phoneNumber": userNumber,
+              "rescueGroupAffiliation":'N/A'
+              
+            };// add new user
 
-          await db.collection('users').doc(userID).set(userInstance);
+            await db.collection('users').add(userInstance).then(
+              (DocumentReference doc) async {
+                final accountInstance = <String, dynamic>{
+                  "firebaseUID": userID,
+                  "userdocID": doc
+                };
+
+                await db.collection('accountLink').add(accountInstance);
+              }
+            );
+          }
         } 
 
       } on FirebaseAuthException catch (e) {
@@ -82,20 +107,23 @@ class UserGoogle {
     // get document of user
     // get firebase ID of new user
     // change firebaseID from accountLink to new user
-    var oldID = auth.currentUser!.uid.toString();
-    var reference = "users/$oldID"; // reference of current user
+    var id = auth.currentUser?.uid.toString();
+    var docID = await UserGoogle().db.collection('accountLink').where('firebaseUID', isEqualTo:  id).get(); // reference of current user
+    var document = docID.docs.first;
     // var catData = await db.collection('entry').where('assignUser', arrayContains: db.doc(reference)).get();
-    
-    signOut(reLogin:true);
-    loginWithGoogle();
+    await signOut(reLogin:true);
+    await loginWithGoogle(reLogin:true,path: document.reference.path);
+    await db.doc(document.get('userdocID').path).update({'email': auth.currentUser!.email, 'name': name, 'phoneNumber': number, 'affiliation': affiliation, 'rescueGroupAffiliation':rescueGroup});
 
     
     // var newReference = db.collection('users').doc(auth.currentUser!.uid.toString());
     // for(DocumentSnapshot doc in catData.docs){
     //   await doc.reference.update({'assignedUser': newReference});
     // }
+    
+    
 
-    await db.collection('users').doc(auth.currentUser!.uid).update({'affiliation':affiliation, 'name': name, 'phoneNumber':number, 'rescueGroupAffiliation':rescueGroup});
+    // await db.collection('users').doc(auth.currentUser!.uid).update({'affiliation':affiliation, 'name': name, 'phoneNumber':number, 'rescueGroupAffiliation':rescueGroup});
     //await db.collection('users').doc(oldID).delete();
   }
 }
