@@ -16,40 +16,38 @@ class _NotificationBoxState extends State<NotificationBox> {
   Widget build(BuildContext context) {
     return Column(children: [
       if (_isWindowOpen)
-        IntrinsicHeight(
-          child: Container(
-            margin: const EdgeInsets.all(5),
-            color: SUYellow,
-            width: MediaQuery.of(context).size.width * 0.45,
-            // height: MediaQuery.of(context).size.height * 0.08,
-            constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height * 0.05),
-            child: Column(children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isWindowOpen = false;
-                      });
-                    },
-                    icon: const Icon(Icons.close)),
+        Container(
+          margin: const EdgeInsets.all(5),
+          color: SUYellow,
+          width: MediaQuery.of(context).size.width * 0.45,
+          height: MediaQuery.of(context).size.height * 0.3,
+          constraints: BoxConstraints(
+              minWidth: 300, minHeight: 250),
+          child: Column(children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isWindowOpen = false;
+                    });
+                  },
+                  icon: const Icon(Icons.close)),
+            ),
+            Expanded(
+              child: Center(
+                child: Container(
+                    padding: const EdgeInsets.only(
+                        top: 20, bottom: 45, left: 20, right: 20),
+                    child: Builder(builder: (context) {
+                      return Text(widget.message,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ));
+                    })),
               ),
-              Expanded(
-                child: Center(
-                  child: Container(
-                      padding: const EdgeInsets.only(
-                          top: 20, bottom: 45, left: 20, right: 20),
-                      child: Builder(builder: (context) {
-                        return Text(widget.message,
-                            style: TextStyle(
-                              fontSize: 16,
-                            ));
-                      })),
-                ),
-              )
-            ]),
-          ),
+            )
+          ]),
         ),
     ]);
   }
