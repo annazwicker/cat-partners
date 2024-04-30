@@ -238,6 +238,7 @@ class FirebaseHelper {
       fullName: stationMap['fullName'],
       name: stationMap['name'],
       photo: stationMap['photo'],
+      dateCreated: stationMap['dateCreated'],
     );
 
     return _stationsRef.add(station);

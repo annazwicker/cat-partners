@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/snapshots.dart';
 import '../../services/firebase_helper.dart';
 
 class EditFeedingStationsContent extends StatefulWidget {
@@ -151,6 +153,7 @@ class _EditFeedingStationsContentState
                                     'fullName': name,
                                     'name': name,
                                     'photo': "photo placeholder",
+                                    'dateCreated': Timestamp.fromDate(Snapshots.equalizeDate(DateTime.now())) 
                                   };
                                   _dbHelper.addStation(stationMap);
                                 } else {
