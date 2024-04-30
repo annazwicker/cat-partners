@@ -350,14 +350,14 @@ class NotificationWidget extends StatelessWidget {
               notificationMessage +=
                   "Today's ${todayEntries.join(', ')} entries are empty\n";
             } else {
-              "There are no empty entries today!";
+              notificationMessage +="There are no empty entries today!\n";
             }
 
             if (tmrwEntries.isNotEmpty) {
               notificationMessage +=
                   "Tomorrow's ${tmrwEntries.join(', ')} entries are empty";
               print(notificationMessage);
-              // print("line331");
+              print("line360");
             } else {
               notificationMessage += "There are no empty entries tomorrow!";
             }

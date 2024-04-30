@@ -162,6 +162,13 @@ class FirebaseHelper {
     //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
   }
 
+
+    Stream<QuerySnapshot>  getThisUser(email) {
+
+    return _usersRef.where('email', isEqualTo: email).snapshots();
+    //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
+  }
+
   //Account Page Methods
 
   //add security that ensures phone number is valid
