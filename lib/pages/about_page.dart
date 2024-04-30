@@ -92,7 +92,7 @@ class AboutScreen extends StatelessWidget {
                       children: [
                         const TextSpan(
                           text:
-                              '    This site is the official Cat Partners Feeding website. It is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the feral cat colonies on campus. To learn more about CPSU and how to support them, please visit the ',
+                              '\tThis site is the official Cat Partners Feeding website. It is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the feral cat colonies on campus. To learn more about CPSU and how to support them, please visit the ',
                           style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Playfair Display',
