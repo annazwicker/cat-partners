@@ -61,7 +61,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _dbHelper.getUserStream(),
+        stream: _dbHelper.getThisUser('nay@southwestern.edu'),
         builder: (context, snapshot) {
           List userSnapshot = snapshot.data?.docs ?? [];
           //create map -- {email:documentID}
