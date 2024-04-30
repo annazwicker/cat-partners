@@ -16,7 +16,6 @@ void main() => runApp(const AccountScreen());
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +54,6 @@ class AccountInfoFormState extends State<AccountInfoForm> {
 
   final ScrollController _vertical = ScrollController();
 
-  
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -85,15 +82,12 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         }));
   }
 
-  Widget horizontalWidgets(double containerWidth){
+  Widget horizontalWidgets(double containerWidth) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            accountInfo(containerWidth),
-            pfpBox(containerWidth)
-          ],
+          children: [accountInfo(containerWidth), pfpBox(containerWidth)],
         ),
         signOutButton()
       ],
@@ -107,154 +101,155 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         accountInfo(screenWidth),
         pfpBox(screenWidth),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0,0,0,20),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
           child: signOutButton(),
         )
       ],
     );
   }
 
-  // No longer using to upload image. Relying on user's own pfp from Google
-  /*
-  void selectImage() async{
-    final ImagePicker imagePicker = ImagePicker();
-    Uint8List temp;
-      XFile? result = await imagePicker.pickImage(source: ImageSource.gallery);
-      if (result != null) {
-        //_pfp = File(result.path)
-        temp = await result.readAsBytes(); 
-        setState(() {
-          _pfpByte = temp;
-        });
-      }
-      
-  }
-  */
-  Widget accountInfo(double containerWidth){
-    return SizedBox(
-      width: containerWidth,
-      height: 520,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTextField('Name', 'Enter your name', (value) {
-                  _name = value;
-                }),
-                // TextFormField(
-                //   initialValue: 'value',
-                //   readOnly: true,
-                //   decoration: InputDecoration(
-                //     labelText: 'Email',
-                //     hintText: 'hintText',
-                //     labelStyle: TextStyle(fontWeight: FontWeight.bold), // Bold label
-                //   ),
-                // ),
+  Widget accountInfo(double containerWidth) {
+    String userToken = 'nay@southwestern.edu';
 
-                _buildTextField('Email', 'email@gmail.com', (value) {
-                  _email = 'email@gmail.com';
-                  
-                }),
-                _buildTextField('Phone Number', 'Enter your phone number', (value) {
-                  _phoneNumber = value;
-                }),
-                _buildDropdownField('SU Affiliation', ['Student', 'Staff', 'Faculty', 'Alumni', 'Parent of Student', 'Friend of Cats'], (value) {
-                _affiliation = value;
-                }),
-                _buildTextField('Rescue Group Affiliation', 'Enter your rescue group affiliation', (value) {
-                  _rescuegroupaffiliation = value;
-                }),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
-                        // Process the collected data (you can send it to a server or save it in a database
-                        Map<String, dynamic> formData = {
-                          'name': _name?.trim(),
-                          'email': _email?.trim(),
-                          'phone' : _phoneNumber?.trim(),
-                          'affiliation': _affiliation?.trim(),
-                          'rescueGroup': _rescuegroupaffiliation?.trim(),
-                          };
+    return StreamBuilder(
+        stream: _dbHelper.getThisUser(userToken),
+        builder: (context, snapshot) {
+          List userSnapshot = snapshot.data?.docs ?? [];
+          // Map<String, String> userMap = {};
+          Map<String, String> userInfo = {};
+          userSnapshot.forEach((doc) {
+            userInfo = {
+              'email': doc['email'],
+              'name': doc['name'],
+              'affiliation': doc['affiliation'],
+              'phone': doc['phoneNumber'],
+              'rescue': doc['rescueGroupAffiliaton']
+            };
+            // String docId = doc.id;
+            // String email = doc['email'];
+            // userMap[email] = docId;
+          });
+          print("userMap:");
+          print(userInfo);
+          //create controllers
+          final TextEditingController nameController =
+              TextEditingController(text: userInfo['name']);
+          final TextEditingController phoneNumberController =
+              TextEditingController(text: userInfo['phone']);
+          final TextEditingController rescueController =
+              TextEditingController(text: userInfo['rescue']);
+          // final TextEditingController rescueController = TextEditingController(text:'help');
+          final TextEditingController emailController =
+              TextEditingController(text: userInfo['email']);
 
-                        //print('Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_affiliation, Rescue Group Affiliation: $_rescuegroupaffiliation');
-                        //create map 
-                        //_dbHelper.changeProfileFields('5SLi4nS54TigU4XtHzAp', formData);
-                        if(_email != UserGoogle.getUser().email){
-                          UserGoogle().reLogin(_email!, _name, _phoneNumber, _affiliation, _rescuegroupaffiliation);
-                        } else {
-                          var id = UserGoogle().auth.currentUser?.uid.toString();
-                          var docID;
-                          await UserGoogle().db.collection('accountLink').get().then(
-                            (QuerySnapshot querySnapshot) => {
-                                querySnapshot.docs.forEach((doc) {
-                                  if(doc['firebaseUID'] == id){
-                                    docID = doc['firebaseUID'];
-                                  }
-                                }
-                              )
-                            }
-                          );
-                          UserGoogle().db.doc(docID).update({'affiliation':_affiliation, 'name': _name, 'phoneNumber':_phoneNumber, 'rescueGroupAffiliation':_rescuegroupaffiliation});
-                        }
-                      }
-                    },
-                    child: const Text('Save'),
+          return SizedBox(
+              width: containerWidth,
+              height: 520,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTextField('Name', 'Enter your name', (value) {
+                          _name = value;
+                        }, nameController),
+                        _buildTextField('Email', 'email@gmail.com', (value) {
+                          _email = 'email@gmail.com';
+                        }, emailController),
+                        _buildOptionalTextField(
+                            'Phone Number', 'Enter your phone number', (value) {
+                          _phoneNumber = value;
+                        }, phoneNumberController),
+                        _buildDropdownField('Affiliation', [
+                          'Student',
+                          'Staff',
+                          'Faculty',
+                          'Alumni',
+                          'Parent of Student',
+                          'Friend of Cats'
+                        ], (value) {
+                          _affiliation = value;
+                        }, userInfo['affiliation']!),
+                        _buildOptionalTextField('Rescue Group Affiliation',
+                            'Enter your rescue group affiliation', (value) {
+                          _rescuegroupaffiliation = value;
+                        }, rescueController),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 16),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Processing Data')),
+                                );
+                                // Process the collected data (you can send it to a server or save it in a database
+                                Map<String, dynamic> formData = {
+                                  'name': _name?.trim(),
+                                  'phone': _phoneNumber?.trim(),
+                                  'affiliation': _affiliation?.trim(),
+                                  'rescueGroup':
+                                      _rescuegroupaffiliation?.trim(),
+                                };
+
+                                print(
+                                    'Name: $_name, Email: $_email, Phone Number: $_phoneNumber, Status: $_affiliation, Rescue Group Affiliation: $_rescuegroupaffiliation');
+
+                                //create map
+                                _dbHelper.changeProfileFields(
+                                    userToken, formData);
+                              }
+                            },
+                            child: const Text('Submit'),
+                          ),
+                        ),
+                      ],
+                       ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      )
-    );
+              ));
+        });
   }
 
   Widget pfpBox(double containerWidth) {
     return Container(
-      alignment: Alignment.center,
-      width: containerWidth,
-      height: 520,
-      child: Column(
-        children: [
-          Builder(
-            builder: (context){
-              try{
+        alignment: Alignment.center,
+        width: containerWidth,
+        height: 520,
+        child: Column(
+          children: [
+            Builder(builder: (context) {
+              try {
                 return CircleAvatar(
-                  radius: 200,
-                  backgroundImage: NetworkImage(UserGoogle.getUser().photoURL.toString())
-                );
-              } on Exception{
+                    radius: 200,
+                    backgroundImage:
+                        NetworkImage(UserGoogle.getUser().photoURL.toString()));
+              } on Exception {
                 return const CircleAvatar(
                     radius: 200,
                     backgroundImage: AssetImage('images/defualtPFP.jpg'));
               }
-            }
-          )
-        ],
-      )
-    );
+            })
+          ],
+        ));
   }
 
-  Widget signOutButton(){
+  Widget signOutButton() {
     return ElevatedButton(
-      onPressed: () {UserGoogle.signOut();}, 
-      child: const Text('Sign Out')  
-    );
+        onPressed: () {
+          UserGoogle.signOut();
+        },
+        child: const Text('Sign Out'));
   }
 
 // This is the code that creates the name of the text field and the actual box
 // for users to submit information.
-  Widget _buildTextField(
-      String title, String hintText, Function(String?) onChanged, TextEditingController controller) {
+  Widget _buildTextField(String title, String hintText,
+      Function(String?) onChanged, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -281,9 +276,8 @@ class AccountInfoFormState extends State<AccountInfoForm> {
     );
   }
 
-
-    Widget _buildOptionalTextField(
-      String title, String hintText, Function(String?) onChanged, TextEditingController controller) {
+  Widget _buildOptionalTextField(String title, String hintText,
+      Function(String?) onChanged, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -305,12 +299,9 @@ class AccountInfoFormState extends State<AccountInfoForm> {
   }
 }
 
-
-
-
 //TextEditingController controller
-Widget _buildDropdownField(
-    String title, List<String> options, Function(String?) onChanged, String defaultValue) {
+Widget _buildDropdownField(String title, List<String> options,
+    Function(String?) onChanged, String defaultValue) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
