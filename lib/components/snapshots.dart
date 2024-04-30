@@ -207,9 +207,7 @@ class Snapshots {
         "Affiliation",  // Affiliation of user. NULL for no user.
         ]
     );
-    var entryQuery = fh.entriesRef
-      .where(Entry.dateString, isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-      .where(Entry.dateString, isLessThan: Timestamp.fromDate(endDate));
+    var entryQuery = entriesFromToQuery(startDate, endDate );
     await entryQuery.get().then( (querySnapshot) async {
       List<QueryDocumentSnapshot<Entry>> entrySnapshots = querySnapshot.docs;
       for (QueryDocumentSnapshot<Entry> entrySnapshot in entrySnapshots){
@@ -346,8 +344,6 @@ class Snapshots {
     );
   }
 
-
-
   /// Returns the results of querying the database for all entries on [date].
   static Future<List<QueryDocumentSnapshot<Entry>>> getEntries(DateTime date) async {
     ensureEntries(date);
@@ -366,6 +362,13 @@ class Snapshots {
     Timestamp nextStamp = Timestamp.fromDate(nextDate);
     return fh.entriesRef.where('date',
         isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
+  }
+
+  /// Retrieves a query that obtains all entries from [startDate] to [endDate] exclusive.
+  static Query<Entry> entriesFromToQuery(DateTime startDate, DateTime endDate){
+    return fh.entriesRef
+      .where(Entry.dateString, isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+      .where(Entry.dateString, isLessThan: Timestamp.fromDate(endDate));
   }
 
   // Modifying stations

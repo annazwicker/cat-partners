@@ -38,7 +38,7 @@ class _FeederTableState extends State<FeederTable> {
   @override
   Widget build(BuildContext context) {
     // Ensures entries exist for at least 2 weeks past current date
-    Snapshots.ensureEntriesPast();
+    // Snapshots.ensureEntriesPast();
     return FutureBuilder(
       future: Snapshots.stationQuery,
       builder: (stationContext, stationSnapshot) {
@@ -46,8 +46,14 @@ class _FeederTableState extends State<FeederTable> {
           return const CircularProgressIndicator();
         }
         stations = stationSnapshot.data!;
+        
+        // Limit entries shown to range of dates
+        DateTime now = Snapshots.equalizeDate(DateTime.now());
+        var entryRangeQuery = Snapshots.entriesFromToQuery(
+          now.subtract(const Duration(days: 7)),  // Start one week prior to current date
+          now.add(const Duration(days: 14))); // End two weeks past current date
         return StreamBuilder(
-          stream: Snapshots.entryStream,
+          stream: entryRangeQuery.snapshots(),
           builder: (context, snapshot) {
             List<QueryDocumentSnapshot<Entry>> allEntries = snapshot.data?.docs ?? [];
         
@@ -90,11 +96,17 @@ class _FeederTableState extends State<FeederTable> {
         for (QueryDocumentSnapshot<Station> station in stations) {
           // Find entries with this stationID
           if(!snapshots.any((element) => element.data().stationID.id == station.id)){
+            // print('couldn\'t find an entry for station ${station.id} on date ${formatDashes.format(date)}');
             rowIsValid = false;
             break;
           }
         }
-      } else { rowIsValid = false; }
+      } else 
+      { 
+        // print('Unexpected number of entries for date ${formatDashes.format(date)}.'
+        // ' Expected ${stations.length}, got ${snapshots.length}');
+        rowIsValid = false; 
+      }
 
       if(rowIsValid) {
         rows.add(buildRow(stamp, snapshots));
