@@ -111,20 +111,21 @@ class _EditCatsContentState extends State<EditCatsContent> {
         stream: _dbHelper.getCatStream(), //get station stream
         builder: (context, catSnapshot) {
           return StreamBuilder(
+              // gets list of all stations
               stream: _dbHelper.getStationStream(),
               builder: (context, stationSnapshot) {
                 List stationSnapshots = stationSnapshot.data?.docs ?? [];
-                stationSnapshots.sort((a, b) {
-                  String aDT = a.data().name;
-                  String bDT = b.data().name;
-                  int comp = aDT.compareTo(bDT);
-                  if (comp == 0) {
-                    String aS = a.id;
-                    String bS = b.id;
-                    return aS.compareTo(bS);
-                  }
-                  return comp;
-                });
+                // stationSnapshots.sort((a, b) {
+                //   String aDT = a.data().name;
+                //   String bDT = b.data().name;
+                //   int comp = aDT.compareTo(bDT);
+                //   if (comp == 0) {
+                //     String aS = a.id;
+                //     String bS = b.id;
+                //     return aS.compareTo(bS);
+                //   }
+                //   return comp;
+                // });
 
                 List catSnapshots = catSnapshot.data?.docs ?? [];
                 catSnapshots.sort((a, b) {
