@@ -3,8 +3,20 @@ import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/components/login_page.dart';
+import 'package:flutter_application_1/components/snapshots.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
+
+
+/**
+ * UserGoogle userGoogle = UserGoogle();
+    //get firebase ID
+    String? fireBaseID = userGoogle.auth.currentUser?.uid.toString();
+    QuerySnapshot<Map<String, dynamic>> docID = await userGoogle.db.collection('accountLink').where('firebaseUID', isEqualTo: fireBaseID).get();
+
+ * 
+ */
+
 
 class UserGoogle {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -125,5 +137,18 @@ class UserGoogle {
 
     // await db.collection('users').doc(auth.currentUser!.uid).update({'affiliation':affiliation, 'name': name, 'phoneNumber':number, 'rescueGroupAffiliation':rescueGroup});
     //await db.collection('users').doc(oldID).delete();
+  }
+
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDoc() async{
+    String? fireBaseID = auth.currentUser?.uid.toString();
+
+    // Query, gets AccountLink docs with this firebaseUID
+    QuerySnapshot<Map<String, dynamic>> docID = await db.collection('accountLink').where('firebaseUID', isEqualTo: fireBaseID).get();
+    // Extracts (hopefully singular) result.
+    QueryDocumentSnapshot<Map<String, dynamic>> document = docID.docs.first;
+    var path = document.get('userdocID').path;
+    // return Snapshots.fh.usersRef.doc(document.get('userdocID').id); // rets DocumentReference<UserDoc>
+    return db.doc(path).get();
   }
 }
