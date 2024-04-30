@@ -7,28 +7,41 @@ import '../../components/snapshots.dart';
 import '../../models/entry.dart';
 import '../../models/userdoc.dart';
 
+/// Formats the date in yyyy-MM-dd format. E.g., 2024-12-30
 var formatDashes = DateFormat('yyyy-MM-dd');
+/// Formats the date in mm dd, yyyy format. E.g., Dec 30, 2024.
 var formatAbbr = DateFormat('yMMMd');
 
+/// Enumeration for the current state of the page.
 enum PageState { 
-  empty,  // Default view. Displays basic information.
-  select, // Entry selection. User selects multiple entries.
-  view,   // View an entry, the user's or another's.
+  /// Default view. Displays basic information.
+  empty,  
+  /// Entry selection. User selects multiple entries.
+  select, 
+  /// View an entry, the user's or another's.
+  view,   
   }
 
+/// Controller for the FeederSidebar and CellWrappers. User interactions with table cells
+/// and sidebar components invoke methods of this controller, prompting state changes
+/// to the FeederSidebar and CellWrappers as appropriate.
 class FeederController extends ChangeNotifier {
 
+  /// The current state of the page.
   PageState currentState = PageState.empty;
 
-  // Shared
-  // late int? currentUserID; // placeholder; should be global variable across app
-
   // Entry select
+  /// List of information about all selected cells. The first value in an element is the 
+  /// DocumentSnapshot of an entry, and the second value is the ValueNotifier for that entry's
+  /// cell. 
   late List<(QueryDocumentSnapshot<Entry>, ValueNotifier<CellSelectStatus>)>? selectedEntries;
 
   // Entry view
+  /// The DocumentSnapshot of the entry of the selected cell.
   late QueryDocumentSnapshot<Entry>? currentEntry;
+  /// The DocumentSnapshot of the user assigned to the selected cell.
   late DocumentSnapshot<UserDoc>? currentEntryUser;
+  /// The ValueNotifier of the selected cell.
   late ValueNotifier? currentCellNotifier;
   late bool isUsersEntry; // TODO true if user is viewing their own entry
 
@@ -39,22 +52,27 @@ class FeederController extends ChangeNotifier {
   }
   
   /// Asserts that the Controller is in the PageState [state], and that
-  /// certain variables are non-null.
+  /// certain variables are in order.
   void checkThisState(PageState state){
     assert (currentState == state);
     switch (state){
       case PageState.view:
+        // Variables necessary for view
         assert (currentEntry != null);
+        assert (currentEntryUser != null);
         assert (currentCellNotifier != null);
       case PageState.select:
+        // Variables necessary for selection
         assert (selectedEntries != null);
       default:
+        // PageState.empty doesn't need anything initialized
     }
   }
 
   /// Adds given entry to selection if it's not included,
   /// And removes entry from selection if it is.
   /// Returns whether this entry will be in the selection AFTER this operation.
+  /// Must be in selection mode to invoke.
   bool toggleSelection(QueryDocumentSnapshot<Entry> entry, ValueNotifier<CellSelectStatus> cellController){
     checkThisState(PageState.select);
     var lookingFor = selectedEntries!.where((element) => element.$1 == entry);
@@ -75,13 +93,13 @@ class FeederController extends ChangeNotifier {
     }
   }
 
-  // List<QueryDocumentSnapshot<Entry>> wrappersAsEntries() => selectedEntries!.map((e) => e.widget.data).toList();
-
+  /// Returns a list of the DocumentSnapshots of entries currently selected.
   List<QueryDocumentSnapshot<Entry>> getSelection(){
     checkThisState(PageState.select);
     return selectedEntries!.map((e) => e.$1).toList();
   }
 
+  /// Assigns the logged-in user to all currently selected entries.
   void commitSelections() async {
     checkThisState(PageState.select);
     DocumentReference currentUserRef = await Snapshots.getCurrentUserTEST();
@@ -96,6 +114,7 @@ class FeederController extends ChangeNotifier {
     toEmptyState();
   }
 
+  /// Unassigns the user in the current entry.
   void unassignCurrent() async {
     checkThisState(PageState.view);
     Snapshots.runTransaction(
@@ -154,6 +173,8 @@ class FeederController extends ChangeNotifier {
     }
   }
 
+  /// Performs cleanup to move on from the current state. Mostly entails setting
+  /// certain attributes to null, and notifying any relevant CellWrappers.
   void fromState() {
     switch (currentState) {
       case PageState.empty:
