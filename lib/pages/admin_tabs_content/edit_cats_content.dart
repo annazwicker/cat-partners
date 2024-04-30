@@ -127,6 +127,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
                 //   return comp;
                 // });
 
+                // list of cats in the database and live updates
                 List catSnapshots = catSnapshot.data?.docs ?? [];
                 catSnapshots.sort((a, b) {
                   String aDT = a.data().name;
