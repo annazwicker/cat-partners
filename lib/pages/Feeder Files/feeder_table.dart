@@ -45,13 +45,25 @@ class _FeederTableState extends State<FeederTable> {
         if (!stationSnapshot.hasData) {
           return const CircularProgressIndicator();
         }
-        stations = stationSnapshot.data!;
-        
-        // Limit entries shown to range of dates
         DateTime now = Snapshots.equalizeDate(DateTime.now());
-        var entryRangeQuery = Snapshots.entriesFromToQuery(
-          now.subtract(const Duration(days: 7)),  // Start one week prior to current date
-          now.add(const Duration(days: 14))); // End two weeks past current date
+        DateTime startDate = now.subtract(const Duration(days: 7)); // Start one week prior to current date
+        DateTime endDate = now.add(const Duration(days: 14)); // End two weeks past current date
+
+        stations = stationSnapshot.data!;
+
+        // Filter out stations that were deleted before the starting date
+        stations = stations.where( (element) { 
+          Timestamp? dateDeleted = element.data().dateDeleted;  
+          if (dateDeleted != null) { // Station has been deleted
+            // Whether station was deleted strictly before the starting date
+            dateDeleted = Snapshots.equalizeTime(dateDeleted);
+            return !dateDeleted.toDate().isBefore(startDate);
+          } else { return true; } // Station has never been deleted; include
+        }).toList();
+
+        // Limit entries shown to range of dates
+        var entryRangeQuery = Snapshots.entriesFromToQuery(startDate, endDate);
+
         return StreamBuilder(
           stream: entryRangeQuery.snapshots(),
           builder: (context, snapshot) {
