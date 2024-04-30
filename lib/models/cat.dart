@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Cat {
+import 'model.dart';
+
+class Cat extends Model {
   final String description;
   final String name;
   final String photo;
