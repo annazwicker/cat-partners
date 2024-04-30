@@ -39,6 +39,7 @@ class _LoginPageState extends State<LoginPage>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
+                // google logo, sign in button, then Cat Partners Logo
                 children: [
                   const SizedBox(
                     width: 150,
@@ -60,12 +61,14 @@ class _LoginPageState extends State<LoginPage>{
                       SignInButton(
                         Buttons.Google,
                         text: "Sign up with Google",
+                        // Will redirect to HomePage when login is successful and is authorized to Firebase
                         onPressed: () async{
                           try {
                             final user = await UserGoogle().loginWithGoogle();
                             if (user != null && mounted){
                               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
                             }
+                          // error handling
                           } on FirebaseAuthException catch (error){
                             // print(error.message);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message ?? "Something went wrong")));
