@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import "package:flutter/material.dart";
-import 'package:flutter/widgets.dart';
-import 'package:flutter_application_1/const.dart'; 
+// import 'package:flutter_application_1/const.dart'; 
 // ignore: depend_on_referenced_packages
 import 'package:url_launcher/url_launcher.dart';
 
@@ -94,7 +92,7 @@ class AboutScreen extends StatelessWidget {
                       children: [
                         const TextSpan(
                           text:
-                              '    This site is the official Cat Partners Feeding website. It is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the feral cat colonies on campus. To learn more about CPSU and how to support them, please visit the ',
+                              '\tThis site is the official Cat Partners Feeding website. It is meant to help manage the feeding locations and times for the members of Cat Partners and other volunteers.\n    Cat Partners is an official Southwestern University student organization charged with caring for the feral cat colonies on campus. To learn more about CPSU and how to support them, please visit the ',
                           style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Playfair Display',
@@ -230,7 +228,7 @@ class AboutScreen extends StatelessWidget {
           scrollDirection: Axis.vertical,
           controller: _ScrollCat,
           children: const [
-            // put images in componenets
+            // following puts images of cats in a scroll box
             Row(
               mainAxisAlignment: MainAxisAlignment.center, 
               children: [
@@ -312,7 +310,9 @@ class NestedTabBar extends StatefulWidget {
 
 class _NestedTabBarState extends State<NestedTabBar>
     with TickerProviderStateMixin {
+  // controls tabs
   late TabController _nestedTabController;
+  // controls scrolling
   final ScrollController _tabVerticalOne = ScrollController();
   final ScrollController _tabVerticalTwo = ScrollController();
   @override
@@ -363,6 +363,7 @@ class _NestedTabBarState extends State<NestedTabBar>
             labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Playfair Display"),
             tabs: const [ ///////////////// the tab options, length must match
               Tab(icon: Icon(Icons.home), text: 'Home'),
+              Tab(icon: Icon(Icons.info), text: 'About'),
               Tab(icon: Icon(Icons.admin_panel_settings), text: 'Admin'),
               Tab(icon: Icon(Icons.local_dining), text: 'Sign Up To Feed'),
               Tab(icon: Icon(Icons.account_box), text: 'Account'),
