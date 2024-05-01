@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter_application_1/components/user_google.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
@@ -148,15 +149,24 @@ class Snapshots {
   }
 
   /// TEMPORARY FUNCTION.
-  /// Returns whether there is a user logged in.
-  static bool isUserLoggedIn() { return fh.isUserLoggedIn; }
-
-  /// TEMPORARY FUNCTION.
   /// Returns the DocumentReference of the current HARD-CODED user.
   static Future<DocumentReference> getCurrentUserTEST() async {
-    assert (isUserLoggedIn());
+    // assert (isUserLoggedIn());
     String currentUserID = fh.currentUserIDTest!;
     return await fh.usersRef.doc(currentUserID);
+  }
+
+  /// Retrieves the UserDoc of the user that's currently signed in.
+  /// If an Exception occurs during retrieval (perhaps due to the userDoc not existing,
+  /// or there being no user signed in), returns null.
+  static Future<DocumentSnapshot<Map<String, dynamic>>?> getCurrentUserDoc() async {
+    try {
+      var userDocRef = await UserGoogle.getUserDoc();
+      return userDocRef;
+    } on Exception catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and
