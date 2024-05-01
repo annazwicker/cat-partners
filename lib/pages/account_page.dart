@@ -1,6 +1,6 @@
-//import 'dart:io';
-//import 'dart:typed_data';
-import 'dart:js_interop';
+// import 'dart:io';
+// import 'dart:typed_data';
+// import 'dart:js_interop';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -81,36 +81,41 @@ class AccountInfoFormState extends State<AccountInfoForm> {
           }
         }));
   }
-
-  Widget horizontalWidgets(double containerWidth) {
+  
+  /// aligns accountInfo and pfpBoxwidgets horizontally. signOutButton widget is placed below both.
+  Widget horizontalWidgets(double containerWidth){
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [accountInfo(containerWidth), pfpBox(containerWidth)],
         ),
-        signOutButton()
-      ],
-    );
-  }
-
-  Widget verticalWidgets(double screenWidth) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        accountInfo(screenWidth),
-        pfpBox(screenWidth),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+          padding: const EdgeInsets.fromLTRB(0,0,0,30),
           child: signOutButton(),
         )
       ],
     );
   }
 
+  /// aligns accountInfo, pfpBox, and signOutButton widgets vertically.
+  Widget verticalWidgets(double screenWidth){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        accountInfo(screenWidth),
+        pfpBox(screenWidth),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0,0,0,30),
+          child: signOutButton(),
+        )
+      ],
+    );
+  }
+  
+  /// Sets up the field used to change user information.
   Widget accountInfo(double containerWidth) {
     String userToken = 'nay@southwestern.edu';
-
     return StreamBuilder(
         stream: _dbHelper.getThisUser(userToken),
         builder: (context, snapshot) {
@@ -204,18 +209,19 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                                     userToken, formData);
                               }
                             },
-                            child: const Text('Submit'),
+                            child: const Text('Save'),
                           ),
                         ),
                       ],
-                       ),
+                    ),
                   ),
                 ),
               ));
         });
   }
 
-  Widget pfpBox(double containerWidth) {
+  /// Returns a Widget that takes a user's pfp from their Google account and displays it
+  Widget pfpBox(double containerWidth){
     return Container(
         alignment: Alignment.center,
         width: containerWidth,
@@ -238,7 +244,8 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         ));
   }
 
-  Widget signOutButton() {
+  /// Returns a widget that creates a sign out button
+  Widget signOutButton(){
     return ElevatedButton(
         onPressed: () {
           UserGoogle.signOut();
