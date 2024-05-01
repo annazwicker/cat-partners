@@ -81,8 +81,14 @@ class AccountInfoFormState extends State<AccountInfoForm> {
           }
         }));
   }
+<<<<<<< HEAD
 
   Widget horizontalWidgets(double containerWidth) {
+=======
+  
+  /// aligns accountInfo and pfpBoxwidgets horizontally. signOutButton widget is placed below both.
+  Widget horizontalWidgets(double containerWidth){
+>>>>>>> 205b943d83687ec3071bc5abc5dc47bff4788dbc
     return Column(
       children: [
         Row(
@@ -97,23 +103,36 @@ class AccountInfoFormState extends State<AccountInfoForm> {
     );
   }
 
+<<<<<<< HEAD
   Widget verticalWidgets(double screenWidth) {
+=======
+  /// aligns accountInfo, pfpBox, and signOutButton widgets vertically.
+  Widget verticalWidgets(double screenWidth){
+>>>>>>> 205b943d83687ec3071bc5abc5dc47bff4788dbc
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         accountInfo(screenWidth),
         pfpBox(screenWidth),
         Padding(
+<<<<<<< HEAD
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+=======
+          padding: const EdgeInsets.fromLTRB(0,0,0,30),
+>>>>>>> 205b943d83687ec3071bc5abc5dc47bff4788dbc
           child: signOutButton(),
         )
       ],
     );
   }
+<<<<<<< HEAD
 
+=======
+  
+  /// Sets up the field used to change user information.
+>>>>>>> 205b943d83687ec3071bc5abc5dc47bff4788dbc
   Widget accountInfo(double containerWidth) {
     String userToken = 'nay@southwestern.edu';
-
     return StreamBuilder(
         stream: _dbHelper.getThisUser(userToken),
         builder: (context, snapshot) {
@@ -207,18 +226,27 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                                     userToken, formData);
                               }
                             },
-                            child: const Text('Submit'),
+                            child: const Text('Save'),
                           ),
                         ),
                       ],
+<<<<<<< HEAD
                        ),
+=======
+                    ),
+>>>>>>> 205b943d83687ec3071bc5abc5dc47bff4788dbc
                   ),
                 ),
               ));
         });
   }
 
+<<<<<<< HEAD
   Widget pfpBox(double containerWidth) {
+=======
+  /// Returns a Widget that takes a user's pfp from their Google account and displays it
+  Widget pfpBox(double containerWidth){
+>>>>>>> 205b943d83687ec3071bc5abc5dc47bff4788dbc
     return Container(
         alignment: Alignment.center,
         width: containerWidth,
@@ -241,7 +269,12 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         ));
   }
 
+<<<<<<< HEAD
   Widget signOutButton() {
+=======
+  /// Returns a widget that creates a sign out button
+  Widget signOutButton(){
+>>>>>>> 205b943d83687ec3071bc5abc5dc47bff4788dbc
     return ElevatedButton(
         onPressed: () {
           UserGoogle.signOut();
