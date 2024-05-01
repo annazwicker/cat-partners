@@ -87,23 +87,7 @@ class FirebaseHelper {
       return comp;
     });
   }
-
-  void testing() {
-    Query<Entry> emptyNoteQuery = _entriesRef.where('note', isEqualTo: '');
-    // emptyNoteQuery.
-    // Future<QuerySnapshot<Entry>> fut = emptyNoteQuery.get();
-    emptyNoteQuery.get().then(
-      (querySnapshot) {
-        print("Successfully completed");
-        List<QueryDocumentSnapshot<Entry>> queryResults = querySnapshot.docs;
-        for (var docSnapshot in querySnapshot.docs) {
-          print('${docSnapshot.id} => ${docSnapshot.data()}');
-        }
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
-  }
-
+  
   //get user's name given documentReference
   Future getUserName(DocumentReference<Object?>? docRef) async {
     DocumentSnapshot assignedUserSnapshot = await docRef!.get();
@@ -156,9 +140,35 @@ class FirebaseHelper {
         // .where("stationID", isEqualTo: station)
         .snapshots();
   }
+  Stream<QuerySnapshot> getAllUserEntries(DocumentReference userRef) {
+    print(userRef);
+
+    // DateTime now = DateTime.now();
+    // DateTime now = DateTime.now().add(const Duration(days: -30));
+    DateTime now = DateTime.now();
+    DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
+    print(nowNoSeconds);
+    Timestamp time = Timestamp.fromDate(nowNoSeconds);
+    print(time);
+
+    DocumentReference<Station> station = _stationsRef.doc('1');
+
+    return _entriesRef
+        .where("assignedUser", isEqualTo: userRef)
+
+        // .where("stationID", isEqualTo: station)
+        .snapshots();
+  }
 
   DocumentReference getCurrentUser() {
     return _usersRef.doc('nay@southwestern.edu');
+    //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
+  }
+
+
+    Stream<QuerySnapshot>  getThisUser(email) {
+
+    return _usersRef.where('email', isEqualTo: email).snapshots();
     //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
   }
 
@@ -175,7 +185,7 @@ class FirebaseHelper {
     }
     //change phone number
     if (accountForm['phone'] != null) {
-      updateForm['phone'] = accountForm['phone'];
+      updateForm['phoneNumber'] = accountForm['phone'];
     }
     //change affiliation
     if (accountForm['affiliation'] != null) {
@@ -183,7 +193,7 @@ class FirebaseHelper {
     }
     //change rescue group
     if (accountForm['rescueGroup'] != null) {
-      updateForm['rescueGroup'] = accountForm['rescueGroup'];
+      updateForm['rescueGroupAffiliaton'] = accountForm['rescueGroup'];
     }
 
     //perform update
@@ -263,28 +273,6 @@ class FirebaseHelper {
     return cat.delete();
   }
 
-  /**
-   * adds station to Station collection given a map of the station's characteristics
-   */
-  Future addStation(Map<String, dynamic> stationMap) async {
-    Station station = Station(
-      description: stationMap['description'],
-      fullName: stationMap['fullName'],
-      name: stationMap['name'],
-      photo: stationMap['photo'],
-    );
-
-    return _stationsRef.add(station);
-  }
-
-  /**
-   * deletes station from Station collection given a doc reference to that station
-   */
-  Future deleteStation(String stationToDelete) async {
-    DocumentReference station = _stationsRef.doc(stationToDelete);
-    return station.delete();
-  }
-
 /**
  * given a search string, returns search results for all user's names and emails for a match
  */
@@ -353,166 +341,4 @@ class FirebaseHelper {
     return currentUserIDTest;
   }
 
-  void addEntry(Entry entry) async {
-    _entriesRef.add(entry);
-  }
-
-  /// Ensures that entries exist for [date] by adding them if they don't exist.
-  void ensureEntries(DateTime date) async {
-    // Remove milliseconds
-    date = DateTime(date.year, date.month, date.day);
-    Timestamp stamp = Timestamp.fromDate(date);
-    _db.runTransaction((transaction) async {
-      // Get all stations
-      bool isError = false;
-      List<QueryDocumentSnapshot<Station>> stations = [];
-      _stationsRef.get().then(
-        (querySnapshot) {
-          stations = querySnapshot.docs;
-        },
-        onError: (e) {
-          print(e);
-          isError = true;
-        },
-      );
-
-      // Get entries with given date
-      List<QueryDocumentSnapshot<Entry>> entries = [];
-      entriesOnDateQuery(date).get().then(
-        (querySnapshot) {
-          entries = querySnapshot.docs;
-        },
-        onError: (e) {
-          print(e);
-          isError = true;
-        },
-      );
-
-      // Check if there isn't an error
-      if (!isError) {
-        for (QueryDocumentSnapshot<Station> station in stations) {
-          // Query returns entry with station and date
-          List<QueryDocumentSnapshot<Entry>> statEntry = entries
-              .where((element) => element.data().stationID.id == station.id)
-              .toList();
-          // Add entry if it doesn't exist
-          if (statEntry.isEmpty) {
-            Entry newEntry = Entry(
-              assignedUser: null,
-              date: stamp,
-              note: '',
-              stationID: station.reference,
-            );
-            DocumentReference<Entry> newDocRef = _entriesRef.doc();
-            transaction.set(newDocRef, newEntry);
-          }
-        }
-      }
-    });
-    // TODO adds entries for the given date, if they don't exist.
-  }
-
-  /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and
-  /// milliseconds set to 0.
-  Timestamp equalizeTime(Timestamp stamp) {
-    DateTime date = stamp.toDate();
-    date = DateTime(date.year, date.month, date.day);
-    return Timestamp.fromDate(date);
-  }
-
-  List<QueryDocumentSnapshot<Entry>> getEntries(DateTime date) {
-    ensureEntries(date);
-    List<QueryDocumentSnapshot<Entry>> entries = [];
-    entriesOnDateQuery(date).get().then((querySnapshot) {
-      entries = querySnapshot.docs.toList();
-    });
-    return entries;
-  }
-
-  /// Returns a query that queries the database for all entries on the given [date].
-  Query<Entry> entriesOnDateQuery(DateTime date) {
-    DateTime nextDate = date.add(const Duration(days: 1));
-
-    Timestamp stamp = Timestamp.fromDate(date);
-    Timestamp nextStamp = Timestamp.fromDate(nextDate);
-    return _entriesRef.where('date',
-        isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
-  }
-
-  static Future<bool> saveStation({
-    // required BuildContext context,
-    required int stationID,
-    required String name,
-    required String description,
-    required String photo,
-  }) async {
-    try {
-      //either grab or create a document from a collection
-
-      // Create a new user with a first and last name
-      final user = <String, dynamic>{
-        "first": "Ada",
-        "last": "Lovelace",
-        "born": 2009
-      };
-
-      // Add a new document with a generated ID
-      print(user);
-      print(_db);
-      _db.collection("users").add(user).then((DocumentReference doc) =>
-          print('DocumentSnapshot added with ID: ${doc.id}'));
-
-      var stationRef = _db.collection('station').doc("101");
-
-      //create hard coded json document example
-      Map<String, dynamic> hardCodedJson = {
-        'name': 'AMogususs',
-        'description':
-            'The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A sing lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start. ding﻿',
-        'photo': 'placeholder.img',
-      };
-
-      //set document to a specific value
-      stationRef.set(hardCodedJson);
-
-      print("set stationRef");
-
-      //retrieve document and create a Station object
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  static Future<bool> saveUser({
-    required BuildContext context,
-    required String email,
-    required String password,
-  }) async {
-    try {
-      final UserCredential credential = await _auth
-          .createUserWithEmailAndPassword(email: email, password: password);
-
-      if (credential.user != null) {
-        return true;
-      }
-
-      return false;
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(e.toString()),
-      ));
-      return false;
-    }
-  }
-
-//name getters
-
-  Future getStationName(String stationID) async {
-    // Fetch the document referenced by stationID
-    _stationsRef.doc(stationID).get().then((stationSnapshot) {
-      final data = stationSnapshot.data() as Map<String, dynamic>;
-      return data['name'];
-    });
-  }
 }

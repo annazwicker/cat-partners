@@ -111,21 +111,23 @@ class _EditCatsContentState extends State<EditCatsContent> {
         stream: _dbHelper.getCatStream(), //get station stream
         builder: (context, catSnapshot) {
           return StreamBuilder(
+              // gets list of all stations
               stream: _dbHelper.getStationStream(),
               builder: (context, stationSnapshot) {
                 List stationSnapshots = stationSnapshot.data?.docs ?? [];
-                stationSnapshots.sort((a, b) {
-                  String aDT = a.data().name;
-                  String bDT = b.data().name;
-                  int comp = aDT.compareTo(bDT);
-                  if (comp == 0) {
-                    String aS = a.id;
-                    String bS = b.id;
-                    return aS.compareTo(bS);
-                  }
-                  return comp;
-                });
+                // stationSnapshots.sort((a, b) {
+                //   String aDT = a.data().name;
+                //   String bDT = b.data().name;
+                //   int comp = aDT.compareTo(bDT);
+                //   if (comp == 0) {
+                //     String aS = a.id;
+                //     String bS = b.id;
+                //     return aS.compareTo(bS);
+                //   }
+                //   return comp;
+                // });
 
+                // list of cats in the database and live updates
                 List catSnapshots = catSnapshot.data?.docs ?? [];
                 catSnapshots.sort((a, b) {
                   String aDT = a.data().name;
@@ -173,161 +175,164 @@ class _EditCatsContentState extends State<EditCatsContent> {
                     children: [
                       Expanded(
                         // The add account section
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              'Add Cat',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                        child: SingleChildScrollView(
+                          controller: ScrollController(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                'Add Cat',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Name:',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 10),
-                                TextField(
-                                  controller: nameController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
+                              const SizedBox(height: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Name:',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                Text(
-                                  'Description:',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 10),
-                                TextField(
-                                  controller: descriptionController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
+                                  const SizedBox(height: 10),
+                                  TextField(
+                                    controller: nameController,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 9),
-                            _buildDropdownFieldAdd(
-                              'Select Feeding Station',
-                              stationDropDown,
-                              (String? value) {
-                                setState(() {
-                                  selectedFeedingStation = value;
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text('Confirm'),
-                                        content: Text(
-                                            "Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedFeedingStation}\" feeding station?"),
-                                        actions: [
-                                          TextButton(
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Description:',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  TextField(
+                                    controller: descriptionController,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              _buildDropdownFieldAdd(
+                                'Select Feeding Station',
+                                stationDropDown,
+                                (String? value) {
+                                  setState(() {
+                                    selectedFeedingStation = value;
+                                  });
+                                },
+                              ),
+                              const SizedBox(height: 10),
+                              ElevatedButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text('Confirm'),
+                                          content: Text(
+                                              "Are you sure you want to add a new cat named \"${nameController.text}\" at the \"${selectedFeedingStation}\" feeding station?"),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('Cancel')),
+                                            TextButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
+                                                final catname =
+                                                    nameController.text;
+                                                final catDescription =
+                                                    descriptionController.text;
+                                                // Check if the name and feeding station are not empty
+                                                if (catname.isNotEmpty &&
+                                                    catDescription.isNotEmpty &&
+                                                    selectedFeedingStation !=
+                                                        null) {
+                                                  Map<String, dynamic> catMap = {
+                                                    'description': catDescription,
+                                                    'name': catname,
+                                                    'photo': 'placeholder.img',
+                                                    'stationID': stationMap[selectedFeedingStation],
+                                                  };
+                                                  _dbHelper.addCat(catMap);
+                                                  // Add success dialog
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title:
+                                                            const Text('Success'),
+                                                        content: Text(
+                                                            'Cat added successfully!'),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  'OK')),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                  print(
+                                                      'Cat Name: $catname, Selected Feeding Station: $selectedFeedingStation');
+                                                  nameController.clear();
+                                                  descriptionController.clear();
+                                                  setState(() {
+                                                    selectedFeedingStation = null;
+                                                  });
+                                                } else {
+                                                  // Add failure dialog
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title:
+                                                            const Text('Error'),
+                                                        content: Text(
+                                                            'Please enter a name and select a feeding station.'),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  'OK')),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                }
                                               },
-                                              child: const Text('Cancel')),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              final catname =
-                                                  nameController.text;
-                                              final catDescription =
-                                                  descriptionController.text;
-                                              // Check if the name and feeding station are not empty
-                                              if (catname.isNotEmpty &&
-                                                  catDescription.isNotEmpty &&
-                                                  selectedFeedingStation !=
-                                                      null) {
-                                                Map<String, dynamic> catMap = {
-                                                  'description': catDescription,
-                                                  'name': catname,
-                                                  'photo': 'placeholder.img',
-                                                  'stationID': stationMap[selectedFeedingStation],
-                                                };
-                                                _dbHelper.addCat(catMap);
-                                                // Add success dialog
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title:
-                                                          const Text('Success'),
-                                                      content: Text(
-                                                          'Cat added successfully!'),
-                                                      actions: [
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                            child: const Text(
-                                                                'OK')),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                                print(
-                                                    'Cat Name: $catname, Selected Feeding Station: $selectedFeedingStation');
-                                                nameController.clear();
-                                                descriptionController.clear();
-                                                setState(() {
-                                                  selectedFeedingStation = null;
-                                                });
-                                              } else {
-                                                // Add failure dialog
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title:
-                                                          const Text('Error'),
-                                                      content: Text(
-                                                          'Please enter a name and select a feeding station.'),
-                                                      actions: [
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                            child: const Text(
-                                                                'OK')),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              }
-                                            },
-                                            child: const Text('Confirm'),
-                                          )
-                                        ],
-                                      );
-                                    });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.black, // white text
+                                              child: const Text('Confirm'),
+                                            )
+                                          ],
+                                        );
+                                      });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.black, // white text
+                                ),
+                                child: const Text('Add Cat'),
                               ),
-                              child: const Text('Add Cat'),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       // create a line between the two sections so it's clear
