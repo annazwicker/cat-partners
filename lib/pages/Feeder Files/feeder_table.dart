@@ -53,11 +53,15 @@ class _FeederTableState extends State<FeederTable> {
 
         // Filter out stations that were deleted before the starting date
         stations = stations.where( (element) { 
-          Timestamp? dateDeleted = element.data().dateDeleted;  
+          Timestamp? dateDeleted = element.data().dateDeleted;
           if (dateDeleted != null) { // Station has been deleted
-            // Whether station was deleted strictly before the starting date
-            dateDeleted = Snapshots.equalizeTime(dateDeleted);
-            return !dateDeleted.toDate().isBefore(startDate);
+            DateTime dateCreatedDate = Snapshots.equalizeDate(element.data().dateCreated.toDate());
+            DateTime dateDeletedDate = Snapshots.equalizeDate(dateDeleted.toDate());
+            return 
+              // Don't include if station was added/deleted on same day (no entries)
+              !dateCreatedDate.isAtSameMomentAs(dateDeletedDate) 
+              // Don't include if station was deleted on/before start date
+              && dateDeletedDate.isAfter(startDate);
           } else { return true; } // Station has never been deleted; include
         }).toList();
 

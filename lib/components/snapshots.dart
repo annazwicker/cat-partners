@@ -348,6 +348,10 @@ class Snapshots {
       .where(Entry.dateString, isLessThan: Timestamp.fromDate(endDate));
   }
 
+  static Query<Entry> entriesForStationQuery(DocumentReference stationRef) {
+    return fh.entriesRef.where(Entry.stationRefString, isEqualTo: stationRef);
+  }
+
   // Modifying stations
 
   /// adds station to Station collection given a map of the station's characteristics
@@ -368,12 +372,23 @@ class Snapshots {
   
   /// deletes station from Station collection given a doc reference to that station
   static Future deleteStation(String stationToDelete) async {
-    // TODO remove future entries for new station
     return runTransaction(
       (transaction) async {
         DocumentReference stationRef = fh.stationsRef.doc(stationToDelete);
+        DateTime deletionDate = equalizeDate(DateTime.now());
+        List<QueryDocumentSnapshot<Entry>> allStationEntries = (await entriesForStationQuery(stationRef).get()).docs;
+
+        // Delete all entries for this station with dates today and in the future
+        for(var entry in allStationEntries) {
+          print('found an entry!');
+          DateTime entryDate = entry.data().date.toDate();
+          if(!entryDate.isBefore(deletionDate)){
+            transaction.delete(entry.reference);
+          }
+        }
+        // Delete station
         // Deletion is done by setting the 'date deleted' param
-        transaction.update(stationRef, {Station.dateDeletedString: Timestamp.now()});
+        transaction.update(stationRef, {Station.dateDeletedString: Timestamp.fromDate(deletionDate)});
       });
   }
 
