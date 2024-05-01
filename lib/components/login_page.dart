@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage>{
                         // Will redirect to HomePage when login is successful and is authorized to Firebase
                         onPressed: () async{
                           try {
-                            final user = await UserGoogle().loginWithGoogle();
+                            final user = await UserGoogle.loginWithGoogle();
                             if (user != null && mounted){
                               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
                             }

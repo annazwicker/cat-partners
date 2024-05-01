@@ -118,10 +118,9 @@ class AccountInfoFormState extends State<AccountInfoForm> {
   /// Sets up the field used to change user information.
   Widget accountInfo(double containerWidth) {
 
-    UserGoogle userGoogle = UserGoogle();
     //get firebase ID
     Future<DocumentSnapshot<Map<String, dynamic>>> _userDocument =
-        userGoogle.getUserDoc();
+        UserGoogle.getUserDoc();
 
     return FutureBuilder(
         future: _userDocument,

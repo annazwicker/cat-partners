@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dar
 import '../../components/snapshots.dart';
 import '../../models/entry.dart';
 import '../../models/station.dart';
+import '../../models/userdoc.dart';
 
 class FeederSidebar extends StatefulWidget {
   const FeederSidebar({
@@ -48,9 +51,32 @@ class _FeederSidebarState extends State<FeederSidebar> {
     Entry currentEntryData = currentEntry.data();
     String entryUserName = widget.controller.getCurrentEntryUserName();
 
-    Future<bool> isThisUserEntry() async {
-      var currentUser = await Snapshots.getCurrentUserTEST();
-      return currentUser.path == currentEntryData.assignedUser!.path;
+
+    /// Whether the user may edit the current entry.
+    /// True if the user is logged in and this is their entry, or if
+    /// they're logged in and 
+    Future<bool> canUserEdit() async {
+      DocumentSnapshot<Map<String, dynamic>>? currentUserDoc = (await Snapshots.getCurrentUserDoc()).$2;
+      if (currentUserDoc == null){
+        // Error retrieving userDoc
+        // Don't let user edit
+        // TODO; show some error
+        return false;
+      } else {
+        try {
+          UserDoc loggedInUser = UserDoc.fromJson(currentUserDoc.data()!);
+          // print('Logged in: Name: ${loggedInUser.getName()}, Email: ${loggedInUser.getEmail()}, isAdmin: ${loggedInUser.isAdmin}');
+          // print('currentUserID: ${currentEntryData.assignedUser!.id}');
+          // print('loggedInID: ${currentUserDoc.reference.id}');
+          return loggedInUser.isAdmin || // User can edit if they're admin
+          currentEntryData.assignedUser!.id == currentUserDoc.reference.id; // User can edit if this is their entry
+        } on Exception catch (e) {
+          // Don't let user edit if something bad happens
+          print(e);
+          return false;
+        }
+      }
+      // return 
     }
     
     Map<String, String> prints = {
@@ -97,7 +123,7 @@ class _FeederSidebarState extends State<FeederSidebar> {
       );
 
     return FutureBuilder(
-      future: isThisUserEntry(),
+      future: canUserEdit(),
       builder: (context, snapshot) {
         bool isUsersEntry = false;
         if(snapshot.hasData){
