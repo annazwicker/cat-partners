@@ -258,97 +258,72 @@ class Snapshots {
     fh.entriesRef.add(entry);
   }
 
-  /// Ensure entries exist for at least [numDays] days after the current date.
+  /// Ensure entries exist, as appropriate, for all stations at least [numDays] days after the current date.
   static Future<void> ensureEntriesPast({int numDays = 14}) async {
-    // TODO account for added/deleted stations
     DateTime dateNow = equalizeDate(DateTime.now());
-    DateTime dateThen = dateNow.add(const Duration(days: 14));
-
-    // Obtain the date of the latest set of entries
-    var allEntries = await getEntryQuery();
-    allEntries.sort(
-      (a, b) {
-        return a.data().date.compareTo(b.data().date);
-      });
-    DateTime latestDate = equalizeTime(allEntries.last.data().date).toDate();
-
-    // Ensure entries exist starting from that date up until dateNow + numDays
-    int i = 1;
-    DateTime nextDate = latestDate.add(Duration(days: i));
+    DateTime dateThen = dateNow.add(Duration(days: numDays));
     var stations = await getStationQuery();
-    while(!nextDate.isAfter(dateThen)){
-      addEntriesForAll(stations, Timestamp.fromDate(nextDate));
-      i++;
-      nextDate = latestDate.add(Duration(days: i));
+    for(var station in stations){
+      await ensureStationEntries(station, dateThen);
     }
   }
 
-  /// Ensures that entries exist for [date] for each station by adding them if they don't exist.
-  static void ensureEntries(DateTime date) async {
-    // Remove milliseconds
-    date = DateTime(date.year, date.month, date.day);
-    Timestamp stamp = Timestamp.fromDate(date);
-    runTransaction((transaction) async {
-      // Get all stations
-      bool isError = false;
-      List<QueryDocumentSnapshot<Station>> stations = await getStationQuery();
+  /// Ensures entries are generated for [station] up to and including the date [until] or the date of
+  /// the station's deletion, if applicable; whichever is sooner.
+  /// 
+  static Future<void> ensureStationEntries(DocumentSnapshot<Station> station, DateTime until) async {
+    Station stationModel = station.data()!;
+    // Query DB for all entries for given station
+    var entriesForStationQuery = fh.entriesRef.where(Entry.stationRefString, isEqualTo: station.reference);
+    // Get results
+    var allEntries = (await entriesForStationQuery.get()).docs;
+    
+    // Figure out date to start generating entries
+    DateTime from;
+    if(allEntries.isNotEmpty){
+      // If entries already exist, start at latest entry
+      allEntries.sort(
+        (a, b) {
+          return a.data().date.compareTo(b.data().date);
+        });
+      // Gets time of latest entry and goes one day after
+      from = equalizeTime(allEntries.last.data().date).toDate().add(const Duration(days: 1));
+    } else {
+      // If no entries exist, start at station creation date
+      from = stationModel.dateCreated.toDate();
+    }
 
-      // Get entries with given date
-      List<QueryDocumentSnapshot<Entry>> entries = [];
-      entriesOnDateQuery(date).get().then(
-        (querySnapshot) {
-          entries = querySnapshot.docs;
-        },
-        onError: (e) {
-          print(e);
-          isError = true;
-        },
-      );
+    // Find date to stop generating entries
+    // Cut off at station deletion date, if station was ever deleted
+    if(stationModel.dateDeleted != null){
+      DateTime deletedEqualize = equalizeTime(stationModel.dateDeleted!).toDate();
+      until = until.isAfter(deletedEqualize) ? deletedEqualize : until;
+    } 
 
-      // Check if there isn't an error
-      if (!isError) {
-        for (QueryDocumentSnapshot<Station> station in stations) {
-          // Query returns entry with station and date
-          List<QueryDocumentSnapshot<Entry>> statEntry = entries
-              .where((element) => element.data().stationID.id == station.id)
-              .toList();
-          // Add entry if it doesn't exist
-          if (statEntry.isEmpty) {
-            Entry newEntry = Entry(
-              assignedUser: null,
-              date: stamp,
-              note: '',
-              stationID: station.reference,
-            );
-            DocumentReference<Entry> newDocRef = fh.entriesRef.doc();
-            transaction.set(newDocRef, newEntry);
-          }
-        }
-      }
-    });
-  }
-
-  /// Adds a new entry for each station in [stations], all with Timestamp [stamp].
-  static Future<void> addEntriesForAll(List<QueryDocumentSnapshot<Station>> stations, Timestamp stamp) async {
-    await runTransaction(
-      (transaction) async {
-        for(var station in stations){
-          Entry newEntry = Entry(
+    // Iterate through times
+    int i = 0;
+    DateTime nextDate = from;
+    while(!nextDate.isAfter(until)){
+      // Transaction initializes single entry
+      // MUST await; otherwise 'i' won't update as it should.
+      await runTransaction((transaction) async {
+        Entry newEntry = Entry(
           assignedUser: null,
-            date: stamp,
-            note: '',
-            stationID: station.reference,
-          );
-          DocumentReference<Entry> newDocRef = fh.entriesRef.doc();
-          transaction.set(newDocRef, newEntry);
-        }
-      }
-    );
+          date: Timestamp.fromDate(nextDate),
+          note: '',
+          stationID: station.reference,
+        );
+        DocumentReference<Entry> newDocRef = fh.entriesRef.doc();
+        transaction.set(newDocRef, newEntry);
+      });
+      i++;
+      nextDate = from.add(Duration(days: i));
+    }
+
   }
 
   /// Returns the results of querying the database for all entries on [date].
-  static Future<List<QueryDocumentSnapshot<Entry>>> getEntries(DateTime date) async {
-    ensureEntries(date);
+  static Future<List<QueryDocumentSnapshot<Entry>>> getEntriesOnDate(DateTime date) async {
     List<QueryDocumentSnapshot<Entry>> entries = [];
     await entriesOnDateQuery(date).get().then((querySnapshot) {
       entries = querySnapshot.docs.toList();

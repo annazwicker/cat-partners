@@ -38,7 +38,7 @@ class _FeederTableState extends State<FeederTable> {
   @override
   Widget build(BuildContext context) {
     // Ensures entries exist for at least 2 weeks past current date
-    // Snapshots.ensureEntriesPast();
+    Snapshots.ensureEntriesPast();
     return FutureBuilder(
       future: Snapshots.stationQuery,
       builder: (stationContext, stationSnapshot) {
