@@ -19,8 +19,8 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
   final TextEditingController emailControllerDelete = TextEditingController();
 
   Widget _buildDropdownField(
-    String title,
-    List<String> options,
+    String title, // title of the dropdown
+    List<String> options, // options in the dropdown 
     Function(String?) onChanged,
   ) {
     return Padding(
@@ -29,10 +29,13 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            title,
+            title,  // title of the dropdown
             style: const TextStyle(
                 fontWeight: FontWeight.bold, color: Colors.black),
           ),
+          // takes the list of options (which is a parameter named 'options')
+          // and maps them into a list that this widget can use to create individual
+          // options for the user to select from 
           DropdownButtonFormField<String>(
             items: options.map((String option) {
               return DropdownMenuItem<String>(
@@ -44,6 +47,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
               );
             }).toList(),
             onChanged: onChanged,
+            // checks if the user doesn't select anything
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please select an option';
@@ -52,7 +56,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
             },
             value: selectedAffiliation, // Set initial value of dropdown
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 10), // formatting box to create spacing between the input fields
         ],
       ),
     );
