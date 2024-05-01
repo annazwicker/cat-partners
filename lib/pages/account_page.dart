@@ -117,7 +117,6 @@ class AccountInfoFormState extends State<AccountInfoForm> {
   
   /// Sets up the field used to change user information.
   Widget accountInfo(double containerWidth) {
-    String userToken = 'nay@southwestern.edu';
 
     //get firebase ID
     Future<DocumentSnapshot<Map<String, dynamic>>> _userDocument =
@@ -126,6 +125,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
     return FutureBuilder(
         future: _userDocument,
         builder: (context, userSnapshot) {
+          if(!userSnapshot.hasData) return Text("Loading...");
           String userID = userSnapshot.data!.id;
 
           if (userSnapshot.connectionState == ConnectionState.done) {
@@ -138,6 +138,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
           return StreamBuilder(
               stream: _dbHelper.getThisUser2(userID),
               builder: (context, snapshot) {
+                if(!snapshot.hasData) return Text("Loading...");
                 // List userSnapshot = snapshot.data?.docs ?? [];
                 // Map<String, String> userMap = {};
                 UserDoc? data = snapshot.data!.data();
