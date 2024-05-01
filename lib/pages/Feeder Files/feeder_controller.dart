@@ -102,12 +102,16 @@ class FeederController extends ChangeNotifier {
   /// Assigns the logged-in user to all currently selected entries.
   void commitSelections() async {
     checkThisState(PageState.select);
-    DocumentReference currentUserRef = await Snapshots.getCurrentUserTEST();
+    var (success, currentUserRef) = await Snapshots.getCurrentUserDoc();
+    if(!success) {
+      // TODO display to user
+      print('Error occurred during selection commit.');
+      return;
+    }
     for(var entryPair in selectedEntries!){
       var entry = entryPair.$1;
       Snapshots.runTransaction((transaction) async {
-        Entry newEntry = entry.data().copyWith(assignedUser: currentUserRef);
-        transaction.update(entry.reference, newEntry.toJson());
+        transaction.update(entry.reference, {Entry.userRefString: currentUserRef!.reference});
       });
       entryPair.$2.value = CellSelectStatus.inactive;
     }

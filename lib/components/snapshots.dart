@@ -159,13 +159,13 @@ class Snapshots {
   /// Retrieves the UserDoc of the user that's currently signed in.
   /// If an Exception occurs during retrieval (perhaps due to the userDoc not existing,
   /// or there being no user signed in), returns null.
-  static Future<DocumentSnapshot<Map<String, dynamic>>?> getCurrentUserDoc() async {
+  static Future<(bool, DocumentSnapshot<Map<String, dynamic>>?)> getCurrentUserDoc() async {
     try {
       var userDocRef = await UserGoogle.getUserDoc();
-      return userDocRef;
+      return (true, userDocRef);
     } on Exception catch (e) {
       print(e);
-      return null;
+      return (false, null);
     }
   }
 
