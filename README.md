@@ -56,6 +56,8 @@ The admin page is specifically for users who have admin permissions.  It allows 
 - Search for a user by entering their email.
 - Export data as a CSV file by selecting a yearlong range from a dropdown box.
 
+All of the tabs excluding the Search Users and Export Data tabs, will display pop up boxes asking the user to confirm their changes before proceeding.  After the admin user clicks 'Confirm', another pop up box will display indicating either a successful change or an error in the process.
+
 A demo video of the admin page can be found [here](https://drive.google.com/file/d/1z5ZmxNhxAfLXjHhymFgovI_GY0cn0Trd/view?usp=sharing).
 
 ### Sign Up to Feed Page

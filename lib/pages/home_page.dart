@@ -350,14 +350,14 @@ class NotificationWidget extends StatelessWidget {
               notificationMessage +=
                   "Today's ${todayEntries.join(', ')} entries are empty\n";
             } else {
-              "There are no empty entries today!";
+              notificationMessage +="There are no empty entries today!\n";
             }
 
             if (tmrwEntries.isNotEmpty) {
               notificationMessage +=
                   "Tomorrow's ${tmrwEntries.join(', ')} entries are empty";
               print(notificationMessage);
-              // print("line331");
+              print("line360");
             } else {
               notificationMessage += "There are no empty entries tomorrow!";
             }
@@ -390,7 +390,7 @@ class AchievementsBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _dbHelper.getUpcomingUserEntries(_dbHelper.getCurrentUser()),
+        stream: _dbHelper.getAllUserEntries(_dbHelper.getCurrentUser()),
         builder: (context, snapshot) {
           List entries = snapshot.data?.docs ?? [];
 

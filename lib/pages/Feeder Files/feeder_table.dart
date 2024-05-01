@@ -1,19 +1,15 @@
-import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
-import 'package:intl/intl.dart';
 
 import '../../models/entry.dart';
 import '../../models/station.dart';
-import '../../models/userdoc.dart';
-import '../../services/firebase_helper.dart';
+import '../../components/snapshots.dart';
 import 'package:collection/collection.dart';
 
 import 'cell_wrapper.dart';
-import 'feeder_data_source.dart';
 
 Widget commonCellWrapping(String text, {Color? color}) {
   return Container(
@@ -26,11 +22,9 @@ Widget commonCellWrapping(String text, {Color? color}) {
 
 class FeederTable extends StatefulWidget {
   const FeederTable({super.key,
-  required this.controller,
-  required this.fh});
+  required this.controller});
 
   final FeederController controller;
-  final FirebaseHelper fh;
 
   @override
   State<FeederTable> createState() => _FeederTableState();
@@ -43,22 +37,42 @@ class _FeederTableState extends State<FeederTable> {
 
   @override
   Widget build(BuildContext context) {
+    // Ensures entries exist for at least 2 weeks past current date
+    // Snapshots.ensureEntriesPast();
     return FutureBuilder(
-      future: widget.controller.fds.stations,
+      future: Snapshots.stationQuery,
       builder: (stationContext, stationSnapshot) {
         if (!stationSnapshot.hasData) {
           return const CircularProgressIndicator();
         }
+        DateTime now = Snapshots.equalizeDate(DateTime.now());
+        DateTime startDate = now.subtract(const Duration(days: 7)); // Start one week prior to current date
+        DateTime endDate = now.add(const Duration(days: 14)); // End two weeks past current date
+
         stations = stationSnapshot.data!;
+
+        // Filter out stations that were deleted before the starting date
+        stations = stations.where( (element) { 
+          Timestamp? dateDeleted = element.data().dateDeleted;  
+          if (dateDeleted != null) { // Station has been deleted
+            // Whether station was deleted strictly before the starting date
+            dateDeleted = Snapshots.equalizeTime(dateDeleted);
+            return !dateDeleted.toDate().isBefore(startDate);
+          } else { return true; } // Station has never been deleted; include
+        }).toList();
+
+        // Limit entries shown to range of dates
+        var entryRangeQuery = Snapshots.entriesFromToQuery(startDate, endDate);
+
         return StreamBuilder(
-          stream: widget.controller.fds.tableStream,
+          stream: entryRangeQuery.snapshots(),
           builder: (context, snapshot) {
             List<QueryDocumentSnapshot<Entry>> allEntries = snapshot.data?.docs ?? [];
         
             // Groups entries by date
             Map<Timestamp, List<QueryDocumentSnapshot<Entry>>> groupedEntries = groupBy(allEntries, 
               (p0) {
-                return widget.fh.equalizeTime(p0.data().date);
+                return Snapshots.equalizeTime(p0.data().date);
               }
             );
 
@@ -72,7 +86,7 @@ class _FeederTableState extends State<FeederTable> {
               controller: ScrollController(),
               child: Table(
                   columnWidths: const {
-                    0: FixedColumnWidth(100),
+                    0: IntrinsicColumnWidth(),
                   },
                   border: TableBorder.all(),
                   children: [headerRow()] + rows)
@@ -86,44 +100,44 @@ class _FeederTableState extends State<FeederTable> {
   List<TableRow> buildAllRows(Map<Timestamp, List<QueryDocumentSnapshot<Entry>>> groupedEntries) {
     List<TableRow> rows = [];
     groupedEntries.forEach((stamp, snapshots) { 
-      DateTime date = stamp.toDate();
-      // Ensure data for this row is valid (iterate through stations)
-      bool rowIsValid = true;
-      if(snapshots.length == stations.length) {
-        // There must exist an entry for each station
-        for (QueryDocumentSnapshot<Station> station in stations) {
-          // Find entries with this stationID
-          if(!snapshots.any((element) => element.data().stationID.id == station.id)){
-            rowIsValid = false;
-            break;
-          }
-        }
-      } else { rowIsValid = false; }
-
-      if(rowIsValid) {
-        rows.add(buildRow(stamp, snapshots));
-      } 
-      else { // debug
-        print('Row invalid: $date');
-      }
-
+      rows.add(buildRow(stamp, snapshots));
     });
-    // TODO sort rows...
     return rows; // TODO
   }
   
   TableRow buildRow(Timestamp date, List<QueryDocumentSnapshot<Entry>> data){
     List<TableCell> cells = [];
-    // Add date first
+
+    // 'Indexes' entries by stationID
+    var dataMap = groupBy(data, (p0) => p0.data().stationID.id);
+
+    // Add date cell first
     String formattedDate = formatAbbr.format(date.toDate());
     cells.add(buildCell(commonCellWrapping(formattedDate)));
-    for (int i = 0; i < data.length; i++) {
-      // CellWrapper holds all cell data
-      cells.add(buildCell(CellWrapper(
-        data: data[i], 
-        controller: widget.controller,
-        fh: widget.fh,
-      )));
+    
+    // Add cells for each station
+    for (var station in stations) {
+      // Entry exists for this station
+      if(dataMap.containsKey(station.id)){ 
+        // CellWrapper holds all cell data
+        cells.add(buildCell(CellWrapper(
+          data: dataMap[station.id]![0], 
+          controller: widget.controller,
+        )));
+      } 
+      // Entry does not exist for this station
+      else {
+        // Display null cell
+        cells.add(buildCell(
+          Container(
+            alignment: Alignment.center,
+            color: Colors.black,
+            padding: const EdgeInsets.all(8.0),
+            child: const Text('N/A', 
+              style: TextStyle(color: Colors.white),)
+          )
+        ));
+      }
     }
     return TableRow(
       children: cells

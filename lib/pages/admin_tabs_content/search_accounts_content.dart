@@ -15,7 +15,7 @@ class SearchUsersContent extends StatefulWidget {
 }
 
 class _SearchUsersContentState extends State<SearchUsersContent> {
-  final TextEditingController nameController = TextEditingController();
+  //final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final FirebaseHelper fh = FirebaseHelper();
   bool doSearch = false;
@@ -85,9 +85,9 @@ class _SearchUsersContentState extends State<SearchUsersContent> {
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: () {
-                    final name = nameController.text;
+                    //final name = nameController.text;
                     final email = emailController.text;
-                    print('Name: $name, Email: $email');
+                    print('Email: $email');
                     doSearch = true;
                     setState(() {});
                     // nameController.clear();
@@ -122,7 +122,7 @@ class _SearchUsersContentState extends State<SearchUsersContent> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(text,
                           style: const TextStyle(color: Colors.white),),
-                      );
+                      ); 
 
                     Container fieldDataCont(String text) =>
                       Container(
