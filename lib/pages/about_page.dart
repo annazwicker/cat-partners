@@ -208,8 +208,6 @@ class AboutScreen extends StatelessWidget {
                 height: 150,
                 width: 150,
                 child: Image(image: AssetImage('images/Princess.jpeg'))),
-              
-            // add text
           ]
         )
       )
@@ -230,7 +228,7 @@ class AboutScreen extends StatelessWidget {
           scrollDirection: Axis.vertical,
           controller: _ScrollCat,
           children: const [
-            // following puts images of cats in a scroll box
+            // following puts images of cats in a scroll box; 2 cats per row
             Row(
               mainAxisAlignment: MainAxisAlignment.center, 
               children: [
@@ -365,7 +363,6 @@ class _NestedTabBarState extends State<NestedTabBar>
             labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Playfair Display"),
             tabs: const [ ///////////////// the tab options, length must match
               Tab(icon: Icon(Icons.home), text: 'Home'),
-              Tab(icon: Icon(Icons.info), text: 'About'),
               Tab(icon: Icon(Icons.admin_panel_settings), text: 'Admin'),
               Tab(icon: Icon(Icons.local_dining), text: 'Sign Up To Feed'),
               Tab(icon: Icon(Icons.account_box), text: 'Account'),

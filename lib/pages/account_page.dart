@@ -1,12 +1,12 @@
-//import 'dart:io';
-//import 'dart:typed_data';
-import 'dart:js_interop';
+// import 'dart:io';
+// import 'dart:typed_data';
+// import 'dart:js_interop';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_application_1/const.dart'; 
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:flutter_application_1/const.dart'; 
 import 'package:flutter_application_1/components/user_google.dart';
 
 import '../services/firebase_helper.dart';
@@ -78,7 +78,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       )
     );
   }
-
+  /// aligns accountInfo and pfpBoxwidgets horizontally. signOutButton widget is placed below both.
   Widget horizontalWidgets(double containerWidth){
     return Column(
       children: [
@@ -96,6 +96,8 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       ],
     );
   }
+
+  /// aligns accountInfo, pfpBox, and signOutButton widgets vertically.
   Widget verticalWidgets(double screenWidth){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -125,6 +127,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
       
   }
   */
+  /// Sets up the field used to change user information.
   Widget accountInfo(double containerWidth){
     return SizedBox(
       width: containerWidth,
@@ -142,7 +145,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                   _name = value;
                 }),
                 _buildTextField('Email', 'email@gmail.com', (value) {
-                  _email = 'email@gmail.com';
+                  _email = value;
                   
                 }),
                 _buildTextField('Phone Number', 'Enter your phone number', (value) {
@@ -175,7 +178,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                         // checks if email has changed, thus requiring a change in the database to account for it(new email gets new FirebaseID)
                         if(_email != UserGoogle.getUser().email){
                           UserGoogle().reLogin(_email!, _name, _phoneNumber, _affiliation, _rescuegroupaffiliation);
-                        } else {
+                        } else { // if email is the same
                           var id = UserGoogle().auth.currentUser?.uid.toString();
                           var docID;
                           await UserGoogle().db.collection('accountLink').get().then(
@@ -203,6 +206,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
     );
   }
 
+  /// Returns a Widget that takes a user's pfp from their Google account and displays it
   Widget pfpBox(double containerWidth){
     return Container(
       alignment: Alignment.center,
@@ -230,6 +234,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
     );
   }
 
+  /// Returns a widget that creates a sign out button
   Widget signOutButton(){
     return ElevatedButton(
       onPressed: () {UserGoogle.signOut();}, 
