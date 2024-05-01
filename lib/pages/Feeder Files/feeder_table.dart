@@ -40,7 +40,7 @@ class _FeederTableState extends State<FeederTable> {
     // Ensures entries exist for at least 2 weeks past current date
     Snapshots.ensureEntriesPast();
     return FutureBuilder(
-      future: Snapshots.stationQuery,
+      future: Snapshots.getStationQuery(),
       builder: (stationContext, stationSnapshot) {
         if (!stationSnapshot.hasData) {
           return const CircularProgressIndicator();

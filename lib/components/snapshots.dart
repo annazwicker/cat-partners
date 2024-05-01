@@ -380,7 +380,6 @@ class Snapshots {
 
         // Delete all entries for this station with dates today and in the future
         for(var entry in allStationEntries) {
-          print('found an entry!');
           DateTime entryDate = entry.data().date.toDate();
           if(!entryDate.isBefore(deletionDate)){
             transaction.delete(entry.reference);
