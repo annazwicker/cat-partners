@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: FutureBuilder(
                   future: _userDocument,
                   builder: (context, userSnapshot) {
+                    if(!userSnapshot.hasData) return Text("Loading...");
                     String userID = userSnapshot.data!.id;
 
                     if (userSnapshot.connectionState == ConnectionState.done) {
@@ -68,9 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     return StreamBuilder(
                         stream: _dbHelper.getThisUser2(userID),
                         builder: (context, snapshot) {
+                          if(!snapshot.hasData) return Text("Loading...");
                           return StreamBuilder(
                               stream: _dbHelper.getStationStream(),
                               builder: (context, stationSnapshot) {
+                                if(!stationSnapshot.hasData) return Text("Loading...");
                                 return Column(
                                     // mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
@@ -129,6 +132,7 @@ class UpcomingEntries extends StatelessWidget {
     return StreamBuilder(
         stream: _dbHelper.getUpcomingUserEntries(_userID),
         builder: (context, snapshot) {
+          if(!snapshot.hasData) return Text("Loading...");
           //create list, map for stations
           List stationList = _stationSnapshot.data?.docs ?? [];
           _dbHelper.sortStationList(stationList);
@@ -244,6 +248,7 @@ class userEntries extends StatelessWidget {
     return StreamBuilder(
         stream: _dbHelper.getUpcomingUserEntries(_userID),
         builder: (context, snapshot) {
+          if(!snapshot.hasData) return Text("Loading...");
           List entries = snapshot.data?.docs ?? [];
           entries.sort((a, b) {
             DateTime aE = a.data().date.toDate();
@@ -309,6 +314,7 @@ class NotificationWidget extends StatelessWidget {
     return StreamBuilder(
         stream: _dbHelper.getUrgentEntries(),
         builder: (context, snapshot) {
+          if(!snapshot.hasData) return Text("Loading...");
           //get live list of stations
           List stationList = _stationSnapshot.data?.docs ?? [];
           _dbHelper.sortStationList(stationList);
@@ -421,6 +427,10 @@ class AchievementsBox extends StatelessWidget {
     return StreamBuilder(
         stream: _dbHelper.getAllCompletedUserEntries(_userID),
         builder: (context, snapshot) {
+
+          if (!snapshot.hasData){
+            return Text("Loading...");
+          }
           List entries = snapshot.data?.docs ?? [];
 
           String achievementText = "";
