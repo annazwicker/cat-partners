@@ -255,8 +255,8 @@ Stream<QuerySnapshot> getAllCompletedUserEntries(String userID) {
    * changes user account's affiliation
    */
   Future changeUserAffiliation(
-      String userEmail, String selectedAffiliation) async {
-    DocumentReference documentReference = _usersRef.doc(userEmail);
+      String userID, String selectedAffiliation) async {
+    DocumentReference documentReference = _usersRef.doc(userID);
     return documentReference.update({'affiliation': selectedAffiliation});
   }
 
