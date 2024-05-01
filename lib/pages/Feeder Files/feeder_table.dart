@@ -39,8 +39,8 @@ class _FeederTableState extends State<FeederTable> {
   Widget build(BuildContext context) {
     // Ensures entries exist for at least 2 weeks past current date
     Snapshots.ensureEntriesPast();
-    return FutureBuilder(
-      future: Snapshots.getStationQuery(),
+    return StreamBuilder(
+      stream: Snapshots.stationStream,
       builder: (stationContext, stationSnapshot) {
         if (!stationSnapshot.hasData) {
           return const CircularProgressIndicator();
@@ -49,7 +49,7 @@ class _FeederTableState extends State<FeederTable> {
         DateTime startDate = now.subtract(const Duration(days: 7)); // Start one week prior to current date
         DateTime endDate = now.add(const Duration(days: 14)); // End two weeks past current date
 
-        stations = stationSnapshot.data!;
+        stations = stationSnapshot.data!.docs;
 
         // Filter out stations that were deleted before the starting date
         stations = stations.where( (element) { 

@@ -27,12 +27,6 @@ class Snapshots {
   static final Stream<QuerySnapshot<Station>> _stationStream = fh.getStationStream();
   static final Stream<QuerySnapshot<UserDoc>> _userStream = fh.getUserStream();
 
-  
-  static final Future<List<QueryDocumentSnapshot<Station>>> _stationQuery = getStationQuery();
-  static final Future<List<QueryDocumentSnapshot<Entry>>> _entryQuery = getEntryQuery();
-  static final Future<List<QueryDocumentSnapshot<Cat>>> _catQuery = getCatQuery();
-  static final Future<List<QueryDocumentSnapshot<UserDoc>>> _userQuery = getUserQuery();
-
   /// A Stream returning all entries. Dynamically updates.
   static Stream<QuerySnapshot<Entry>> get entryStream => _entryStream;
   /// A Stream returning all cats. Dynamically updates.
@@ -41,16 +35,6 @@ class Snapshots {
   static Stream<QuerySnapshot<Station>> get stationStream => _stationStream;
   /// A Stream returning all users. Dynamically updates.
   static Stream<QuerySnapshot<UserDoc>> get userStream => _userStream;
-
-
-  /// Returns a list of stations. Does not dynamically update.
-  static Future<List<QueryDocumentSnapshot<Station>>>  get stationQuery => _stationQuery;
-  /// Returns a list of entries. Does not dynamically update.
-  static Future<List<QueryDocumentSnapshot<Entry>>>    get entryQuery => _entryQuery;
-  /// Returns a list of cats. Does not dynamically update.
-  static Future<List<QueryDocumentSnapshot<Cat>>>      get catQuery => _catQuery;
-  /// Returns a list of users. Does not dynamically update.
-  static Future<List<QueryDocumentSnapshot<UserDoc>>>  get userQuery => _userQuery;
 
   /// Returns all documents in the collection referenced by [ref].
   static Future<List<QueryDocumentSnapshot<T>>> _getQuery<T>(CollectionReference<T> ref) async {
@@ -108,13 +92,13 @@ class Snapshots {
     Future<List<QueryDocumentSnapshot<T>>> query;
     switch(T){
       case Station:
-        query = _stationQuery as Future<List<QueryDocumentSnapshot<T>>>;
+        query = getStationQuery() as Future<List<QueryDocumentSnapshot<T>>>;
       case Cat:
-        query = _catQuery as Future<List<QueryDocumentSnapshot<T>>>;
+        query = getCatQuery() as Future<List<QueryDocumentSnapshot<T>>>;
       case Entry:
-        query = _entryQuery as Future<List<QueryDocumentSnapshot<T>>>;
+        query = getEntryQuery() as Future<List<QueryDocumentSnapshot<T>>>;
       case UserDoc:
-        query = _userQuery as Future<List<QueryDocumentSnapshot<T>>>;
+        query = getUserQuery() as Future<List<QueryDocumentSnapshot<T>>>;
       default:
         throw FormatException('DocumentReference is not in the right collection: ${docRef.parent.runtimeType}.'
         ' Please provide a DocumentReference in the Station, Cat, Users or Entry collections.');
