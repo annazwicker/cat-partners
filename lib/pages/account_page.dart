@@ -181,7 +181,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                               }, nameController),
                               _buildTextField('Email', 'email@gmail.com',
                                   (value) {
-                                _email = 'email@gmail.com';
+                                _email = value;
                               }, emailController),
                               _buildOptionalTextField(
                                   'Phone Number', 'Enter your phone number',
