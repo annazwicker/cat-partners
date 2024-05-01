@@ -207,9 +207,7 @@ class Snapshots {
         "Affiliation",  // Affiliation of user. NULL for no user.
         ]
     );
-    var entryQuery = fh.entriesRef
-      .where(Entry.dateString, isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-      .where(Entry.dateString, isLessThan: Timestamp.fromDate(endDate));
+    var entryQuery = entriesFromToQuery(startDate, endDate );
     await entryQuery.get().then( (querySnapshot) async {
       List<QueryDocumentSnapshot<Entry>> entrySnapshots = querySnapshot.docs;
       for (QueryDocumentSnapshot<Entry> entrySnapshot in entrySnapshots){
@@ -260,6 +258,7 @@ class Snapshots {
 
   /// Ensure entries exist for at least [numDays] days after the current date.
   static Future<void> ensureEntriesPast({int numDays = 14}) async {
+    // TODO account for added/deleted stations
     DateTime dateNow = equalizeDate(DateTime.now());
     DateTime dateThen = dateNow.add(const Duration(days: 14));
 
@@ -276,7 +275,7 @@ class Snapshots {
     DateTime nextDate = latestDate.add(Duration(days: i));
     var stations = await getStationQuery();
     while(!nextDate.isAfter(dateThen)){
-      addEntriesFor(stations, Timestamp.fromDate(nextDate));
+      addEntriesForAll(stations, Timestamp.fromDate(nextDate));
       i++;
       nextDate = latestDate.add(Duration(days: i));
     }
@@ -328,7 +327,7 @@ class Snapshots {
   }
 
   /// Adds a new entry for each station in [stations], all with Timestamp [stamp].
-  static Future<void> addEntriesFor(List<QueryDocumentSnapshot<Station>> stations, Timestamp stamp) async {
+  static Future<void> addEntriesForAll(List<QueryDocumentSnapshot<Station>> stations, Timestamp stamp) async {
     await runTransaction(
       (transaction) async {
         for(var station in stations){
@@ -363,6 +362,42 @@ class Snapshots {
     Timestamp nextStamp = Timestamp.fromDate(nextDate);
     return fh.entriesRef.where('date',
         isGreaterThanOrEqualTo: stamp, isLessThan: nextStamp);
+  }
+
+  /// Retrieves a query that obtains all entries from [startDate] to [endDate] exclusive.
+  static Query<Entry> entriesFromToQuery(DateTime startDate, DateTime endDate){
+    return fh.entriesRef
+      .where(Entry.dateString, isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+      .where(Entry.dateString, isLessThan: Timestamp.fromDate(endDate));
+  }
+
+  // Modifying stations
+
+  /// adds station to Station collection given a map of the station's characteristics
+  static Future addStation(Station station) async {
+    // Add station document
+    DocumentReference<Station> newStationRef = await fh.stationsRef.add(station);
+    // Add entries for the new station for the next two weeks
+    DateTime now = equalizeDate(DateTime.now());
+    for(int i = 0; i <= 14; i++){
+      addEntry(Entry(
+        assignedUser: null, 
+        date: Timestamp.fromDate(now.add(Duration(days: i))), 
+        note: '', 
+        stationID: newStationRef));
+    }
+  }
+
+  
+  /// deletes station from Station collection given a doc reference to that station
+  static Future deleteStation(String stationToDelete) async {
+    // TODO remove future entries for new station
+    return runTransaction(
+      (transaction) async {
+        DocumentReference stationRef = fh.stationsRef.doc(stationToDelete);
+        // Deletion is done by setting the 'date deleted' param
+        transaction.update(stationRef, {Station.dateDeletedString: Timestamp.now()});
+      });
   }
 
 }

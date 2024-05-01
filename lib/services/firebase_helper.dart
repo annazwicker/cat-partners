@@ -79,6 +79,15 @@ class FirebaseHelper {
     return _usersRef.snapshots();
   }
 
+  void sortStationList(List stationList) {
+    stationList.sort((a, b) {
+      String aE = a.data().name;
+      String bE = b.data().name;
+      int comp = aE.compareTo(bE);
+      return comp;
+    });
+  }
+  
   //get user's name given documentReference
   Future getUserName(DocumentReference<Object?>? docRef) async {
     DocumentSnapshot assignedUserSnapshot = await docRef!.get();
@@ -104,6 +113,7 @@ class FirebaseHelper {
     return _entriesRef
         .where("date", isGreaterThanOrEqualTo: nowNoSeconds)
         .where("date", isLessThanOrEqualTo: tomorrow)
+        .where("assignedUser", isNull: true)
         .snapshots();
   }
 
@@ -188,6 +198,14 @@ class FirebaseHelper {
   }
 
   /**
+   * returns snapshots of all users with admin permission
+   */
+  Stream<QuerySnapshot<UserDoc>> getAdminUsers() {
+    return _usersRef.where('isAdmin', isEqualTo: true).snapshots();
+    // return _usersRef.snapshots();
+  }
+
+  /**
    * gives admin status to user account given the email address string 
    * (assuming email is the doc ID)
    */
@@ -227,28 +245,6 @@ class FirebaseHelper {
   Future deleteCat(String catToDelete) async {
     DocumentReference cat = _catsRef.doc(catToDelete);
     return cat.delete();
-  }
-
-  /**
-   * adds station to Station collection given a map of the station's characteristics
-   */
-  Future addStation(Map<String, dynamic> stationMap) async {
-    Station station = Station(
-      description: stationMap['description'],
-      fullName: stationMap['fullName'],
-      name: stationMap['name'],
-      photo: stationMap['photo'],
-    );
-
-    return _stationsRef.add(station);
-  }
-
-  /**
-   * deletes station from Station collection given a doc reference to that station
-   */
-  Future deleteStation(String stationToDelete) async {
-    DocumentReference station = _stationsRef.doc(stationToDelete);
-    return station.delete();
   }
 
 /**
