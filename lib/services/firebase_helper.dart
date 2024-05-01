@@ -138,16 +138,16 @@ class FirebaseHelper {
 /**
  * queries all of a given user's upcoming entries
  */
-  Stream<QuerySnapshot> getUpcomingUserEntries(DocumentReference userRef) {
-    print(userRef);
+  Stream<QuerySnapshot> getUpcomingUserEntries(String userID) {
 
+    DocumentReference userRef = _usersRef.doc(userID);
     // DateTime now = DateTime.now();
     // DateTime now = DateTime.now().add(const Duration(days: -30));
     DateTime now = DateTime.now();
     DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
     print(nowNoSeconds);
+    // print(time);
     Timestamp time = Timestamp.fromDate(nowNoSeconds);
-    print(time);
 
     DocumentReference<Station> station = _stationsRef.doc('1');
 
@@ -159,8 +159,12 @@ class FirebaseHelper {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> getAllUserEntries(DocumentReference userRef) {
-    print(userRef);
+  Stream<QuerySnapshot> getAllUserEntries(String userID) {
+    // print(userRef);
+      
+  DocumentReference userRef = _usersRef.doc(userID);    
+
+
 
     // DateTime now = DateTime.now();
     // DateTime now = DateTime.now().add(const Duration(days: -30));
@@ -179,10 +183,37 @@ class FirebaseHelper {
         .snapshots();
   }
 
-  DocumentReference getCurrentUser() {
-    return _usersRef.doc('nay@southwestern.edu');
-    //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
+
+Stream<QuerySnapshot> getAllCompletedUserEntries(String userID) {
+    // print(userRef);
+      
+  DocumentReference userRef = _usersRef.doc(userID);    
+
+
+
+    // DateTime now = DateTime.now();
+    // DateTime now = DateTime.now().add(const Duration(days: -30));
+    DateTime now = DateTime.now();
+    DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
+    print(nowNoSeconds);
+    Timestamp time = Timestamp.fromDate(nowNoSeconds);
+    print(time);
+
+    DocumentReference<Station> station = _stationsRef.doc('1');
+
+    return _entriesRef
+        .where("assignedUser", isEqualTo: userRef)
+        .where("date", isLessThanOrEqualTo: time)
+
+        // .where("stationID", isEqualTo: station)
+        .snapshots();
   }
+
+
+  // DocumentReference getCurrentUser() {
+  //   return _usersRef.doc('nay@southwestern.edu');
+  //   //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
+  // }
 
   Stream<QuerySnapshot> getThisUser(email) {
     return _usersRef.where('email', isEqualTo: email).snapshots();

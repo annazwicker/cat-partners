@@ -111,7 +111,6 @@ class AccountInfoFormState extends State<AccountInfoForm> {
   }
 
   Widget accountInfo(double containerWidth) {
-    String userToken = 'nay@southwestern.edu';
 
     UserGoogle userGoogle = UserGoogle();
     //get firebase ID
