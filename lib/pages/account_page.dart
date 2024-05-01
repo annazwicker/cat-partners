@@ -165,7 +165,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
                           _email = 'email@gmail.com';
                         }, emailController),
                         _buildOptionalTextField(
-                            'Phone Number', 'Enter your phone number', (value) {
+                            'Phone Number (XXX-XXX-XXXX)', 'Enter your phone number', (value) {
                           _phoneNumber = value;
                         }, phoneNumberController),
                         _buildDropdownField('Affiliation', [
