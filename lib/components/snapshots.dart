@@ -148,14 +148,6 @@ class Snapshots {
     return (userExists, toReturn);
   }
 
-  /// TEMPORARY FUNCTION.
-  /// Returns the DocumentReference of the current HARD-CODED user.
-  static Future<DocumentReference> getCurrentUserTEST() async {
-    // assert (isUserLoggedIn());
-    String currentUserID = fh.currentUserIDTest!;
-    return await fh.usersRef.doc(currentUserID);
-  }
-
   /// Retrieves the UserDoc of the user that's currently signed in.
   /// If an Exception occurs during retrieval (perhaps due to the userDoc not existing,
   /// or there being no user signed in), returns null.

@@ -24,13 +24,7 @@ class FirebaseHelper {
   late final CollectionReference<Entry> _entriesRef;
   late final CollectionReference<Station> _stationsRef;
   late final CollectionReference<Cat> _catsRef;
-  late final CollectionReference<UserDoc> _usersRef;
-
-  // TODO get current user ID
-  final bool isUserLoggedIn = true;
-  final String? currentUserIDTest = 'bGb48S0N1TXE7bzF52yc';
-
-  
+  late final CollectionReference<UserDoc> _usersRef;  
 
   FirebaseHelper() {
     // Mapping used by all reference initializers
@@ -188,12 +182,6 @@ Stream<QuerySnapshot> getAllCompletedUserEntries(String userID) {
         // .where("stationID", isEqualTo: station)
         .snapshots();
   }
-
-
-  // DocumentReference getCurrentUser() {
-  //   return _usersRef.doc('nay@southwestern.edu');
-  //   //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
-  // }
 
   Stream<QuerySnapshot> getThisUser(email) {
     return _usersRef.where('email', isEqualTo: email).snapshots();
@@ -367,11 +355,6 @@ Stream<QuerySnapshot> getAllCompletedUserEntries(String userID) {
 
   FirebaseFirestore get db {
     return _db;
-  }
-
-  /// Returns document ID of current user, as string
-  String? getUserIDTest() {
-    return currentUserIDTest;
   }
 
 }
