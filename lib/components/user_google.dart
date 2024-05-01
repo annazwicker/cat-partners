@@ -72,7 +72,7 @@ class UserGoogle {
         } 
 
       } on FirebaseAuthException catch (e) {
-        print("Something when wrong");
+        print("Something when wrong with Firebase");
       } catch (e) {
         print("Something when wrong");
       }
