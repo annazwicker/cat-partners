@@ -34,6 +34,8 @@ class FirebaseHelper {
   final bool isUserLoggedIn = true;
   final String? currentUserIDTest = 'bGb48S0N1TXE7bzF52yc';
 
+  
+
   FirebaseHelper() {
     // Mapping used by all reference initializers
     Map<String, Object?> toFirestore(item, _) => item.toJson();
@@ -156,6 +158,7 @@ class FirebaseHelper {
         // .where("stationID", isEqualTo: station)
         .snapshots();
   }
+
   Stream<QuerySnapshot> getAllUserEntries(DocumentReference userRef) {
     print(userRef);
 
@@ -181,13 +184,16 @@ class FirebaseHelper {
     //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
   }
 
-
-    Stream<QuerySnapshot>  getThisUser(email) {
-
+  Stream<QuerySnapshot> getThisUser(email) {
     return _usersRef.where('email', isEqualTo: email).snapshots();
     //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
   }
 
+
+ Stream<DocumentSnapshot<UserDoc>> getThisUser2(userID) {
+    // return _usersRef.where('email', isEqualTo: email).snapshots();
+     return _usersRef.doc(userID).snapshots();
+  }
   //Account Page Methods
 
   //add security that ensures phone number is valid

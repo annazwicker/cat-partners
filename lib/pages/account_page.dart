@@ -122,32 +122,29 @@ class AccountInfoFormState extends State<AccountInfoForm> {
         future: _userDocument,
         builder: (context, userSnapshot) {
           String userID = userSnapshot.data!.id;
-          
-        if (userSnapshot.connectionState == ConnectionState.done) {
-          print("line 127");
-          print(userID);
-          // Map<String, dynamic> data = userSnapshot.data!.data() as Map<String, dynamic>;
-          // return Text("Full Name: ${data['full_name']} ${data['last_name']}");
-        }
+
+          if (userSnapshot.connectionState == ConnectionState.done) {
+            print("line 127");
+            print(userID);
+            // Map<String, dynamic> data = userSnapshot.data!.data() as Map<String, dynamic>;
+            // return Text("Full Name: ${data['full_name']} ${data['last_name']}");
+          }
 
           return StreamBuilder(
-              stream: _dbHelper.getThisUser(userToken),
+              stream: _dbHelper.getThisUser2(userID),
               builder: (context, snapshot) {
-                List userSnapshot = snapshot.data?.docs ?? [];
+                // List userSnapshot = snapshot.data?.docs ?? [];
                 // Map<String, String> userMap = {};
+                UserDoc? data = snapshot.data!.data();
+
                 Map<String, String> userInfo = {};
-                userSnapshot.forEach((doc) {
-                  userInfo = {
-                    'email': doc['email'],
-                    'name': doc['name'],
-                    'affiliation': doc['affiliation'],
-                    'phone': doc['phoneNumber'],
-                    'rescue': doc['rescueGroupAffiliaton']
-                  };
-                  // String docId = doc.id;
-                  // String email = doc['email'];
-                  // userMap[email] = docId;
-                });
+                userInfo = {
+                  'email': data!.getEmail(),//data['email'],
+                  'name': data.getName(),//data['name'],
+                  'affiliation': data.affiliation,//data['affiliation'],
+                  'phone': data.phoneNumber,//data['phoneNumber'],
+                  'rescue': data.rescueGroup//data['rescueGroupAffiliaton']
+                };
                 print("userMap:");
                 print(userInfo);
                 //create controllers
@@ -226,7 +223,7 @@ class AccountInfoFormState extends State<AccountInfoForm> {
 
                                       //create map
                                       _dbHelper.changeProfileFields(
-                                          userToken, formData);
+                                          userID, formData);
                                     }
                                   },
                                   child: const Text('Submit'),
