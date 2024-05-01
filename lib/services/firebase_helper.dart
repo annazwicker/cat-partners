@@ -1,9 +1,5 @@
-import 'dart:js_interop_unsafe';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart';
 
 import '../models/cat.dart';
 import '../models/entry.dart';

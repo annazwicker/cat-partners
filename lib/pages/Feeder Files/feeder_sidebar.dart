@@ -56,7 +56,6 @@ class _FeederSidebarState extends State<FeederSidebar> {
     /// True if the user is logged in and this is their entry, or if
     /// they're logged in and 
     Future<bool> canUserEdit() async {
-      return false; // Dealing with something give me a second jesus christ
       DocumentSnapshot<Map<String, dynamic>>? currentUserDoc = await Snapshots.getCurrentUserDoc();
       if (currentUserDoc == null){
         // Error retrieving userDoc

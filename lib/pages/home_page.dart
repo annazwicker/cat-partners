@@ -42,10 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    UserGoogle userGoogle = UserGoogle();
+    // UserGoogle userGoogle = UserGoogle();
     //get firebase ID
     Future<DocumentSnapshot<Map<String, dynamic>>> _userDocument =
-        userGoogle.getUserDoc();
+        UserGoogle.getUserDoc();
     return Scaffold(
         appBar: AppBar(
           title: Text('Home Page'),
