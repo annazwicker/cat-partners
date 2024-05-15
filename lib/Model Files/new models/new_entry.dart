@@ -32,6 +32,8 @@ class NewEntryModel implements EntryInterface {
 
   NewEntryModel._(this.doc);
 
+  static String collectionId = 'entry';
+
   factory NewEntryModel.fromSnapshot(DocumentSnapshot<Json> snapshot){
     return NewEntryModel._(DocModel(snapshot, _getChecker()));
   }
@@ -52,11 +54,9 @@ class NewEntryModel implements EntryInterface {
   static DocChecker _getChecker () {
     Map<String, FieldChecker> fieldCheckers = {
       _fieldRecord.note: FieldChecker.typeChecker<String>(),
-      // TODO should be User?
-      _fieldRecord.user: FieldChecker.typeChecker<SiteUser>(),
+      _fieldRecord.user: FieldChecker.docRefChecker(SiteUser.collectionId, nullable: true),
       _fieldRecord.date: FieldChecker.typeChecker<DateTime>(),
-      // TODO should be Station
-      _fieldRecord.station: FieldChecker.typeChecker<NewStation>(),
+      _fieldRecord.station: FieldChecker.docRefChecker(NewStation.collectionId),
     };
 
     // No verifier for whole document

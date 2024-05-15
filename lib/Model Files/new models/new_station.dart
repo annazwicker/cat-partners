@@ -38,6 +38,8 @@ class NewStation implements StationInterface{
 
   NewStation._(this.doc);
 
+  static const String collectionId = 'station';
+
   static const ({
     String dateCreated, 
     String dateDeleted, 
@@ -54,7 +56,7 @@ class NewStation implements StationInterface{
     return NewStation._(DocModel(snapshot, _getChecker()));
   }
 
-  static DocChecker _getChecker() {
+  static DocChecker _getChecker() { 
     Map<String, FieldChecker> fieldCheckers = {
       _fieldRecord.name: FieldChecker.typeChecker<String>(),
       _fieldRecord.dateCreated: FieldChecker.typeChecker<Timestamp>(),

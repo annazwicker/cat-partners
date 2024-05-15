@@ -15,7 +15,34 @@ class FieldChecker {
     List<String> function(Object? input) {
       List<String> list = [];
       if(input is! T){
-        list.add('Field is not of type $T.');
+        list.add('Field is not of type $T: $input');
+      }
+      return list;
+    }
+    return FieldChecker(function);
+  }
+
+
+  /// Returns a FieldChecker which verifies that inputs are type 
+  /// [DocumentReference], and reference a document in a collection with the
+  /// given ID. Input may be null if indicated as such.
+  static FieldChecker docRefChecker(String collectionID, {bool nullable = false}) {
+    List<String> function(Object? input) {
+      List<String> list = [];
+
+      // Allow null values if nullable
+      if(nullable && input == null) { return []; }
+
+      // Must be a docref
+      if(input is! DocumentReference){
+        list.add("Field is not a DocumentReference: $input");
+      } else {
+        // Must be a ref in given colleciton
+        DocumentReference docRef = input;
+        if(docRef.parent.id != collectionID) {
+          list.add("Field is not a reference to a "
+            "document in $collectionID: $docRef");
+        }
       }
       return list;
     }
