@@ -53,9 +53,12 @@ class FieldChecker {
 /// Contains methods for verifying that a document satisfies a group of checks.
 /// Includes checkers for each field, and checks upon the document as a whole.
 class DocChecker {
-  /// Verifies the given inputs against this checker collectively. Returns any
+
+  /// Verifies the entire input against additional checks. Returns any
   /// error messages generated during verification. If the input is valid,
   /// an empty list is returned. 
+  /// 
+  /// Only run if all field verifiers pass. 
   final List<String> Function(Json input) _finalVerifier;
   
   /// Maps the names of fields to the FieldCheckers that verify their respective
@@ -73,7 +76,9 @@ class DocChecker {
       errorMessages.addAll(checker.verifier(input[fieldName]));
     }
     // Check doc as a whole
-    errorMessages.addAll(_finalVerifier(input));
+    if(errorMessages.isEmpty) {
+      errorMessages.addAll(_finalVerifier(input));
+    }
     return errorMessages;
   }
 

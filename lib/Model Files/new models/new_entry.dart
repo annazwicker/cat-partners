@@ -28,6 +28,8 @@ abstract class EntryInterface {
 
 class NewEntryModel implements EntryInterface {
 
+  // ---- Housekeeping ---- //
+
   DocModel doc;
 
   NewEntryModel._(this.doc);
@@ -63,32 +65,39 @@ class NewEntryModel implements EntryInterface {
     return DocChecker(fieldCheckers, (json) => [] );
   }
 
-  // Overridden members
+  // ---- Overridden members ---- //
+  
   @override
   String get note => doc.document[_fieldRecord.note];
+
   @override
-  // TODO implement
+  /// UNIMPLEMENTED
   set note (String note) {
-    throw UnimplementedError();
+    // TODO implement set note
+    throw UnimplementedError(); 
   }
   
   @override
-  // TODO implement
+  /// UNIMPLEMENTED
   UserInterface? get user {
-    throw UnimplementedError();
+    // TODO implement get user
+    throw UnimplementedError(); 
   }
   @override
-  // TODO implement
+  /// UNIMPLEMENTED
   set user (UserInterface? newUser) {
+  // TODO implement set user
     doc.document[_fieldRecord.user];
     throw UnimplementedError();
   }
   
   @override
+  // TODO implement get date
   DateTime get date => doc.document[_fieldRecord.date];
   
   @override
-  // TODO: implement
+  /// UNIMPLEMENTED
+  // TODO implement get station
   StationInterface get station {
     throw UnimplementedError();
   }

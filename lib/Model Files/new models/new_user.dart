@@ -20,6 +20,9 @@ abstract class UserInterface {
 }
 
 class SiteUser implements UserInterface{
+
+  // ---- Housekeeping ---- //
+
   DocModel doc;
 
   SiteUser._(this.doc);
@@ -52,18 +55,22 @@ class SiteUser implements UserInterface{
     rescueGroups: 'rescueGroupAffiliaton',
   );
 
+  // ---- Overridden members ---- //
+
   @override
   String get name => doc.document[_fieldRecord.name];
   
   @override
+  /// UNIMPLEMENTED
   PrivateUserDataInterface? getPrivateData() {
-    // TODO: implement getPrivateData
+    // TODO: implement getPrivateData()
     throw UnimplementedError();
   }
   
   @override
+  /// UNIMPLEMENTED
   set name(String newName) {
-    // TODO: implement name
+    // TODO: implement set name
     throw UnimplementedError();
   }
 
@@ -120,6 +127,9 @@ abstract class PrivateUserDataInterface {
 }
 
 class PrivateUserData implements PrivateUserDataInterface{
+
+  // ---- Housekeeping ---- //
+
   DocModel doc;
 
   PrivateUserData._(this.doc);
@@ -146,6 +156,8 @@ class PrivateUserData implements PrivateUserDataInterface{
     Map<String, FieldChecker> fieldCheckers = {};
     return DocChecker(fieldCheckers, (json) => []);
   }
+
+  // ---- Overridden members ---- //
   
   @override
   String get affiliation => doc.document[_fieldRecord.affilation];
@@ -160,48 +172,56 @@ class PrivateUserData implements PrivateUserDataInterface{
   String get email => doc.document[_fieldRecord.email];
   
   @override
+  /// UNIMPLEMENTED
   bool addRescueGroup(String newGroup) {
     // TODO: implement addRescueGroup
     throw UnimplementedError();
   }
   
   @override
+  /// UNIMPLEMENTED
   bool hasRescueGroup(String rescueGroup) {
     // TODO: implement hasRescueGroup
     throw UnimplementedError();
   }
   
   @override
+  /// UNIMPLEMENTED
   void removeRescueGroup(int index) {
     // TODO: implement removeRescueGroup
     throw UnimplementedError();
   }
   
   @override
-  // TODO: implement rescueGroups
+  /// UNIMPLEMENTED
+  // TODO: implement get rescueGroups
   List<String> get rescueGroups => throw UnimplementedError();
   
   @override
+  /// UNIMPLEMENTED
   void setFirebaseAccount(String firebaseID) {
     // TODO: implement setFirebaseAccount
     throw UnimplementedError();
   }
   
   @override
+  /// UNIMPLEMENTED
   set affiliation(String newAffiliation) {
-    // TODO: implement affiliation
+    // TODO: implement set affiliation
     throw UnimplementedError();
   }
   
   @override
+  /// UNIMPLEMENTED
   set isAdmin(bool adminPerms) {
-    // TODO: implement isAdmin
+    // TODO: implement set isAdmin
     throw UnimplementedError();
   }
   
   @override
+  /// UNIMPLEMENTED
   set phoneNumber(String? newNumber) {
-    // TODO: implement phoneNumber
+    // TODO: implement set phoneNumber
     throw UnimplementedError();
   }
 

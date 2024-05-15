@@ -34,6 +34,9 @@ abstract class StationInterface {
 }
 
 class NewStation implements StationInterface{
+
+  // ---- Housekeeping ---- //
+
   DocModel doc;
 
   NewStation._(this.doc);
@@ -80,31 +83,39 @@ class NewStation implements StationInterface{
 
   }
 
+  // ---- Overridden members ---- //
+
   @override
-  // TODO: implement name
+  /// UNIMPLEMENTED
+  // TODO implement get name
   String get name => throw UnimplementedError();
 
   @override
-  // TODO: implement dateCreated
+  /// UNIMPLEMENTED
+  // TODO implement get dateCreated
   Timestamp get dateCreated => throw UnimplementedError();
 
   @override
-  // TODO: implement dateDeleted
+  /// UNIMPLEMENTED
+  // TODO implement get dateDeleted
   Timestamp? get dateDeleted => throw UnimplementedError();
 
 
   @override
-  // TODO: implement
+  /// UNIMPLEMENTED
+  // TODO implement set name
   set name(String newName) => throw UnimplementedError();
 
   @override
+  /// UNIMPLEMENTED
   void delete() {
-    // TODO: implement delete
+    // TODO implement delete()
     throw UnimplementedError();
   }
 
   @override
   // TODO: implement isDeleted
+  /// UNIMPLEMENTED
   bool get isDeleted => throw UnimplementedError();
 
 
