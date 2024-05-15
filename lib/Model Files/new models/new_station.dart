@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_1/Model%20Files/doc_checker.dart';
-import 'package:flutter_application_1/Model%20Files/object_model.dart';
+import 'package:flutter_application_1/Model%20Files/doc_model.dart';
 import 'package:flutter_application_1/components/types_and_funcs.dart';
 
 abstract class StationInterface {
