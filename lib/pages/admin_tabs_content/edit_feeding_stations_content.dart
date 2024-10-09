@@ -202,7 +202,7 @@ class _EditFeedingStationsContentState
           Expanded(
             // the delete account portion
             child: StreamBuilder(
-                stream: _dbHelper.getStationStream(),
+                stream: _dbHelper.stationsRef.where(Station.dateDeletedString, isNull: true).snapshots(),
                 builder: (context, snapshot) {
                   List stationSnapshots = snapshot.data?.docs ?? [];
                   stationSnapshots.sort((a, b) {

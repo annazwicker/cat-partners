@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../models/station.dart';
 import '../../services/firebase_helper.dart';
 
 class EditCatsContent extends StatefulWidget {
@@ -112,7 +113,7 @@ class _EditCatsContentState extends State<EditCatsContent> {
         builder: (context, catSnapshot) {
           return StreamBuilder(
               // gets list of all stations
-              stream: _dbHelper.getStationStream(),
+              stream: _dbHelper.stationsRef.where(Station.dateDeletedString, isNull: true).snapshots(),
               builder: (context, stationSnapshot) {
                 List stationSnapshots = stationSnapshot.data?.docs ?? [];
                 // stationSnapshots.sort((a, b) {

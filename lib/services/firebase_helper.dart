@@ -1,9 +1,5 @@
-import 'dart:js_interop_unsafe';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/Feeder%20Files/feeder_test_data.dart';
 
 import '../models/cat.dart';
 import '../models/entry.dart';
@@ -28,11 +24,7 @@ class FirebaseHelper {
   late final CollectionReference<Entry> _entriesRef;
   late final CollectionReference<Station> _stationsRef;
   late final CollectionReference<Cat> _catsRef;
-  late final CollectionReference<UserDoc> _usersRef;
-
-  // TODO get current user ID
-  final bool isUserLoggedIn = true;
-  final String? currentUserIDTest = 'bGb48S0N1TXE7bzF52yc';
+  late final CollectionReference<UserDoc> _usersRef;  
 
   FirebaseHelper() {
     // Mapping used by all reference initializers
@@ -120,16 +112,16 @@ class FirebaseHelper {
 /**
  * queries all of a given user's upcoming entries
  */
-  Stream<QuerySnapshot> getUpcomingUserEntries(DocumentReference userRef) {
-    print(userRef);
+  Stream<QuerySnapshot> getUpcomingUserEntries(String userID) {
 
+    DocumentReference userRef = _usersRef.doc(userID);
     // DateTime now = DateTime.now();
     // DateTime now = DateTime.now().add(const Duration(days: -30));
     DateTime now = DateTime.now();
     DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
     print(nowNoSeconds);
+    // print(time);
     Timestamp time = Timestamp.fromDate(nowNoSeconds);
-    print(time);
 
     DocumentReference<Station> station = _stationsRef.doc('1');
 
@@ -140,8 +132,13 @@ class FirebaseHelper {
         // .where("stationID", isEqualTo: station)
         .snapshots();
   }
-  Stream<QuerySnapshot> getAllUserEntries(DocumentReference userRef) {
-    print(userRef);
+
+  Stream<QuerySnapshot> getAllUserEntries(String userID) {
+    // print(userRef);
+      
+  DocumentReference userRef = _usersRef.doc(userID);    
+
+
 
     // DateTime now = DateTime.now();
     // DateTime now = DateTime.now().add(const Duration(days: -30));
@@ -160,18 +157,42 @@ class FirebaseHelper {
         .snapshots();
   }
 
-  DocumentReference getCurrentUser() {
-    return _usersRef.doc('nay@southwestern.edu');
-    //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
+
+Stream<QuerySnapshot> getAllCompletedUserEntries(String userID) {
+    // print(userRef);
+      
+  DocumentReference userRef = _usersRef.doc(userID);    
+
+
+
+    // DateTime now = DateTime.now();
+    // DateTime now = DateTime.now().add(const Duration(days: -30));
+    DateTime now = DateTime.now();
+    DateTime nowNoSeconds = DateTime(now.year, now.month, now.day);
+    print(nowNoSeconds);
+    Timestamp time = Timestamp.fromDate(nowNoSeconds);
+    print(time);
+
+    DocumentReference<Station> station = _stationsRef.doc('1');
+
+    return _entriesRef
+        .where("assignedUser", isEqualTo: userRef)
+        .where("date", isLessThanOrEqualTo: time)
+
+        // .where("stationID", isEqualTo: station)
+        .snapshots();
   }
 
-
-    Stream<QuerySnapshot>  getThisUser(email) {
-
+  Stream<QuerySnapshot> getThisUser(email) {
     return _usersRef.where('email', isEqualTo: email).snapshots();
     //  return _usersRef.doc('5SLi4nS54TigU4XtHzAp');
   }
 
+
+ Stream<DocumentSnapshot<UserDoc>> getThisUser2(userID) {
+    // return _usersRef.where('email', isEqualTo: email).snapshots();
+     return _usersRef.doc(userID).snapshots();
+  }
   //Account Page Methods
 
   //add security that ensures phone number is valid
@@ -218,8 +239,8 @@ class FirebaseHelper {
    * changes user account's affiliation
    */
   Future changeUserAffiliation(
-      String userEmail, String selectedAffiliation) async {
-    DocumentReference documentReference = _usersRef.doc(userEmail);
+      String userID, String selectedAffiliation) async {
+    DocumentReference documentReference = _usersRef.doc(userID);
     return documentReference.update({'affiliation': selectedAffiliation});
   }
 
@@ -334,11 +355,6 @@ class FirebaseHelper {
 
   FirebaseFirestore get db {
     return _db;
-  }
-
-  /// Returns document ID of current user, as string
-  String? getUserIDTest() {
-    return currentUserIDTest;
   }
 
 }
