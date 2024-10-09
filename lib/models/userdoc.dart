@@ -39,7 +39,6 @@ class UserDoc extends Model {
   String get affiliation {return _affiliation; }
   String get rescueGroup {return _rescueGroup; }
   String get phoneNumber {return _phoneNumber; }
-  bool get isAdmin {return _isAdmin; }
 
   factory UserDoc.fromJson(Map<String, dynamic> json) => UserDoc(
     isAdmin: json[isAdminString],

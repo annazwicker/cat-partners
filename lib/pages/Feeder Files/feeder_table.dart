@@ -38,9 +38,9 @@ class _FeederTableState extends State<FeederTable> {
   @override
   Widget build(BuildContext context) {
     // Ensures entries exist for at least 2 weeks past current date
-    Snapshots.ensureEntriesPast();
-    return StreamBuilder(
-      stream: Snapshots.stationStream,
+    // Snapshots.ensureEntriesPast();
+    return FutureBuilder(
+      future: Snapshots.stationQuery,
       builder: (stationContext, stationSnapshot) {
         if (!stationSnapshot.hasData) {
           return const CircularProgressIndicator();
@@ -49,19 +49,15 @@ class _FeederTableState extends State<FeederTable> {
         DateTime startDate = now.subtract(const Duration(days: 7)); // Start one week prior to current date
         DateTime endDate = now.add(const Duration(days: 14)); // End two weeks past current date
 
-        stations = stationSnapshot.data!.docs;
+        stations = stationSnapshot.data!;
 
         // Filter out stations that were deleted before the starting date
         stations = stations.where( (element) { 
-          Timestamp? dateDeleted = element.data().dateDeleted;
+          Timestamp? dateDeleted = element.data().dateDeleted;  
           if (dateDeleted != null) { // Station has been deleted
-            DateTime dateCreatedDate = Snapshots.equalizeDate(element.data().dateCreated.toDate());
-            DateTime dateDeletedDate = Snapshots.equalizeDate(dateDeleted.toDate());
-            return 
-              // Don't include if station was added/deleted on same day (no entries)
-              !dateCreatedDate.isAtSameMomentAs(dateDeletedDate) 
-              // Don't include if station was deleted on/before start date
-              && dateDeletedDate.isAfter(startDate);
+            // Whether station was deleted strictly before the starting date
+            dateDeleted = Snapshots.equalizeTime(dateDeleted);
+            return !dateDeleted.toDate().isBefore(startDate);
           } else { return true; } // Station has never been deleted; include
         }).toList();
 

@@ -65,9 +65,7 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _dbHelper.getUserStream(),
-        // stream: _dbHelper.getThisUser('nay@southwestern.edu'),
-
+        stream: _dbHelper.getThisUser('nay@southwestern.edu'),
         builder: (context, snapshot) {
           List userSnapshot = snapshot.data?.docs ?? [];
           //create map -- {email:documentID}
@@ -161,8 +159,6 @@ class _EditAccountsContentState extends State<EditAccountsContent> {
                                         // Check if the name and feeding station are not empty
                                         if (emailedit.isNotEmpty &&
                                             selectedAffiliation != null) {
-                                              print(emailedit);
-
                                           // Add success dialog
                                           showDialog(
                                             context: context,

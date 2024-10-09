@@ -2,13 +2,11 @@ import "package:flutter/material.dart";
 import "package:flutter_application_1/components/nav_bar.dart";
 import "package:flutter_application_1/components/notification.dart";
 import 'package:flutter_application_1/const.dart';
-import "package:flutter_application_1/models/userdoc.dart";
 
 import "package:flutter_application_1/services/firebase_helper.dart";
 
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:intl/intl.dart";
-import "../components/user_google.dart";
 import "../models/entry.dart";
 import "../models/station.dart";
 import "Feeder Files/feeder_controller.dart";
@@ -42,10 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // UserGoogle userGoogle = UserGoogle();
-    //get firebase ID
-    Future<DocumentSnapshot<Map<String, dynamic>>> _userDocument =
-        UserGoogle.getUserDoc();
     return Scaffold(
         appBar: AppBar(
           title: Text('Home Page'),
@@ -53,60 +47,40 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SingleChildScrollView(
           controller: _vertical,
           child: Center(
-              child: FutureBuilder(
-                  future: _userDocument,
-                  builder: (context, userSnapshot) {
-                    if(!userSnapshot.hasData) return Text("Loading...");
-                    String userID = userSnapshot.data!.id;
+              child: StreamBuilder(
+                  stream: _dbHelper.getStationStream(),
+                  builder: (context, stationSnapshot) {
+                    return Column(
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          //notification box
+                          NotificationWidget(
+                              dbHelper: _dbHelper,
+                              stationSnapshot: stationSnapshot),
+                          //achievement box
+                          AchievementsBox(dbHelper: _dbHelper),
 
-                    if (userSnapshot.connectionState == ConnectionState.done) {
-                      print("line 61");
-                      print(userID);
-                      // Map<String, dynamic> data = userSnapshot.data!.data() as Map<String, dynamic>;
-                      // return Text("Full Name: ${data['full_name']} ${data['last_name']}");
-                    }
+                          // userEntries(dbHelper: _dbHelper),
+                          Container(
+                            margin:EdgeInsets.only(bottom:15),
+                            child: Text("Your Upcoming Feeding Entries",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                  // fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                          UpcomingEntries(
+                            dbHelper: _dbHelper,
+                            stationSnapshot: stationSnapshot,
+                          ),
 
-                    return StreamBuilder(
-                        stream: _dbHelper.getThisUser2(userID),
-                        builder: (context, snapshot) {
-                          if(!snapshot.hasData) return Text("Loading...");
-                          return StreamBuilder(
-                              stream: _dbHelper.getStationStream(),
-                              builder: (context, stationSnapshot) {
-                                if(!stationSnapshot.hasData) return Text("Loading...");
-                                return Column(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      //notification box
-                                      NotificationWidget(
-                                        dbHelper: _dbHelper,
-                                        stationSnapshot: stationSnapshot,
-                                      ),
-                                      //achievement box
-                                      AchievementsBox(
-                                        dbHelper: _dbHelper,
-                                        userID: userID,
-                                      ),
+                          //start test
 
-                                      // userEntries(dbHelper: _dbHelper),
-                                      Container(
-                                        margin: EdgeInsets.only(bottom: 15),
-                                        child: Text(
-                                            "Your Upcoming Feeding Entries",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w800,
-                                              // fontWeight: FontWeight.bold,
-                                            )),
-                                      ),
-                                      UpcomingEntries(
-                                        dbHelper: _dbHelper,
-                                        stationSnapshot: stationSnapshot,
-                                        userID: userID,
-                                      ),
-                                    ]);
-                              });
-                        });
+                          // testStream(dbHelper: _dbHelper),
+
+                          //end test
+                        ]);
                   })),
         ));
   }
@@ -116,23 +90,19 @@ class UpcomingEntries extends StatelessWidget {
   const UpcomingEntries(
       {super.key,
       required FirebaseHelper dbHelper,
-      required AsyncSnapshot<QuerySnapshot<Station>> stationSnapshot,
-      required String userID})
+      required AsyncSnapshot<QuerySnapshot<Station>> stationSnapshot})
       : _dbHelper = dbHelper,
-        _stationSnapshot = stationSnapshot,
-        _userID = userID;
+        _stationSnapshot = stationSnapshot;
 
   final FirebaseHelper _dbHelper;
   final AsyncSnapshot<QuerySnapshot<Station>> _stationSnapshot;
-  final String _userID;
 
   @override
   Widget build(BuildContext context) {
     //get list of upcoming user entries -- organized by date (column1 date, column2 station)
     return StreamBuilder(
-        stream: _dbHelper.getUpcomingUserEntries(_userID),
+        stream: _dbHelper.getUpcomingUserEntries(_dbHelper.getCurrentUser()),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) return Text("Loading...");
           //create list, map for stations
           List stationList = _stationSnapshot.data?.docs ?? [];
           _dbHelper.sortStationList(stationList);
@@ -236,19 +206,15 @@ class userEntries extends StatelessWidget {
   const userEntries({
     super.key,
     required FirebaseHelper dbHelper,
-    required String userID,
-  })  : _dbHelper = dbHelper,
-        _userID = userID;
+  }) : _dbHelper = dbHelper;
 
   final FirebaseHelper _dbHelper;
-  final _userID;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _dbHelper.getUpcomingUserEntries(_userID),
+        stream: _dbHelper.getUpcomingUserEntries(_dbHelper.getCurrentUser()),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) return Text("Loading...");
           List entries = snapshot.data?.docs ?? [];
           entries.sort((a, b) {
             DateTime aE = a.data().date.toDate();
@@ -314,7 +280,6 @@ class NotificationWidget extends StatelessWidget {
     return StreamBuilder(
         stream: _dbHelper.getUrgentEntries(),
         builder: (context, snapshot) {
-          if(!snapshot.hasData) return Text("Loading...");
           //get live list of stations
           List stationList = _stationSnapshot.data?.docs ?? [];
           _dbHelper.sortStationList(stationList);
@@ -385,7 +350,7 @@ class NotificationWidget extends StatelessWidget {
               notificationMessage +=
                   "Today's ${todayEntries.join(', ')} entries are empty\n";
             } else {
-              notificationMessage += "There are no empty entries today!\n";
+              notificationMessage +="There are no empty entries today!\n";
             }
 
             if (tmrwEntries.isNotEmpty) {
@@ -397,6 +362,9 @@ class NotificationWidget extends StatelessWidget {
               notificationMessage += "There are no empty entries tomorrow!";
             }
             print(notificationMessage);
+
+            // notificationMessage+="test check";
+            // notificationMessage = "fuck\nfuck\nfuck\nfuck\nfuck\nfuck\nfuck\nfuck\n";
           }
 
           return Column(
@@ -414,23 +382,16 @@ class AchievementsBox extends StatelessWidget {
   const AchievementsBox({
     Key? key,
     required FirebaseHelper dbHelper,
-    required String userID,
   })  : _dbHelper = dbHelper,
-        _userID = userID,
         super(key: key);
 
   final FirebaseHelper _dbHelper;
-  final _userID;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _dbHelper.getAllCompletedUserEntries(_userID),
+        stream: _dbHelper.getAllUserEntries(_dbHelper.getCurrentUser()),
         builder: (context, snapshot) {
-
-          if (!snapshot.hasData){
-            return Text("Loading...");
-          }
           List entries = snapshot.data?.docs ?? [];
 
           String achievementText = "";

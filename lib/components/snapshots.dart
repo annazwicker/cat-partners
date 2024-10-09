@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:file_saver/file_saver.dart';
-import 'package:flutter_application_1/components/user_google.dart';
 import 'package:flutter_application_1/pages/Feeder%20Files/feeder_controller.dart';
 import 'package:flutter_application_1/services/firebase_helper.dart';
 
@@ -27,6 +26,12 @@ class Snapshots {
   static final Stream<QuerySnapshot<Station>> _stationStream = fh.getStationStream();
   static final Stream<QuerySnapshot<UserDoc>> _userStream = fh.getUserStream();
 
+  
+  static final Future<List<QueryDocumentSnapshot<Station>>> _stationQuery = getStationQuery();
+  static final Future<List<QueryDocumentSnapshot<Entry>>> _entryQuery = getEntryQuery();
+  static final Future<List<QueryDocumentSnapshot<Cat>>> _catQuery = getCatQuery();
+  static final Future<List<QueryDocumentSnapshot<UserDoc>>> _userQuery = getUserQuery();
+
   /// A Stream returning all entries. Dynamically updates.
   static Stream<QuerySnapshot<Entry>> get entryStream => _entryStream;
   /// A Stream returning all cats. Dynamically updates.
@@ -35,6 +40,16 @@ class Snapshots {
   static Stream<QuerySnapshot<Station>> get stationStream => _stationStream;
   /// A Stream returning all users. Dynamically updates.
   static Stream<QuerySnapshot<UserDoc>> get userStream => _userStream;
+
+
+  /// Returns a list of stations. Does not dynamically update.
+  static Future<List<QueryDocumentSnapshot<Station>>>  get stationQuery => _stationQuery;
+  /// Returns a list of entries. Does not dynamically update.
+  static Future<List<QueryDocumentSnapshot<Entry>>>    get entryQuery => _entryQuery;
+  /// Returns a list of cats. Does not dynamically update.
+  static Future<List<QueryDocumentSnapshot<Cat>>>      get catQuery => _catQuery;
+  /// Returns a list of users. Does not dynamically update.
+  static Future<List<QueryDocumentSnapshot<UserDoc>>>  get userQuery => _userQuery;
 
   /// Returns all documents in the collection referenced by [ref].
   static Future<List<QueryDocumentSnapshot<T>>> _getQuery<T>(CollectionReference<T> ref) async {
@@ -92,13 +107,13 @@ class Snapshots {
     Future<List<QueryDocumentSnapshot<T>>> query;
     switch(T){
       case Station:
-        query = getStationQuery() as Future<List<QueryDocumentSnapshot<T>>>;
+        query = _stationQuery as Future<List<QueryDocumentSnapshot<T>>>;
       case Cat:
-        query = getCatQuery() as Future<List<QueryDocumentSnapshot<T>>>;
+        query = _catQuery as Future<List<QueryDocumentSnapshot<T>>>;
       case Entry:
-        query = getEntryQuery() as Future<List<QueryDocumentSnapshot<T>>>;
+        query = _entryQuery as Future<List<QueryDocumentSnapshot<T>>>;
       case UserDoc:
-        query = getUserQuery() as Future<List<QueryDocumentSnapshot<T>>>;
+        query = _userQuery as Future<List<QueryDocumentSnapshot<T>>>;
       default:
         throw FormatException('DocumentReference is not in the right collection: ${docRef.parent.runtimeType}.'
         ' Please provide a DocumentReference in the Station, Cat, Users or Entry collections.');
@@ -132,17 +147,16 @@ class Snapshots {
     return (userExists, toReturn);
   }
 
-  /// Retrieves the UserDoc of the user that's currently signed in.
-  /// If an Exception occurs during retrieval (perhaps due to the userDoc not existing,
-  /// or there being no user signed in), returns null.
-  static Future<(bool, DocumentSnapshot<Map<String, dynamic>>?)> getCurrentUserDoc() async {
-    try {
-      var userDocRef = await UserGoogle.getUserDoc();
-      return (true, userDocRef);
-    } on Exception catch (e) {
-      print(e);
-      return (false, null);
-    }
+  /// TEMPORARY FUNCTION.
+  /// Returns whether there is a user logged in.
+  static bool isUserLoggedIn() { return fh.isUserLoggedIn; }
+
+  /// TEMPORARY FUNCTION.
+  /// Returns the DocumentReference of the current HARD-CODED user.
+  static Future<DocumentReference> getCurrentUserTEST() async {
+    assert (isUserLoggedIn());
+    String currentUserID = fh.currentUserIDTest!;
+    return await fh.usersRef.doc(currentUserID);
   }
 
   /// Returns a timestamp with the same date as [stamp], with hours, minutes, seconds and
@@ -242,72 +256,97 @@ class Snapshots {
     fh.entriesRef.add(entry);
   }
 
-  /// Ensure entries exist, as appropriate, for all stations at least [numDays] days after the current date.
+  /// Ensure entries exist for at least [numDays] days after the current date.
   static Future<void> ensureEntriesPast({int numDays = 14}) async {
+    // TODO account for added/deleted stations
     DateTime dateNow = equalizeDate(DateTime.now());
-    DateTime dateThen = dateNow.add(Duration(days: numDays));
+    DateTime dateThen = dateNow.add(const Duration(days: 14));
+
+    // Obtain the date of the latest set of entries
+    var allEntries = await getEntryQuery();
+    allEntries.sort(
+      (a, b) {
+        return a.data().date.compareTo(b.data().date);
+      });
+    DateTime latestDate = equalizeTime(allEntries.last.data().date).toDate();
+
+    // Ensure entries exist starting from that date up until dateNow + numDays
+    int i = 1;
+    DateTime nextDate = latestDate.add(Duration(days: i));
     var stations = await getStationQuery();
-    for(var station in stations){
-      await ensureStationEntries(station, dateThen);
+    while(!nextDate.isAfter(dateThen)){
+      addEntriesForAll(stations, Timestamp.fromDate(nextDate));
+      i++;
+      nextDate = latestDate.add(Duration(days: i));
     }
   }
 
-  /// Ensures entries are generated for [station] up to and including the date [until] or the date of
-  /// the station's deletion, if applicable; whichever is sooner.
-  /// 
-  static Future<void> ensureStationEntries(DocumentSnapshot<Station> station, DateTime until) async {
-    Station stationModel = station.data()!;
-    // Query DB for all entries for given station
-    var entriesForStationQuery = fh.entriesRef.where(Entry.stationRefString, isEqualTo: station.reference);
-    // Get results
-    var allEntries = (await entriesForStationQuery.get()).docs;
-    
-    // Figure out date to start generating entries
-    DateTime from;
-    if(allEntries.isNotEmpty){
-      // If entries already exist, start at latest entry
-      allEntries.sort(
-        (a, b) {
-          return a.data().date.compareTo(b.data().date);
-        });
-      // Gets time of latest entry and goes one day after
-      from = equalizeTime(allEntries.last.data().date).toDate().add(const Duration(days: 1));
-    } else {
-      // If no entries exist, start at station creation date
-      from = stationModel.dateCreated.toDate();
-    }
+  /// Ensures that entries exist for [date] for each station by adding them if they don't exist.
+  static void ensureEntries(DateTime date) async {
+    // Remove milliseconds
+    date = DateTime(date.year, date.month, date.day);
+    Timestamp stamp = Timestamp.fromDate(date);
+    runTransaction((transaction) async {
+      // Get all stations
+      bool isError = false;
+      List<QueryDocumentSnapshot<Station>> stations = await getStationQuery();
 
-    // Find date to stop generating entries
-    // Cut off at station deletion date, if station was ever deleted
-    if(stationModel.dateDeleted != null){
-      DateTime deletedEqualize = equalizeTime(stationModel.dateDeleted!).toDate();
-      until = until.isAfter(deletedEqualize) ? deletedEqualize : until;
-    } 
+      // Get entries with given date
+      List<QueryDocumentSnapshot<Entry>> entries = [];
+      entriesOnDateQuery(date).get().then(
+        (querySnapshot) {
+          entries = querySnapshot.docs;
+        },
+        onError: (e) {
+          print(e);
+          isError = true;
+        },
+      );
 
-    // Iterate through times
-    int i = 0;
-    DateTime nextDate = from;
-    while(!nextDate.isAfter(until)){
-      // Transaction initializes single entry
-      // MUST await; otherwise 'i' won't update as it should.
-      await runTransaction((transaction) async {
-        Entry newEntry = Entry(
+      // Check if there isn't an error
+      if (!isError) {
+        for (QueryDocumentSnapshot<Station> station in stations) {
+          // Query returns entry with station and date
+          List<QueryDocumentSnapshot<Entry>> statEntry = entries
+              .where((element) => element.data().stationID.id == station.id)
+              .toList();
+          // Add entry if it doesn't exist
+          if (statEntry.isEmpty) {
+            Entry newEntry = Entry(
+              assignedUser: null,
+              date: stamp,
+              note: '',
+              stationID: station.reference,
+            );
+            DocumentReference<Entry> newDocRef = fh.entriesRef.doc();
+            transaction.set(newDocRef, newEntry);
+          }
+        }
+      }
+    });
+  }
+
+  /// Adds a new entry for each station in [stations], all with Timestamp [stamp].
+  static Future<void> addEntriesForAll(List<QueryDocumentSnapshot<Station>> stations, Timestamp stamp) async {
+    await runTransaction(
+      (transaction) async {
+        for(var station in stations){
+          Entry newEntry = Entry(
           assignedUser: null,
-          date: Timestamp.fromDate(nextDate),
-          note: '',
-          stationID: station.reference,
-        );
-        DocumentReference<Entry> newDocRef = fh.entriesRef.doc();
-        transaction.set(newDocRef, newEntry);
-      });
-      i++;
-      nextDate = from.add(Duration(days: i));
-    }
-
+            date: stamp,
+            note: '',
+            stationID: station.reference,
+          );
+          DocumentReference<Entry> newDocRef = fh.entriesRef.doc();
+          transaction.set(newDocRef, newEntry);
+        }
+      }
+    );
   }
 
   /// Returns the results of querying the database for all entries on [date].
-  static Future<List<QueryDocumentSnapshot<Entry>>> getEntriesOnDate(DateTime date) async {
+  static Future<List<QueryDocumentSnapshot<Entry>>> getEntries(DateTime date) async {
+    ensureEntries(date);
     List<QueryDocumentSnapshot<Entry>> entries = [];
     await entriesOnDateQuery(date).get().then((querySnapshot) {
       entries = querySnapshot.docs.toList();
@@ -332,10 +371,6 @@ class Snapshots {
       .where(Entry.dateString, isLessThan: Timestamp.fromDate(endDate));
   }
 
-  static Query<Entry> entriesForStationQuery(DocumentReference stationRef) {
-    return fh.entriesRef.where(Entry.stationRefString, isEqualTo: stationRef);
-  }
-
   // Modifying stations
 
   /// adds station to Station collection given a map of the station's characteristics
@@ -356,22 +391,12 @@ class Snapshots {
   
   /// deletes station from Station collection given a doc reference to that station
   static Future deleteStation(String stationToDelete) async {
+    // TODO remove future entries for new station
     return runTransaction(
       (transaction) async {
         DocumentReference stationRef = fh.stationsRef.doc(stationToDelete);
-        DateTime deletionDate = equalizeDate(DateTime.now());
-        List<QueryDocumentSnapshot<Entry>> allStationEntries = (await entriesForStationQuery(stationRef).get()).docs;
-
-        // Delete all entries for this station with dates today and in the future
-        for(var entry in allStationEntries) {
-          DateTime entryDate = entry.data().date.toDate();
-          if(!entryDate.isBefore(deletionDate)){
-            transaction.delete(entry.reference);
-          }
-        }
-        // Delete station
         // Deletion is done by setting the 'date deleted' param
-        transaction.update(stationRef, {Station.dateDeletedString: Timestamp.fromDate(deletionDate)});
+        transaction.update(stationRef, {Station.dateDeletedString: Timestamp.now()});
       });
   }
 

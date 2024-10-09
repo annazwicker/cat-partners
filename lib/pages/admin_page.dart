@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/const.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/edit_accounts_content.dart';
@@ -7,9 +6,6 @@ import 'package:flutter_application_1/pages/admin_tabs_content/edit_cats_content
 import 'package:flutter_application_1/pages/admin_tabs_content/edit_feeding_stations_content.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/search_accounts_content.dart';
 import 'package:flutter_application_1/pages/admin_tabs_content/export_data.dart';
-
-import '../components/user_google.dart';
-import '../models/userdoc.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -91,80 +87,53 @@ class _NestedTabBarState extends State<NestedTabBar>
       }
     }
 
-    /// Checks whether the user can access the admin page.
-    /// Only true if the user is logged in and they're set as an admin in the database.
-    Future<bool> canUserSeeAdminPage() async {
-      // User must be logged in
-      if(UserGoogle.auth.currentUser != null){
-        UserDoc currentUser = UserDoc.fromJson((await UserGoogle.getUserDoc()).data()!);
-        // User must be an admin
-        return currentUser.isAdmin;
-      } else { 
-        return false; 
-      }
-    }
-
-    return FutureBuilder(
-      future: canUserSeeAdminPage(),
-      builder: (context, snapshot) {
-        // Waiting for verification
-        if(!snapshot.hasData) {
-          return const Text('Verifying...');
-        }
-        // User may not access
-        if(!snapshot.data!){
-          return const Text('You do not have access to this page.');
-        }
-
-        return Container(
-          height: containerHeight,
-          width: containerWidth,
-          color: Color.fromARGB(255, 202, 202, 202),
-          child: Column(
-            children: [
-              TabBar(
-                tabAlignment: TabAlignment.center,
-                controller: _nestedTabController,
-                indicatorColor: Colors.black,
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.black54,
-                isScrollable: true,
-                labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                tabs: const [
-                  Tab(icon: Icon(Icons.account_box), text: 'Edit Accounts'),
-                  Tab(icon: Icon(Icons.admin_panel_settings), text: 'Edit Admin Users'),
-                  Tab(icon: Icon(Icons.pets), text: 'Edit Cats'),
-                  Tab(icon: Icon(Icons.local_dining), text: 'Edit Feeding Stations'),
-                  Tab(icon: Icon(Icons.search), text: 'Search Users'),
-                  Tab(icon: Icon(Icons.download), text: 'Export Data'),
-                ],
-              ),
-              SizedBox(
-                height: containerHeight - 100,
-                width: containerWidth - 80,
-                child: TabBarView(
-                  controller: _nestedTabController,
-                  children: [
-                    // Contents for each tab
-                    // Edit Accounts tab content
-                    const EditAccountsContent(textColor: Colors.black),
-                    // Edit Admin tab content
-                    const EditAdminContent(textColor: Colors.black),
-                    // Edit Cats tab content
-                    const EditCatsContent(textColor: Colors.black),
-                    // Edit Feeding Stations tab content
-                    const EditFeedingStationsContent(textColor: Colors.black),
-                    // Search users tab content
-                    SearchUsersContent(textColor: Colors.black),
-                    // Export Data tab content
-                    const ExportDataContent(textColor: Colors.black),
-                  ],
-                ),
-              )
+    return Container(
+      height: containerHeight,
+      width: containerWidth,
+      color: Color.fromARGB(255, 202, 202, 202),
+      child: Column(
+        children: [
+          TabBar(
+            tabAlignment: TabAlignment.center,
+            controller: _nestedTabController,
+            indicatorColor: Colors.black,
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.black54,
+            isScrollable: true,
+            labelStyle: TextStyle(fontWeight: FontWeight.bold),
+            tabs: const [
+              Tab(icon: Icon(Icons.account_box), text: 'Edit Accounts'),
+              Tab(icon: Icon(Icons.admin_panel_settings), text: 'Edit Admin Users'),
+              Tab(icon: Icon(Icons.pets), text: 'Edit Cats'),
+              Tab(icon: Icon(Icons.local_dining), text: 'Edit Feeding Stations'),
+              Tab(icon: Icon(Icons.search), text: 'Search Users'),
+              Tab(icon: Icon(Icons.download), text: 'Export Data'),
             ],
           ),
-        );
-      }
+          SizedBox(
+            height: containerHeight - 100,
+            width: containerWidth - 80,
+            child: TabBarView(
+              controller: _nestedTabController,
+              children: [
+                // Contents for each tab
+                // Edit Accounts tab content
+                const EditAccountsContent(textColor: Colors.black),
+                // Edit Admin tab content
+                const EditAdminContent(textColor: Colors.black),
+                // Edit Cats tab content
+                const EditCatsContent(textColor: Colors.black),
+                // Edit Feeding Stations tab content
+                const EditFeedingStationsContent(textColor: Colors.black),
+                // Search users tab content
+                SearchUsersContent(textColor: Colors.black),
+                // Export Data tab content
+                const ExportDataContent(textColor: Colors.black),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

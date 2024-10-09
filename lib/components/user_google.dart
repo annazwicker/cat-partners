@@ -3,16 +3,15 @@ import 'dart:html';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/components/login_page.dart';
-import 'package:flutter_application_1/components/snapshots.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 
 class UserGoogle {
-  static FirebaseAuth auth = FirebaseAuth.instance;
-  static FirebaseFirestore db = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore db = FirebaseFirestore.instance;
   static User? user;
   /// Returns a user that was logged in through Google and authorized by Firebase. This user is also present in the Firestore database
-  static Future<User?> loginWithGoogle({reLogin = false, path}) async{
+  Future<User?> loginWithGoogle({reLogin = false, path}) async{
     final googleAccount = await GoogleSignIn().signIn(); // asks for sign in
 
     // the rest will attempt to authenticate and retrieve values
@@ -121,18 +120,5 @@ class UserGoogle {
     await db.doc(document.get('userdocID').path).update(
       {'email': auth.currentUser!.email, 'name': name, 'phoneNumber': number, 'affiliation': affiliation, 'rescueGroupAffiliaton':rescueGroup}
     );
-  }
-
-
-  static Future<DocumentSnapshot<Map<String, dynamic>>> getUserDoc() async{
-    String? fireBaseID = auth.currentUser?.uid.toString();
-
-    // Query, gets AccountLink docs with this firebaseUID
-    QuerySnapshot<Map<String, dynamic>> docID = await db.collection('accountLink').where('firebaseUID', isEqualTo: fireBaseID).get();
-    // Extracts (hopefully singular) result.
-    QueryDocumentSnapshot<Map<String, dynamic>> document = docID.docs.first;
-    var path = document.get('userdocID').path;
-    // return Snapshots.fh.usersRef.doc(document.get('userdocID').id); // rets DocumentReference<UserDoc>
-    return db.doc(path).get();
   }
 }
